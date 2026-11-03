@@ -86,8 +86,8 @@ export function xCardHtml(p: XPost, { clamp = false } = {}) {
   <p class="${clamp ? "line-clamp-6 " : ""}text-[0.95rem] leading-relaxed whitespace-pre-line text-foreground/90">${esc(p.text)}${p.truncated ? ` <span class="text-primary">Show more on X</span>` : ""}</p>
   ${media}
   <div class="mt-auto flex items-center gap-4 text-xs text-muted-foreground">
-    <span class="flex items-center gap-1.5 tabular-nums transition group-hover:text-[#f91880]" aria-label="${p.likes} likes">${icon(HEART)}${p.likes ? fmt(p.likes) : ""}</span>
-    <span class="flex items-center gap-1.5 tabular-nums" aria-label="${p.replies} replies">${icon(REPLY)}${p.replies ? fmt(p.replies) : ""}</span>
+    <span class="flex items-center gap-1.5 tabular-nums transition group-hover:text-[#f91880]">${icon(HEART)}<span aria-hidden="true">${p.likes ? fmt(p.likes) : ""}</span><span class="sr-only">${p.likes} likes</span></span>
+    <span class="flex items-center gap-1.5 tabular-nums">${icon(REPLY)}<span aria-hidden="true">${p.replies ? fmt(p.replies) : ""}</span><span class="sr-only">${p.replies} replies</span></span>
     <time datetime="${esc(p.date)}" class="ml-auto font-mono">${date}</time>
   </div>
   <a href="${esc(p.url)}" target="_blank" rel="noopener" class="absolute inset-0 rounded-xl focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring" aria-label="View post by ${esc(p.name)} on X"></a>

@@ -72,6 +72,15 @@ The deploy workflow passes `GITHUB_TOKEN` so the GitHub API isn't rate-limited i
 `.github/workflows/deploy.yml`: on push to `master`, daily at 01:00 UTC, or manually.
 `withastro/action@v3` (Node 24) builds, then `actions/deploy-pages@v4` publishes. Repo setting: Pages → Source: GitHub Actions.
 
+### Cloudflare (in front of harindujayakody.com)
+
+GitHub Pages can't set cache headers, so long caching is done in Cloudflare:
+
+- **Cache rule:** URI path starts with `/_astro/` → Edge TTL and Browser TTL **1 year**. Everything in `/_astro/` has a content hash in its file name, so it never goes stale.
+- Leave HTML on the default short cache so new posts appear right after a deploy.
+- **Email Address Obfuscation** (Scrape Shield) adds `email-decode.min.js` to every page; turn it off to keep pages script-free.
+- **Web Analytics** adds `beacon.min.js` (about 10 KB, flagged as legacy JavaScript by PageSpeed). Keep it only if you use the stats.
+
 ## SEO model
 
 - One canonical URL per page (`Astro.site` = `https://harindujayakody.com`).

@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+// Same file as public/avatar.png: this copy gets a hashed, long-cacheable WebP; public/ keeps a fixed URL for social cards.
+import avatar from "../assets/avatar.png";
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.astro";
 import Badge from "../components/ui/Badge.astro";
@@ -59,7 +62,7 @@ const jsonLd = [
   <div class="flex flex-col gap-20">
     <section class="flex flex-col gap-6">
       <div class="rise flex items-center gap-4" style="--d:0ms">
-        <img src="/avatar.png" alt="Harindu Jayakody" width="56" height="56" class="size-14 rounded-full ring-1 ring-border ring-offset-4 ring-offset-background" />
+        <Image src={avatar} alt="Harindu Jayakody" width={56} height={56} densities={[1, 2]} quality={90} loading="eager" class="size-14 rounded-full ring-1 ring-border ring-offset-4 ring-offset-background" />
         <p class="font-mono text-sm text-muted-foreground">
           <span class="text-primary">~/harindu</span> <span class="text-accent">$</span> whoami<span class="caret ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-primary" />
         </p>

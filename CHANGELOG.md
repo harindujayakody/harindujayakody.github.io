@@ -2,6 +2,14 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.0.3] - 2026-11-04
+
+### Fixed
+- Accessibility (PageSpeed "prohibited ARIA attributes"): X card like and reply counts no longer put `aria-label` on a plain `<span>`; screen readers get visually hidden text ("2 likes") instead.
+
+### Changed
+- Home page avatar is served through `astro:assets` as a hashed WebP (under 1 KB, down from a 39 KB PNG), so it can be cached long-term. `public/avatar.png` stays for social cards.
+
 ## [1.0.2] - 2026-11-04
 
 ### Changed

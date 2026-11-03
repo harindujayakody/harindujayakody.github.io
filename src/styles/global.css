@@ -82,6 +82,10 @@
 .prose ol { @apply list-decimal pl-6; }
 .prose li + li { @apply mt-1.5; }
 .prose blockquote { @apply border-l-2 border-primary pl-4 text-muted-foreground italic; }
+/* X embed markup without X's script: styled as a site card (no third-party JS) */
+.prose blockquote.twitter-tweet { @apply rounded-xl border border-border bg-card/70 p-5 text-sm text-muted-foreground not-italic; }
+.prose blockquote.twitter-tweet p { @apply mb-3 text-[0.95rem] leading-relaxed text-foreground/90; }
+.prose blockquote.twitter-tweet a { @apply font-mono text-xs; }
 .prose :not(pre) > code { @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-primary; }
 .prose pre { @apply overflow-x-auto rounded-xl border p-4 font-mono text-sm leading-6; }
 .prose img { @apply rounded-xl border; }

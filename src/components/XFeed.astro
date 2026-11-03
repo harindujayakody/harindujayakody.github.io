@@ -1,0 +1,26 @@
+---
+import type { XPost } from "../lib/x";
+import Card from "./ui/Card.astro";
+import { fmtDate } from "../lib/posts";
+
+const { posts }: { posts: XPost[] } = Astro.props;
+---
+<div class="grid gap-3 sm:grid-cols-2">
+  {posts.map((p) => (
+    <Card href={p.url} class="reveal">
+      <div class="flex items-center gap-3">
+        <img src={p.avatar} alt="" width="32" height="32" loading="lazy" decoding="async" class="size-8 rounded-full border" />
+        <div class="min-w-0 flex-1 leading-tight">
+          <p class="truncate text-sm font-medium">{p.name}</p>
+          <p class="truncate font-mono text-xs text-muted-foreground">@{p.handle}</p>
+        </div>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-4 text-muted-foreground transition group-hover:text-foreground"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.48 3.24H4.3l13.31 17.41z"/></svg>
+      </div>
+      <p class="line-clamp-6 text-sm leading-relaxed whitespace-pre-line text-foreground/90">{p.text}</p>
+      <div class="mt-auto flex items-center gap-3 pt-1 font-mono text-xs text-muted-foreground">
+        <time datetime={p.date}>{fmtDate(new Date(p.date))}</time>
+        {p.likes > 0 && <span>♥ {p.likes.toLocaleString("en")}</span>}
+      </div>
+    </Card>
+  ))}
+</div>

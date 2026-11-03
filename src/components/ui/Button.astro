@@ -1,0 +1,16 @@
+---
+const { href, variant = "default", size = "default", ...rest } = Astro.props;
+---
+<a
+  href={href}
+  class:list={[
+    "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium transition focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring [&_svg]:size-4",
+    variant === "default" && "bg-primary text-primary-foreground hover:bg-primary/85 hover:shadow-[0_0_24px_-4px_var(--primary)]",
+    variant === "outline" && "border bg-card/60 hover:border-primary/40 hover:text-primary",
+    variant === "ghost" && "text-muted-foreground hover:bg-muted hover:text-primary",
+    size === "icon" ? "size-9" : "h-10 px-4",
+  ]}
+  {...rest}
+>
+  <slot />
+</a>

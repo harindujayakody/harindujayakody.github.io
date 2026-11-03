@@ -1,0 +1,28 @@
+---
+import { render } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Badge from "../../components/ui/Badge.astro";
+import { getPosts, fmtDate, readingTime } from "../../lib/posts";
+
+export async function getStaticPaths() {
+  return (await getPosts()).map((post) => ({ params: { id: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+<Layout title={`${post.data.title} · Harindu Jayakody`} description={post.data.description}>
+  <article class="flex flex-col gap-8">
+    <header class="flex flex-col gap-4">
+      <a href="/blog/" class="rise font-mono text-sm text-muted-foreground hover:text-primary">← cd ../blog</a>
+      <h1 class="rise text-3xl font-semibold leading-tight sm:text-5xl" style="--d:80ms">{post.data.title}</h1>
+      <div class="rise flex flex-wrap items-center gap-2 font-mono text-xs text-muted-foreground" style="--d:160ms">
+        <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time>
+        <span>·</span>
+        <span>{readingTime(post.body)} min read</span>
+        {post.data.tags.map((t) => <Badge>#{t}</Badge>)}
+      </div>
+    </header>
+    <div class="prose rise" style="--d:240ms"><Content /></div>
+  </article>
+</Layout>

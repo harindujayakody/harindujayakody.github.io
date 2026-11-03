@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { fmtDate, readingTime } from "../lib/posts";
+
+const { posts }: { posts: CollectionEntry<"blog">[] } = Astro.props;
+---
+<ul class="flex flex-col divide-y rounded-xl border bg-card/50">
+  {posts.map((p) => (
+    <li class="reveal">
+      <a href={`/blog/${p.id}/`} class="group flex flex-col gap-1.5 p-5 transition hover:bg-card">
+        <div class="flex items-center gap-2 font-mono text-xs text-muted-foreground">
+          <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time>
+          <span>·</span>
+          <span>{readingTime(p.body)} min read</span>
+        </div>
+        <h3 class="flex items-center gap-2 font-semibold group-hover:text-primary">
+          {p.data.title}
+          <span class="-translate-x-1 text-primary opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">→</span>
+        </h3>
+        <p class="text-sm text-muted-foreground">{p.data.description}</p>
+      </a>
+    </li>
+  ))}
+  {posts.length === 0 && <li class="p-5 text-sm text-muted-foreground">No posts yet.</li>}
+</ul>

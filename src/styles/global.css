@@ -1,0 +1,88 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource/poppins/latin-600.css";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* shadcn/ui token names, custom dark "terminal" palette: ink + lime + cyan */
+:root {
+  --background: oklch(0.14 0.008 265);
+  --foreground: oklch(0.96 0.004 265);
+  --card: oklch(0.175 0.01 265);
+  --muted: oklch(0.23 0.012 265);
+  --muted-foreground: oklch(0.7 0.012 265);
+  --primary: oklch(0.88 0.2 128);
+  --primary-foreground: oklch(0.18 0.03 128);
+  --secondary: oklch(0.23 0.012 265);
+  --accent: oklch(0.8 0.13 205);
+  --border: oklch(1 0 0 / 9%);
+  --ring: oklch(0.88 0.2 128 / 60%);
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { color-scheme: dark; scroll-behavior: smooth; }
+  body {
+    @apply min-h-dvh bg-background text-foreground font-sans antialiased;
+    background-image:
+      radial-gradient(60rem 30rem at 50% -10rem, oklch(0.88 0.2 128 / 9%), transparent 70%),
+      radial-gradient(circle at 1px 1px, oklch(1 0 0 / 6%) 1px, transparent 0);
+    background-size: auto, 24px 24px;
+  }
+  h1, h2, h3 { @apply font-heading tracking-tight; }
+  ::selection { background: var(--primary); color: var(--primary-foreground); }
+}
+
+/* Motion: on-load stagger (.rise, delay via --d) and scroll reveal (.reveal, CSS-only, no JS) */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes blink { 50% { opacity: 0; } }
+@keyframes ping { 75%, 100% { transform: scale(2.4); opacity: 0; } }
+
+.rise { animation: rise 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: var(--d, 0ms); }
+.caret { animation: blink 1s steps(1) infinite; }
+.ping { animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite; }
+
+@supports (animation-timeline: view()) {
+  .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise, .reveal, .caret, .ping { animation: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* Markdown post body */
+.prose { @apply text-[1.02rem] leading-7 text-foreground/90; }
+.prose > * + * { @apply mt-5; }
+.prose h2 { @apply mt-10 text-xl font-semibold text-foreground; }
+.prose h3 { @apply mt-8 text-lg font-semibold text-foreground; }
+.prose a { @apply text-primary underline underline-offset-4 hover:no-underline; }
+.prose strong { @apply font-semibold text-foreground; }
+.prose ul { @apply list-disc pl-6; }
+.prose ol { @apply list-decimal pl-6; }
+.prose li + li { @apply mt-1.5; }
+.prose blockquote { @apply border-l-2 border-primary pl-4 text-muted-foreground italic; }
+.prose :not(pre) > code { @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-primary; }
+.prose pre { @apply overflow-x-auto rounded-xl border p-4 font-mono text-sm leading-6; }
+.prose img { @apply rounded-xl border; }
+.prose hr { @apply my-10; }

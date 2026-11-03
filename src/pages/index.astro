@@ -1,0 +1,101 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.astro";
+import Card from "../components/ui/Card.astro";
+import Badge from "../components/ui/Badge.astro";
+import Socials from "../components/Socials.astro";
+import PostList from "../components/PostList.astro";
+import Timeline from "../components/Timeline.astro";
+import { getRepos } from "../lib/github";
+import { getPosts } from "../lib/posts";
+
+const gh = "https://github.com/harindujayakody";
+const [repos, posts] = await Promise.all([getRepos(), getPosts()]);
+
+const stats = [
+  { value: repos.length || "70+", label: "public repos" },
+  { value: repos.reduce((n, r) => n + r.stargazers_count, 0) || "—", label: "stars earned" },
+  { value: `${new Date().getFullYear() - 2014}y`, label: "on GitHub" },
+];
+
+const projects = [
+  { name: "octopus-agent", lang: "TypeScript", desc: "Free, open-source anti-detect browser with engine-level fingerprint spoofing in Chromium." },
+  { name: "2fa-tools", lang: "HTML", desc: "Privacy-first TOTP generator running entirely in the browser. Offline PWA, no backend.", href: "https://harindujayakody.github.io/2fa-tools/" },
+  { name: "steam-deal-finder", lang: "JavaScript", desc: "Converts Steam USD prices to LKR live and tracks historical deals for Sri Lankan gamers.", href: "https://harindujayakody.github.io/steam-deal-finder/" },
+  { name: "binance-p2p-lkr-rate-live-update", lang: "JavaScript", desc: "Live Binance P2P LKR/USDT rates, advertiser listings and a toolbar rate badge." },
+  { name: "browser-cache-cleaner-windows", lang: "PowerShell", desc: "Cleans Chrome, Brave, Edge and Firefox cache across all profiles. Cookies stay safe." },
+  { name: "proxyhell", lang: "Shell", desc: "SOCKS5 automation: installs Dante and manages authenticated proxies from the terminal." },
+];
+
+const stack = ["TypeScript", "Astro", "Next.js", "Node.js", "PHP", "Python", "PowerShell", "Bash", "Chrome Extensions"];
+---
+<Layout>
+  <div class="flex flex-col gap-20">
+    <section class="flex flex-col gap-6">
+      <div class="rise flex items-center gap-4" style="--d:0ms">
+        <img src="/avatar.jpg" alt="Harindu Jayakody" width="56" height="56" class="size-14 rounded-full ring-2 ring-primary/40 ring-offset-4 ring-offset-background" />
+        <p class="font-mono text-sm text-muted-foreground">
+          <span class="text-primary">~/harindu</span> <span class="text-accent">$</span> whoami<span class="caret ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-primary" />
+        </p>
+      </div>
+      <h1 class="rise text-4xl font-semibold leading-[1.1] sm:text-6xl" style="--d:80ms">
+        Harindu Jayakody<span class="text-primary">.</span>
+      </h1>
+      <p class="rise max-w-xl text-lg leading-relaxed text-muted-foreground" style="--d:160ms">
+        Founder of <a href="https://infiax.com" class="text-foreground underline decoration-primary underline-offset-4 hover:text-primary">Infiax</a>. I build full-stack web apps, browser extensions and small tools that automate the boring parts. Studying at Wrexham University, based in Sri Lanka.
+      </p>
+      <div class="rise flex flex-wrap items-center gap-2" style="--d:240ms">
+        <Button href="mailto:randeepana@gmail.com">Get in touch</Button>
+        <Button href={gh} variant="outline" target="_blank" rel="noopener">GitHub</Button>
+        <Socials />
+      </div>
+    </section>
+
+    <section aria-label="Stats" class="rise grid grid-cols-3 divide-x rounded-xl border bg-card/50" style="--d:320ms">
+      {stats.map((s) => (
+        <div class="flex flex-col gap-1 p-4 sm:p-5">
+          <span class="font-mono text-2xl font-semibold tabular-nums text-primary sm:text-3xl">{s.value}</span>
+          <span class="font-mono text-[11px] text-muted-foreground sm:text-xs">{s.label}</span>
+        </div>
+      ))}
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <h2 class="reveal flex items-center gap-3 text-xl font-semibold"><span class="font-mono text-sm text-primary">01</span> Projects</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {projects.map((p) => (
+          <Card href={p.href ?? `${gh}/${p.name}`} class="reveal">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="min-w-0 truncate font-mono text-sm font-medium group-hover:text-primary">{p.name}</h3>
+              <Badge>{p.lang}</Badge>
+            </div>
+            <p class="text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
+          </Card>
+        ))}
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <div class="reveal flex items-baseline justify-between">
+        <h2 class="flex items-center gap-3 text-xl font-semibold"><span class="font-mono text-sm text-primary">02</span> Writing</h2>
+        <a href="/blog/" class="font-mono text-sm text-muted-foreground hover:text-primary">all posts →</a>
+      </div>
+      <PostList posts={posts.slice(0, 3)} />
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <div class="reveal flex items-baseline justify-between">
+        <h2 class="flex items-center gap-3 text-xl font-semibold"><span class="font-mono text-sm text-primary">03</span> Recently shipped</h2>
+        <a href="/timeline/" class="font-mono text-sm text-muted-foreground hover:text-primary">full timeline →</a>
+      </div>
+      <Timeline repos={repos.slice(0, 6)} />
+    </section>
+
+    <section class="reveal flex flex-col gap-5">
+      <h2 class="flex items-center gap-3 text-xl font-semibold"><span class="font-mono text-sm text-primary">04</span> Stack</h2>
+      <div class="flex flex-wrap gap-2">
+        {stack.map((t) => <Badge variant="outline">{t}</Badge>)}
+      </div>
+    </section>
+  </div>
+</Layout>

@@ -1,0 +1,14 @@
+---
+const { href, class: className = "" } = Astro.props;
+const Tag = href ? "a" : "div";
+---
+<Tag
+  href={href}
+  class:list={[
+    "group flex min-w-0 flex-col gap-2 rounded-xl border bg-card/70 p-5 backdrop-blur-sm transition duration-300",
+    href && "hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-[0_12px_40px_-12px_var(--ring)] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring",
+    className,
+  ]}
+>
+  <slot />
+</Tag>

@@ -1,0 +1,59 @@
+---
+import "../styles/global.css";
+import Socials from "../components/Socials.astro";
+
+const {
+  title = "Harindu Jayakody",
+  description = "Founder of Infiax. I build full-stack web apps, browser extensions and automation tools.",
+} = Astro.props;
+const path = Astro.url.pathname;
+const nav = [
+  { href: "/", label: "home" },
+  { href: "/blog/", label: "blog" },
+  { href: "/timeline/", label: "timeline" },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0d0e12" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:creator" content="@harindu522" />
+    <link rel="icon" href="/avatar.jpg" />
+  </head>
+  <body class="flex flex-col">
+    <header class="sticky top-0 z-10 border-b bg-background/70 backdrop-blur-md">
+      <nav class="mx-auto flex h-14 max-w-3xl items-center justify-between gap-4 px-4">
+        <a href="/" class="font-mono text-sm font-semibold"><span class="text-primary">~/</span>harindu</a>
+        <ul class="flex items-center gap-1 font-mono text-sm">
+          {nav.map((n) => {
+            const active = n.href === "/" ? path === "/" : path.startsWith(n.href);
+            return (
+              <li>
+                <a href={n.href} aria-current={active ? "page" : undefined}
+                  class:list={["rounded-md px-2.5 py-1.5 transition hover:text-primary", active ? "bg-muted text-primary" : "text-muted-foreground"]}>
+                  {n.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </header>
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-14 sm:py-20">
+      <slot />
+    </main>
+    <footer class="border-t">
+      <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-muted-foreground">
+        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · built with Astro</span>
+        <div class="flex items-center"><Socials /></div>
+      </div>
+    </footer>
+  </body>
+</html>

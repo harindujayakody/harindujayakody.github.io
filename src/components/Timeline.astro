@@ -1,0 +1,38 @@
+---
+import type { Repo } from "../lib/github";
+import Badge from "./ui/Badge.astro";
+
+const { repos }: { repos: Repo[] } = Astro.props;
+const years = Object.entries(Object.groupBy(repos, (r) => r.created_at.slice(0, 4))).sort(([a], [b]) => +b - +a);
+const newest = repos[0]?.name;
+---
+<ol class="flex flex-col gap-10">
+  {years.map(([year, list]) => (
+    <li class="reveal grid grid-cols-[minmax(0,1fr)] gap-4 sm:grid-cols-[5rem_minmax(0,1fr)]">
+      <div class="sm:sticky sm:top-20 sm:self-start">
+        <span class="font-mono text-2xl font-semibold text-primary">{year}</span>
+        <span class="ml-2 font-mono text-xs text-muted-foreground sm:ml-0 sm:block">{list!.length} repos</span>
+      </div>
+      <ol class="relative flex flex-col gap-1 border-l border-dashed pl-5">
+        {list!.map((r) => (
+          <li class="relative">
+            <span class="absolute top-[1.2rem] -left-[1.65rem] flex size-2.5">
+              {r.name === newest && <span class="ping absolute inline-flex size-full rounded-full bg-primary" />}
+              <span class="relative inline-flex size-2.5 rounded-full bg-primary ring-4 ring-background" />
+            </span>
+            <a href={r.homepage || r.html_url} target="_blank" rel="noopener" class="group block min-w-0 rounded-lg px-3 py-3 transition hover:bg-card">
+              <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span class="min-w-0 truncate font-mono text-sm font-medium group-hover:text-primary">{r.name}</span>
+                {r.language && <Badge>{r.language}</Badge>}
+                {r.stargazers_count > 0 && <span class="font-mono text-xs text-muted-foreground">★ {r.stargazers_count}</span>}
+                <time datetime={r.created_at} class="ml-auto font-mono text-xs text-muted-foreground">{r.created_at.slice(5, 10)}</time>
+              </div>
+              {r.description && <p class="mt-1 line-clamp-2 text-sm text-muted-foreground">{r.description}</p>}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </li>
+  ))}
+  {repos.length === 0 && <li class="text-sm text-muted-foreground">Timeline couldn't load from GitHub at build time.</li>}
+</ol>

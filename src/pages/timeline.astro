@@ -1,0 +1,19 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Timeline from "../components/Timeline.astro";
+import { getRepos } from "../lib/github";
+
+const repos = await getRepos();
+---
+<Layout title="Timeline · Harindu Jayakody" description="Every public repo I've shipped, by year.">
+  <div class="flex flex-col gap-10">
+    <header class="flex flex-col gap-3">
+      <p class="rise font-mono text-sm text-primary">$ git log --all --reverse</p>
+      <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">Timeline</h1>
+      <p class="rise text-muted-foreground" style="--d:160ms">
+        <span class="font-mono text-foreground">{repos.length}</span> public repos, newest first. Pulled from GitHub on every build.
+      </p>
+    </header>
+    <Timeline repos={repos} />
+  </div>
+</Layout>

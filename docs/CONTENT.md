@@ -49,7 +49,7 @@ Start with the first paragraph. Don't repeat the title as a `#` heading; the pag
 ### Embedding an X post
 
 Copy the embed code from X (… menu → Embed post). Paste the `<blockquote class="twitter-tweet">…</blockquote>` part.
-Leave out the `<script>` line, since the site loads X's script itself, only when the reader scrolls near the embed.
+Leave out the `<script>` line. At build time the site fetches the post and draws it as its own card (author, verified badge, text, photo or video preview, likes), matching the site theme with no X script. Long posts end with "Show more on X".
 Replace blank lines inside the blockquote with `<br><br>`, because a blank line ends an HTML block in Markdown.
 
 ### Code

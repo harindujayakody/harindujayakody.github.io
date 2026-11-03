@@ -76,7 +76,7 @@
 .prose > * + * { @apply mt-5; }
 .prose h2 { @apply mt-10 text-xl font-semibold text-foreground; }
 .prose h3 { @apply mt-8 text-lg font-semibold text-foreground; }
-.prose a { @apply text-primary underline underline-offset-4 hover:no-underline; }
+.prose a:not(.x-card a) { @apply text-primary underline underline-offset-4 hover:no-underline; }
 .prose strong { @apply font-semibold text-foreground; }
 .prose ul { @apply list-disc pl-6; }
 .prose ol { @apply list-decimal pl-6; }
@@ -88,6 +88,5 @@
 .prose blockquote.twitter-tweet a { @apply font-mono text-xs; }
 .prose :not(pre) > code { @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-primary; }
 .prose pre { @apply overflow-x-auto rounded-xl border p-4 font-mono text-sm leading-6; }
-.prose img { @apply aspect-video w-full rounded-xl border object-cover; }
-.prose .twitter-tweet-rendered { @apply mx-auto; }
+.prose p > img { @apply aspect-video w-full rounded-xl border object-cover; }
 .prose hr { @apply my-10; }

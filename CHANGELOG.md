@@ -2,6 +2,14 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.0.1] - 2026-11-04
+
+### Changed
+- **X embeds in posts are now site-themed cards built at build time**, replacing X's widget, whose iframe used X's own colours, font and player and couldn't be styled. Cards show the author, verified badge, text, a photo or video preview (vertical video centred over a blurred backdrop, with "Watch on X"), likes, replies and date. Long posts end with "Show more on X". Posts no longer load any X script.
+- Home page X cards use the same card, now with photo previews.
+- X images load as X's 680px JPG (`name=small`) instead of full PNGs: about 5× lighter.
+- Markdown runs through Astro 7's Sätteri processor with a small `x-embed` plugin; `@astrojs/markdown-satteri` is now a direct dependency.
+
 ## [1.0.0] - 2026-11-04
 
 ### Added

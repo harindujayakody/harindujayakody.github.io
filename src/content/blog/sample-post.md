@@ -43,7 +43,7 @@ Copy the embed code from X (**⋯ → Embed post**), paste the `<blockquote>` pa
 
 <blockquote class="twitter-tweet"><p lang="en" dir="ltr">Want a sneak peek at the Hermes Agent Mobile app?<br><br>It's still in Private Beta (for now...), but I recorded a quick tour of the app, including all the features, options, and capabilities</p>&mdash; tonbi (@tonbistudio) <a href="https://x.com/tonbistudio/status/2117332014877831657">November 2, 2026</a></blockquote>
 
-Readers see a styled card instantly; the real X embed loads when they scroll near it.
+At build time this becomes a card in the site theme: author, verified badge, text, a video or photo preview with "Watch on X", likes and replies. No X script is loaded.
 
 ## Text formatting
 

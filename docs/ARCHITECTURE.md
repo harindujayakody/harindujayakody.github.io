@@ -1,7 +1,7 @@
 # Architecture
 
 A static site. All data is fetched and all HTML is rendered at build time; the browser gets HTML, inlined CSS, fonts and images.
-JavaScript runs on two pages only: `/search/` (a ~1 KB filter) and posts containing an X embed (X's widget, loaded when the embed scrolls near).
+The only JavaScript is on `/search/` (a ~1 KB filter). X embeds in posts are turned into static cards at build time, so no X script is loaded.
 
 ```
  src/content/blog/*.md ─┐
@@ -33,7 +33,8 @@ src/
   lib/
     posts.ts             getPosts, slugify, category/tag URLs, relatedPosts, postMarkdown
     github.ts            repo list from the GitHub API (cached per build, fails soft to [])
-    x.ts                 X post fetch via cdn.syndication.twimg.com (no key; fails soft per post)
+    x.ts                 X post fetch (no key; fails soft) and xCardHtml, the one card used everywhere
+    x-embed-plugin.ts    Markdown (Sätteri) plugin: pasted X embed code becomes an xCardHtml card at build time
   layouts/Layout.astro   <head> SEO (canonical, OG, Twitter, robots, JSON-LD), header nav, footer
   components/            PostList, BlogIndex, Timeline, ProjectCard, XFeed, Socials, ui/*
   pages/                 routes (below)
@@ -49,7 +50,7 @@ src/
 | `/blog/` | `pages/blog/index.astro` → `BlogIndex` | Category filter chips |
 | `/blog/category/<slug>/` | `pages/blog/category/[slug].astro` | Indexable; `CollectionPage` + breadcrumbs |
 | `/blog/tag/<slug>/` | `pages/blog/tag/[slug].astro` | `noindex, follow` |
-| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` + breadcrumbs, cover image, related posts, lazy X widget |
+| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` + breadcrumbs, cover image, related posts, X embeds as static cards |
 | `/blog/<slug>.md` | `pages/blog/[id].md.ts` | Raw markdown for AI agents |
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
 | `/timeline/` | `pages/timeline.astro` | Every repo grouped by year |
@@ -61,8 +62,8 @@ src/
 | Source | Used for | If it fails |
 |---|---|---|
 | `api.github.com/users/harindujayakody/repos` | timeline, stats, repo list | Build continues; timeline shows a notice, stats fall back |
-| `cdn.syndication.twimg.com/tweet-result` | home page X cards | That post is skipped |
-| `platform.x.com/widgets.js` (browser) | real embeds in posts | Reader sees the styled quote with a link |
+| `cdn.syndication.twimg.com/tweet-result` | X cards on the home page and in posts | Home: that post is skipped. Posts: the pasted embed shows as a styled quote |
+| `pbs.twimg.com` (browser) | avatars, photo and video previews in X cards (680px JPG) | Image fails to load; the card text still shows |
 
 The deploy workflow passes `GITHUB_TOKEN` so the GitHub API isn't rate-limited in CI.
 

@@ -7,6 +7,7 @@ const {
   description = "Founder of Infiax. I build full-stack web apps, browser extensions and automation tools.",
 } = Astro.props;
 const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site);
 const nav = [
   { href: "/", label: "home" },
   { href: "/blog/", label: "blog" },
@@ -21,6 +22,8 @@ const nav = [
     <meta name="theme-color" content="#0d0e12" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta name="twitter:card" content="summary" />

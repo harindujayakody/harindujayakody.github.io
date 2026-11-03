@@ -1,16 +1,29 @@
 ---
 import "../styles/global.css";
 import Socials from "../components/Socials.astro";
+import poppins from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
+import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 
 const {
   title = "Harindu Jayakody",
   description = "Founder of Infiax. I build full-stack web apps, browser extensions and automation tools.",
+  image = "/avatar.jpg",
+  type = "website",
+  published,
+  modified,
+  noindex = false,
+  jsonLd = [],
+}: {
+  title?: string; description?: string; image?: string; type?: "website" | "article";
+  published?: Date; modified?: Date; noindex?: boolean; jsonLd?: object[];
 } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
+const ogImage = new URL(image, Astro.site);
+const large = image !== "/avatar.jpg";
 const nav = [
-  { href: "/", label: "home" },
   { href: "/blog/", label: "blog" },
+  { href: "/projects/", label: "projects" },
   { href: "/timeline/", label: "timeline" },
 ];
 ---
@@ -22,39 +35,60 @@ const nav = [
     <meta name="theme-color" content="#0d0e12" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content="Harindu Jayakody" />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1"} />
     <link rel="canonical" href={canonical} />
+    <link rel="preload" href={poppins} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={inter} as="font" type="font/woff2" crossorigin />
+    <link rel="alternate" type="application/rss+xml" title="Harindu Jayakody" href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Harindu Jayakody" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage} />
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {modified && <meta property="article:modified_time" content={modified.toISOString()} />}
+    <meta name="twitter:card" content={large ? "summary_large_image" : "summary"} />
+    <meta name="twitter:site" content="@harindu522" />
     <meta name="twitter:creator" content="@harindu522" />
     <link rel="icon" href="/avatar.jpg" />
+    <link rel="apple-touch-icon" href="/avatar.jpg" />
+    {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
   </head>
   <body class="flex flex-col">
-    <header class="sticky top-0 z-10 border-b bg-background/70 backdrop-blur-md">
-      <nav class="mx-auto flex h-14 max-w-3xl items-center justify-between gap-4 px-4">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">Skip to content</a>
+    <header class="sticky top-0 z-20 border-b bg-background/70 backdrop-blur-md">
+      <nav aria-label="Main" class="mx-auto flex h-14 max-w-3xl items-center justify-between gap-2 px-4">
         <a href="/" class="font-mono text-sm font-semibold"><span class="text-primary">~/</span>harindu</a>
-        <ul class="flex items-center gap-1 font-mono text-sm">
+        <ul class="flex items-center gap-0.5 font-mono text-xs sm:gap-1 sm:text-sm">
           {nav.map((n) => {
-            const active = n.href === "/" ? path === "/" : path.startsWith(n.href);
+            const active = path.startsWith(n.href);
             return (
               <li>
                 <a href={n.href} aria-current={active ? "page" : undefined}
-                  class:list={["rounded-md px-2.5 py-1.5 transition hover:text-primary", active ? "bg-muted text-primary" : "text-muted-foreground"]}>
+                  class:list={["rounded-md px-2 py-1.5 transition hover:text-primary sm:px-2.5", active ? "bg-muted text-primary" : "text-muted-foreground"]}>
                   {n.label}
                 </a>
               </li>
             );
           })}
+          <li>
+            <a href="/search/" aria-label="Search" aria-current={path.startsWith("/search/") ? "page" : undefined}
+              class:list={["flex size-8 items-center justify-center rounded-md transition hover:text-primary", path.startsWith("/search/") ? "bg-muted text-primary" : "text-muted-foreground"]}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+            </a>
+          </li>
         </ul>
       </nav>
     </header>
-    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-14 sm:py-20">
+    <main id="main" class="mx-auto w-full max-w-3xl flex-1 px-4 py-14 sm:py-20">
       <slot />
     </main>
     <footer class="border-t">
       <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-muted-foreground">
-        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · built with Astro</span>
+        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a></span>
         <div class="flex items-center"><Socials /></div>
       </div>
     </footer>

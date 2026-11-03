@@ -4,6 +4,7 @@ export type XPost = {
   text: string;
   date: string;
   likes: number;
+  replies: number;
   name: string;
   handle: string;
   avatar: string;
@@ -29,8 +30,9 @@ async function getPost(url: string): Promise<XPost | null> {
       text,
       date: t.created_at,
       likes: t.favorite_count ?? 0,
+      replies: t.conversation_count ?? 0,
       // NFKC turns styled "𝗛𝗮𝗿𝗶𝗻𝗱𝘂" into plain letters; strip private-use glyphs no font can draw
-      name: t.user.name.normalize("NFKC").replace(/[-]/g, "").trim(),
+      name: t.user.name.normalize("NFKC").replace(/\p{Co}/gu, "").trim(),
       handle: t.user.screen_name,
       avatar: t.user.profile_image_url_https.replace("_normal.", "_bigger."),
     };

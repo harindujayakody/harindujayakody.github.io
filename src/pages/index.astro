@@ -1,8 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Button from "../components/ui/Button.astro";
-import Card from "../components/ui/Card.astro";
 import Badge from "../components/ui/Badge.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import { items } from "../data/projects";
 import Socials from "../components/Socials.astro";
 import PostList from "../components/PostList.astro";
 import Timeline from "../components/Timeline.astro";
@@ -21,18 +22,40 @@ const stats = [
   { value: `${new Date().getFullYear() - 2014}y`, label: "on GitHub" },
 ];
 
-const projects = [
-  { name: "octopus-agent", lang: "TypeScript", desc: "Free, open-source anti-detect browser with engine-level fingerprint spoofing in Chromium." },
-  { name: "2fa-tools", lang: "HTML", desc: "Privacy-first TOTP generator running entirely in the browser. Offline PWA, no backend.", href: "https://harindujayakody.github.io/2fa-tools/" },
-  { name: "steam-deal-finder", lang: "JavaScript", desc: "Converts Steam USD prices to LKR live and tracks historical deals for Sri Lankan gamers.", href: "https://harindujayakody.github.io/steam-deal-finder/" },
-  { name: "binance-p2p-lkr-rate-live-update", lang: "JavaScript", desc: "Live Binance P2P LKR/USDT rates, advertiser listings and a toolbar rate badge." },
-  { name: "browser-cache-cleaner-windows", lang: "PowerShell", desc: "Cleans Chrome, Brave, Edge and Firefox cache across all profiles. Cookies stay safe." },
-  { name: "proxyhell", lang: "Shell", desc: "SOCKS5 automation: installs Dante and manages authenticated proxies from the terminal." },
-];
-
 const stack = ["TypeScript", "Astro", "Next.js", "Node.js", "PHP", "Python", "PowerShell", "Bash", "Chrome Extensions"];
+
+const site = Astro.site!.href;
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfilePage",
+    url: site,
+    mainEntity: {
+      "@type": "Person",
+      "@id": `${site}#person`,
+      name: "Harindu Jayakody",
+      url: site,
+      image: new URL("/avatar.jpg", site).href,
+      email: "mailto:me@harindujayakody.com",
+      jobTitle: "Founder",
+      worksFor: { "@type": "Organization", name: "Infiax", url: "https://infiax.com" },
+      alumniOf: { "@type": "CollegeOrUniversity", name: "Wrexham University" },
+      address: { "@type": "PostalAddress", addressCountry: "LK" },
+      knowsAbout: stack,
+      sameAs: ["https://github.com/harindujayakody", "https://x.com/harindu522", "https://www.linkedin.com/in/harindux/"],
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Harindu Jayakody",
+    url: site,
+    author: { "@id": `${site}#person` },
+    potentialAction: { "@type": "SearchAction", target: `${site}search/?q={search_term_string}`, "query-input": "required name=search_term_string" },
+  },
+];
 ---
-<Layout>
+<Layout jsonLd={jsonLd}>
   <div class="flex flex-col gap-20">
     <section class="flex flex-col gap-6">
       <div class="rise flex items-center gap-4" style="--d:0ms">
@@ -48,7 +71,7 @@ const stack = ["TypeScript", "Astro", "Next.js", "Node.js", "PHP", "Python", "Po
         Founder of <a href="https://infiax.com" class="text-foreground underline decoration-primary underline-offset-4 hover:text-primary">Infiax</a>. I build full-stack web apps, browser extensions and small tools that automate the boring parts. Studying at Wrexham University, based in Sri Lanka.
       </p>
       <div class="rise flex flex-wrap items-center gap-2" style="--d:240ms">
-        <Button href="mailto:randeepana@gmail.com">Get in touch</Button>
+        <Button href="mailto:me@harindujayakody.com">Get in touch</Button>
         <Button href={gh} variant="outline" target="_blank" rel="noopener">GitHub</Button>
         <Socials />
       </div>
@@ -64,17 +87,12 @@ const stack = ["TypeScript", "Astro", "Next.js", "Node.js", "PHP", "Python", "Po
     </section>
 
     <section class="flex flex-col gap-5">
-      <h2 class="reveal flex items-center gap-3 text-xl font-semibold"><span class="font-mono text-sm text-primary">01</span> Projects</h2>
+      <div class="reveal flex items-baseline justify-between">
+        <h2 class="flex items-center gap-3 text-xl font-semibold"><span class="font-mono text-sm text-primary">01</span> Projects</h2>
+        <a href="/projects/" class="font-mono text-sm text-muted-foreground hover:text-primary">all projects →</a>
+      </div>
       <div class="grid gap-3 sm:grid-cols-2">
-        {projects.map((p) => (
-          <Card href={p.href ?? `${gh}/${p.name}`} class="reveal">
-            <div class="flex items-center justify-between gap-2">
-              <h3 class="min-w-0 truncate font-mono text-sm font-medium group-hover:text-primary">{p.name}</h3>
-              <Badge>{p.lang}</Badge>
-            </div>
-            <p class="text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
-          </Card>
-        ))}
+        {items.filter((i) => i.featured).map((item) => <ProjectCard item={item} />)}
       </div>
     </section>
 

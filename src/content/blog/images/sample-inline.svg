@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#14161b"/>
+  <g fill="none" stroke="#ffffff" stroke-opacity=".08" stroke-width="2">
+    <path d="M0 225h1600M0 450h1600M0 675h1600M400 0v900M800 0v900M1200 0v900"/>
+  </g>
+  <rect x="200" y="300" width="360" height="300" rx="20" fill="#1c1f26" stroke="#7fd6b4" stroke-opacity=".5" stroke-width="2"/>
+  <rect x="620" y="300" width="360" height="300" rx="20" fill="#1c1f26" stroke="#ffffff" stroke-opacity=".12" stroke-width="2"/>
+  <rect x="1040" y="300" width="360" height="300" rx="20" fill="#1c1f26" stroke="#ffffff" stroke-opacity=".12" stroke-width="2"/>
+  <text x="380" y="465" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="40" fill="#7fd6b4">write</text>
+  <text x="800" y="465" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="40" fill="#eef0f4">git push</text>
+  <text x="1220" y="465" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="40" fill="#eef0f4">live</text>
+  <path d="M575 450h30M995 450h30" stroke="#9aa0ab" stroke-width="4"/>
+  <text x="800" y="760" text-anchor="middle" font-family="Inter, sans-serif" font-size="34" fill="#9aa0ab">inline image · 16:9</text>
+</svg>

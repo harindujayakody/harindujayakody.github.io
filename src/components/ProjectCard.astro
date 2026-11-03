@@ -1,0 +1,21 @@
+---
+import type { Item } from "../data/projects";
+import Badge from "./ui/Badge.astro";
+
+const { item: p }: { item: Item } = Astro.props;
+---
+<article class="reveal group relative flex min-w-0 flex-col gap-2 rounded-xl border bg-card/70 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/20">
+  <div class="flex items-center justify-between gap-2">
+    <h3 class="min-w-0 truncate font-mono text-sm font-medium group-hover:text-primary">
+      <a href={p.href} target="_blank" rel="noopener" class="after:absolute after:inset-0">{p.name}</a>
+    </h3>
+    <Badge>{p.kind}</Badge>
+  </div>
+  <p class="text-sm leading-relaxed text-muted-foreground">{p.desc}</p>
+  <div class="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
+    {p.tags.map((t) => <Badge variant="outline">{t}</Badge>)}
+    {p.repo && p.repo !== p.href && (
+      <a href={p.repo} target="_blank" rel="noopener" class="relative z-10 ml-auto font-mono text-xs text-muted-foreground hover:text-primary">source ↗</a>
+    )}
+  </div>
+</article>

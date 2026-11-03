@@ -1,24 +1,31 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import { fmtDate, readingTime } from "../lib/posts";
+import { fmtDate, readingTime, categoryUrl, tagUrl, type Post } from "../lib/posts";
 
-const { posts }: { posts: CollectionEntry<"blog">[] } = Astro.props;
+const { posts }: { posts: Post[] } = Astro.props;
 ---
 <ul class="flex flex-col divide-y rounded-xl border bg-card/50">
   {posts.map((p) => (
-    <li class="reveal">
-      <a href={`/blog/${p.id}/`} class="group flex flex-col gap-1.5 p-5 transition hover:bg-card">
-        <div class="flex items-center gap-2 font-mono text-xs text-muted-foreground">
-          <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time>
-          <span>·</span>
-          <span>{readingTime(p.body)} min read</span>
+    <li class="reveal group relative flex flex-col gap-1.5 p-5 transition hover:bg-card">
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-muted-foreground">
+        <a href={categoryUrl(p.data.category)} class="relative z-10 text-primary hover:underline">{p.data.category}</a>
+        <span>·</span>
+        <time datetime={p.data.date.toISOString()}>{fmtDate(p.data.date)}</time>
+        <span>·</span>
+        <span>{readingTime(p.body)} min read</span>
+      </div>
+      <h3 class="flex items-center gap-2 font-semibold group-hover:text-primary">
+        {/* stretched link: whole row clickable, category/tag links sit above it */}
+        <a href={`/blog/${p.id}/`} class="after:absolute after:inset-0">{p.data.title}</a>
+        <span class="-translate-x-1 text-primary opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100" aria-hidden="true">→</span>
+      </h3>
+      <p class="text-sm text-muted-foreground">{p.data.description}</p>
+      {p.data.tags.length > 0 && (
+        <div class="flex flex-wrap gap-1.5 pt-1">
+          {p.data.tags.map((t) => (
+            <a href={tagUrl(t)} class="relative z-10 rounded-md bg-secondary px-2 py-0.5 font-mono text-xs text-muted-foreground hover:text-primary">#{t}</a>
+          ))}
         </div>
-        <h3 class="flex items-center gap-2 font-semibold group-hover:text-primary">
-          {p.data.title}
-          <span class="-translate-x-1 text-primary opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100">→</span>
-        </h3>
-        <p class="text-sm text-muted-foreground">{p.data.description}</p>
-      </a>
+      )}
     </li>
   ))}
   {posts.length === 0 && <li class="p-5 text-sm text-muted-foreground">No posts yet.</li>}

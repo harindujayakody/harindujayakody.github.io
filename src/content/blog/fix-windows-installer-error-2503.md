@@ -2,6 +2,7 @@
 title: "How to Fix Windows Installer Error 2503"
 description: "Simple steps to fix error 2503 when installing a Windows program."
 date: 2026-11-03
+category: "Windows"
 tags: ["Windows", "troubleshooting"]
 draft: false
 ---

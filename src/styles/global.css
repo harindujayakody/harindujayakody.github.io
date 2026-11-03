@@ -88,5 +88,6 @@
 .prose blockquote.twitter-tweet a { @apply font-mono text-xs; }
 .prose :not(pre) > code { @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-primary; }
 .prose pre { @apply overflow-x-auto rounded-xl border p-4 font-mono text-sm leading-6; }
-.prose img { @apply rounded-xl border; }
+.prose img { @apply aspect-video w-full rounded-xl border object-cover; }
+.prose .twitter-tweet-rendered { @apply mx-auto; }
 .prose hr { @apply my-10; }

@@ -1,17 +1,11 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import PostList from "../../components/PostList.astro";
+import BlogIndex from "../../components/BlogIndex.astro";
 import { getPosts } from "../../lib/posts";
-
-const posts = await getPosts();
 ---
-<Layout title="Blog · Harindu Jayakody" description="Notes on building web apps, extensions and tools.">
-  <div class="flex flex-col gap-10">
-    <header class="flex flex-col gap-3">
-      <p class="rise font-mono text-sm text-primary">$ ls ./posts</p>
-      <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">Blog</h1>
-      <p class="rise text-muted-foreground" style="--d:160ms">Notes on building web apps, browser extensions and tools.</p>
-    </header>
-    <PostList posts={posts} />
-  </div>
-</Layout>
+<BlogIndex
+  title="Blog · Harindu Jayakody"
+  heading="Blog"
+  prompt="$ ls ./posts"
+  intro="Notes on building web apps, browser extensions, Windows fixes and AI tools."
+  posts={await getPosts()}
+/>

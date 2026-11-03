@@ -1,0 +1,63 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import Badge from "../components/ui/Badge.astro";
+import { items } from "../data/projects";
+import { getRepos } from "../lib/github";
+
+const repos = (await getRepos()).toSorted((a, b) => b.stargazers_count - a.stargazers_count || b.created_at.localeCompare(a.created_at));
+const sections = [
+  { id: "tools", title: "Tools", prompt: "./tools --live", list: items.filter((i) => i.kind === "tool") },
+  { id: "projects", title: "Projects", prompt: "./projects", list: items.filter((i) => i.kind === "project") },
+];
+const description = "Free web tools, browser extensions and open-source projects by Harindu Jayakody.";
+const jsonLd = [{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Projects & Tools",
+  description,
+  url: new URL("/projects/", Astro.site).href,
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: items.map((i, n) => ({ "@type": "ListItem", position: n + 1, name: i.name, url: i.href })),
+  },
+}];
+---
+<Layout title="Projects & Tools · Harindu Jayakody" description={description} jsonLd={jsonLd}>
+  <div class="flex flex-col gap-16">
+    <header class="flex flex-col gap-3">
+      <p class="rise font-mono text-sm text-primary">$ ls ~/work</p>
+      <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">Projects & Tools</h1>
+      <p class="rise text-muted-foreground" style="--d:160ms">{description}</p>
+      <nav class="rise flex gap-2 font-mono text-xs" style="--d:240ms" aria-label="Sections">
+        {[...sections, { id: "repos", title: "Repositories" }].map((s) => (
+          <a href={`#${s.id}`} class="rounded-md border px-2.5 py-1 text-muted-foreground transition hover:text-primary">{s.title.toLowerCase()}</a>
+        ))}
+      </nav>
+    </header>
+
+    {sections.map((s) => (
+      <section id={s.id} class="flex scroll-mt-20 flex-col gap-5">
+        <h2 class="reveal flex items-baseline gap-3 text-xl font-semibold">{s.title} <span class="font-mono text-sm font-normal text-muted-foreground">{s.list.length}</span></h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {s.list.map((item) => <ProjectCard item={item} />)}
+        </div>
+      </section>
+    ))}
+
+    <section id="repos" class="flex scroll-mt-20 flex-col gap-5">
+      <h2 class="reveal flex items-baseline gap-3 text-xl font-semibold">Repositories <span class="font-mono text-sm font-normal text-muted-foreground">{repos.length}</span></h2>
+      <ul class="grid gap-x-6 sm:grid-cols-2">
+        {repos.map((r) => (
+          <li class="reveal min-w-0 border-b">
+            <a href={r.homepage || r.html_url} target="_blank" rel="noopener" class="group flex min-w-0 items-center gap-2 py-3">
+              <span class="min-w-0 flex-1 truncate font-mono text-sm group-hover:text-primary">{r.name}</span>
+              {r.stargazers_count > 0 && <span class="font-mono text-xs text-muted-foreground">★ {r.stargazers_count}</span>}
+              {r.language && <Badge>{r.language}</Badge>}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</Layout>

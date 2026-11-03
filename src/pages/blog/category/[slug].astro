@@ -1,0 +1,19 @@
+---
+import BlogIndex from "../../../components/BlogIndex.astro";
+import { getPosts, slugify, categoryUrl, type Post } from "../../../lib/posts";
+
+export async function getStaticPaths() {
+  const groups = Object.groupBy(await getPosts(), (p) => p.data.category);
+  return Object.entries(groups).map(([name, posts]) => ({ params: { slug: slugify(name) }, props: { name, posts } }));
+}
+
+const { name, posts }: { name: string; posts: Post[] } = Astro.props;
+---
+<BlogIndex
+  title={`${name} articles · Harindu Jayakody`}
+  heading={name}
+  prompt={`$ ls ./posts/${slugify(name)}`}
+  intro={`${posts.length} ${posts.length === 1 ? "article" : "articles"} about ${name} by Harindu Jayakody.`}
+  posts={posts}
+  crumb={{ name, url: categoryUrl(name) }}
+/>

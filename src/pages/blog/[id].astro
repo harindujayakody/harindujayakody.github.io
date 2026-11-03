@@ -1,28 +1,100 @@
 ---
 import { render } from "astro:content";
+import { Image, getImage } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
-import Badge from "../../components/ui/Badge.astro";
-import { getPosts, fmtDate, readingTime } from "../../lib/posts";
+import PostList from "../../components/PostList.astro";
+import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, type Post } from "../../lib/posts";
 
 export async function getStaticPaths() {
-  return (await getPosts()).map((post) => ({ params: { id: post.id }, props: { post } }));
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { id: post.id }, props: { post, related: relatedPosts(post, posts) } }));
 }
 
-const { post } = Astro.props;
+const { post, related }: { post: Post; related: Post[] } = Astro.props;
 const { Content } = await render(post);
+const d = post.data;
+const url = new URL(`/blog/${post.id}/`, Astro.site).href;
+// Social networks reject SVG, and Astro won't rasterize it: SVG covers fall back to the default card.
+const og = d.image && d.image.format !== "svg" ? (await getImage({ src: d.image, width: 1200, height: 675, format: "jpg" })).src : undefined;
+const hasXEmbed = post.body?.includes("twitter-tweet");
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: d.title,
+    description: d.description,
+    url,
+    mainEntityOfPage: url,
+    datePublished: d.date.toISOString(),
+    dateModified: (d.updated ?? d.date).toISOString(),
+    articleSection: d.category,
+    keywords: d.tags.join(", "),
+    wordCount: post.body?.split(/\s+/).length,
+    ...(og && { image: new URL(og, Astro.site).href }),
+    author: { "@type": "Person", name: "Harindu Jayakody", url: Astro.site!.href },
+    publisher: { "@type": "Person", name: "Harindu Jayakody", url: Astro.site!.href },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Blog", item: "/blog/" },
+      { name: d.category, item: categoryUrl(d.category) },
+      { name: d.title, item: `/blog/${post.id}/` },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
 ---
-<Layout title={`${post.data.title} · Harindu Jayakody`} description={post.data.description}>
+<Layout title={`${d.title} · Harindu Jayakody`} description={d.description} image={og} type="article"
+  published={d.date} modified={d.updated ?? d.date} jsonLd={jsonLd}>
   <article class="flex flex-col gap-8">
     <header class="flex flex-col gap-4">
-      <a href="/blog/" class="rise font-mono text-sm text-muted-foreground hover:text-primary">← cd ../blog</a>
-      <h1 class="rise text-3xl font-semibold leading-tight sm:text-5xl" style="--d:80ms">{post.data.title}</h1>
+      <nav aria-label="Breadcrumb" class="rise flex flex-wrap items-center gap-1.5 font-mono text-sm text-muted-foreground">
+        <a href="/blog/" class="hover:text-primary">blog</a>
+        <span>/</span>
+        <a href={categoryUrl(d.category)} class="text-primary hover:underline">{d.category.toLowerCase()}</a>
+      </nav>
+      <h1 class="rise text-3xl font-semibold leading-tight sm:text-5xl" style="--d:80ms">{d.title}</h1>
       <div class="rise flex flex-wrap items-center gap-2 font-mono text-xs text-muted-foreground" style="--d:160ms">
-        <time datetime={post.data.date.toISOString()}>{fmtDate(post.data.date)}</time>
+        <time datetime={d.date.toISOString()}>{fmtDate(d.date)}</time>
+        {d.updated && <span>· updated <time datetime={d.updated.toISOString()}>{fmtDate(d.updated)}</time></span>}
         <span>·</span>
         <span>{readingTime(post.body)} min read</span>
-        {post.data.tags.map((t) => <Badge>#{t}</Badge>)}
+        {d.tags.map((t) => (
+          <a href={tagUrl(t)} class="rounded-md bg-secondary px-2 py-0.5 hover:text-primary">#{t}</a>
+        ))}
       </div>
     </header>
+    {d.image && (
+      <Image src={d.image} alt={d.imageAlt} widths={[400, 768, 1200]} sizes="(min-width: 768px) 736px, 100vw"
+        loading="eager" fetchpriority="high" class="rise aspect-video w-full rounded-xl border object-cover" style="--d:200ms" />
+    )}
     <div class="prose rise" style="--d:240ms"><Content /></div>
   </article>
+
+  {related.length > 0 && (
+    <section class="mt-20 flex flex-col gap-5">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ ls ../related</h2>
+      <PostList posts={related} />
+    </section>
+  )}
+
+  {hasXEmbed && (
+    <script is:inline>
+      // Load X's widget only when an embed nears the viewport; the styled blockquote shows until then.
+      const embeds = document.querySelectorAll("blockquote.twitter-tweet");
+      const io = new IntersectionObserver((entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        io.disconnect();
+        embeds.forEach((b) => { b.dataset.theme = "dark"; b.dataset.dnt = "true"; });
+        const s = document.createElement("script");
+        s.src = "https://platform.x.com/widgets.js";
+        s.async = true;
+        document.body.append(s);
+      }, { rootMargin: "600px" });
+      embeds.forEach((b) => io.observe(b));
+    </script>
+  )}
 </Layout>

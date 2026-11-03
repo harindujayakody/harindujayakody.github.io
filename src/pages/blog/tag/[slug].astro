@@ -1,0 +1,25 @@
+---
+import BlogIndex from "../../../components/BlogIndex.astro";
+import { getPosts, slugify, tagUrl, type Post } from "../../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  return tags.map((tag) => ({
+    params: { slug: slugify(tag) },
+    props: { tag, posts: posts.filter((p) => p.data.tags.includes(tag)) },
+  }));
+}
+
+const { tag, posts }: { tag: string; posts: Post[] } = Astro.props;
+---
+<!-- Tag pages duplicate category listings: noindex,follow so category pages carry the ranking. -->
+<BlogIndex
+  title={`#${tag} · Harindu Jayakody`}
+  heading={`#${tag}`}
+  prompt={`$ grep -l "${tag}" ./posts`}
+  intro={`Posts tagged ${tag}.`}
+  posts={posts}
+  noindex
+  crumb={{ name: `#${tag}`, url: tagUrl(tag) }}
+/>

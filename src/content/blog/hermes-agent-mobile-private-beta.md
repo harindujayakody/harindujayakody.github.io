@@ -2,6 +2,7 @@
 title: "Hermes Agent Mobile Is in Private Beta"
 description: "Hermes Agent now has a mobile app in Private Beta, with a video tour of its features."
 date: 2026-11-04
+category: "AI"
 tags: ["Hermes Agent", "mobile"]
 draft: false
 ---

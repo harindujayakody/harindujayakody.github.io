@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Socials from "../components/Socials.astro";
 import poppins from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
 import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
+import { version } from "../../package.json";
 
 const {
   title = "Harindu Jayakody",
@@ -88,7 +89,7 @@ const nav = [
     </main>
     <footer class="border-t">
       <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-muted-foreground">
-        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a></span>
+        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a> · <a href="https://github.com/harindujayakody/harindujayakody.github.io/blob/master/CHANGELOG.md" target="_blank" rel="noopener" class="hover:text-primary">v{version}</a></span>
         <div class="flex items-center"><Socials /></div>
       </div>
     </footer>

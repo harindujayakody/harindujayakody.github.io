@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.1.0] - 2026-11-04
+
+### Added
+- Site version in the footer (read from `package.json`), linking to this changelog on GitHub.
+
 ## [1.0.3] - 2026-11-04
 
 ### Fixed

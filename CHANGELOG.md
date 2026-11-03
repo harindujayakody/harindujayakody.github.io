@@ -2,6 +2,15 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.0.2] - 2026-11-04
+
+### Changed
+- New avatar `public/avatar.png` (home page, default social card, `Person` structured data).
+- New favicon and Apple touch icon `public/favicon.jpg`, separate from the avatar.
+
+### Removed
+- Old `public/avatar.jpg`.
+
 ## [1.0.1] - 2026-11-04
 
 ### Changed

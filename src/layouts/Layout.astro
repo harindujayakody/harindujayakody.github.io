@@ -7,7 +7,7 @@ import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff
 const {
   title = "Harindu Jayakody",
   description = "Founder of Infiax. I build full-stack web apps, browser extensions and automation tools.",
-  image = "/avatar.jpg",
+  image = "/avatar.png",
   type = "website",
   published,
   modified,
@@ -20,7 +20,7 @@ const {
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
 const ogImage = new URL(image, Astro.site);
-const large = image !== "/avatar.jpg";
+const large = image !== "/avatar.png";
 const nav = [
   { href: "/blog/", label: "blog" },
   { href: "/projects/", label: "projects" },
@@ -53,8 +53,8 @@ const nav = [
     <meta name="twitter:card" content={large ? "summary_large_image" : "summary"} />
     <meta name="twitter:site" content="@harindu522" />
     <meta name="twitter:creator" content="@harindu522" />
-    <link rel="icon" href="/avatar.jpg" />
-    <link rel="apple-touch-icon" href="/avatar.jpg" />
+    <link rel="icon" href="/favicon.jpg" type="image/jpeg" />
+    <link rel="apple-touch-icon" href="/favicon.jpg" />
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
   </head>
   <body class="flex flex-col">

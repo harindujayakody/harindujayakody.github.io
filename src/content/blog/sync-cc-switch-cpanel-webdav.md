@@ -4,7 +4,7 @@ description: "Use a cPanel Web Disk account as a free WebDAV server to sync CC S
 date: 2026-11-05
 category: "Guides"
 tags: ["cc-switch", "webdav", "cpanel", "claude-code"]
-draft: true
+draft: false
 ---
 
 If you use Claude Code, Codex, OpenCode, or another AI coding assistant on more than one computer, your setups slowly drift apart. You add a new API provider on your Windows PC, then find it missing on your MacBook. The same happens with MCP servers, prompts, and custom skills.

@@ -2,7 +2,11 @@
 import type { Repo } from "../lib/github";
 import Badge from "./ui/Badge.astro";
 
-const { repos }: { repos: Repo[] } = Astro.props;
+interface Props {
+  repos: Repo[];
+}
+
+const { repos } = Astro.props;
 const years = Object.entries(Object.groupBy(repos, (r) => r.created_at.slice(0, 4))).sort(([a], [b]) => +b - +a);
 const newest = repos[0]?.name;
 ---

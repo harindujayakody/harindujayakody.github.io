@@ -4,10 +4,17 @@ import PostList from "./PostList.astro";
 import { getPosts, categoryUrl, slugify, type Post } from "../lib/posts";
 
 // Shared by /blog, /blog/category/*, /blog/tag/*
-const { title, heading, prompt, intro, posts, noindex = false, crumb }: {
-  title: string; heading: string; prompt: string; intro: string; posts: Post[]; noindex?: boolean;
+interface Props {
+  title: string;
+  heading: string;
+  prompt: string;
+  intro: string;
+  posts: Post[];
+  noindex?: boolean;
   crumb?: { name: string; url: string };
-} = Astro.props;
+}
+
+const { title, heading, prompt, intro, posts, noindex = false, crumb } = Astro.props;
 
 const categories = Object.entries(Object.groupBy(await getPosts(), (p) => p.data.category))
   .map(([name, list]) => ({ name, count: list!.length }))

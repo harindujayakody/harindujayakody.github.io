@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.3.0] - 2026-11-11
+
+### Changed
+- Code in posts now looks like GitHub dark mode: syntax colours from Shiki's `github-dark-default` (was `vesper`), `#151b23` blocks with GitHub's `#3d444d` border, 6px corners and 85% font size, and GitHub's neutral grey chip for inline `code` (was mint).
+
 ## [1.2.0] - 2026-11-11
 
 ### Added

@@ -54,7 +54,7 @@ Replace blank lines inside the blockquote with `<br><br>`, because a blank line 
 
 ### Code
 
-Use fenced blocks with a language: ```` ```powershell ````. Highlighting uses the Shiki `vesper` theme.
+Use fenced blocks with a language: ```` ```powershell ````. Highlighting uses the Shiki `github-dark-default` theme (the same colours as GitHub dark mode).
 
 ## Home page X posts
 

@@ -86,8 +86,9 @@
 .prose blockquote.twitter-tweet { @apply rounded-xl border border-border bg-card/70 p-5 text-sm text-muted-foreground not-italic; }
 .prose blockquote.twitter-tweet p { @apply mb-3 text-[0.95rem] leading-relaxed text-foreground/90; }
 .prose blockquote.twitter-tweet a { @apply font-mono text-xs; }
-.prose :not(pre) > code { @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-primary; }
-.prose pre { @apply overflow-x-auto rounded-xl border p-4 font-mono text-sm leading-6; }
+/* Code matches GitHub dark: neutral inline chip, #151b23 blocks, 6px radius (syntax colours come from github-dark-default). */
+.prose :not(pre) > code { @apply rounded-[6px] bg-[#656c7633] px-1.5 py-0.5 font-mono text-[0.85em] text-foreground; }
+.prose pre { @apply overflow-x-auto rounded-[6px] border border-[#3d444d] p-4 font-mono text-[0.85rem] leading-[1.45]; background-color: #151b23 !important; }
 .code-block { @apply relative; }
 .code-block pre { @apply pr-20; }
 .copy-btn { @apply absolute top-2.5 right-2.5 rounded-md border bg-background/80 px-2 py-1 font-mono text-xs text-muted-foreground backdrop-blur transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring; }

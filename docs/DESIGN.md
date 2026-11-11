@@ -27,6 +27,7 @@ Defined on `:root` in `src/styles/global.css` with shadcn/ui names, so component
 
 The site is dark only (`color-scheme: dark`). Background: a 4% mint radial at the top plus a 24px dot grid at 4% white.
 X brand pink `#f91880` appears only on the X card like icon, on hover.
+Code borrows GitHub dark mode: Shiki `github-dark-default` syntax colours, `#151b23` blocks with a `#3d444d` border and 6px corners, and a `#656c7633` chip for inline code. These are the only non-token colours besides the X pink.
 
 ## Typography
 

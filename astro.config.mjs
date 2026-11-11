@@ -6,6 +6,6 @@ import { xEmbed } from "./src/lib/x-embed-plugin.ts";
 export default defineConfig({
   site: "https://harindujayakody.com",
   build: { inlineStylesheets: "always" },
-  markdown: { shikiConfig: { theme: "vesper" }, processor: satteri({ hastPlugins: [xEmbed] }) },
+  markdown: { shikiConfig: { theme: "github-dark-default" }, processor: satteri({ hastPlugins: [xEmbed] }) },
   vite: { plugins: [tailwindcss()] },
 });

@@ -2,7 +2,7 @@
 title: "Craft Anything: Rebuild Any Software With Your AI Agent"
 description: "ArtCraft's open-source Craft Anything lets your AI coding agent study a website, app, or game and rebuild it in the language you pick. Here is what it does and how to start."
 date: 2026-11-05
-category: "AI Tools"
+category: "AI"
 tags: ["craft-anything", "artcraft", "reverse-engineering", "open-source", "mcp"]
 draft: false
 ---

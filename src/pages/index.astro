@@ -19,10 +19,12 @@ import { xPosts } from "../data/x-posts";
 const gh = "https://github.com/harindujayakody";
 const [repos, posts, tweets] = await Promise.all([getRepos(), getPosts(), getXPosts(xPosts)]);
 
+// Hand-picked items and public repos overlap (most items are repos), so count unique names.
+const shipped = new Set([...items, ...repos].map((x) => x.name.toLowerCase())).size;
 const stats = [
-  { value: repos.length || "70+", label: "public repos" },
-  { value: repos.reduce((n, r) => n + r.stargazers_count, 0) || "—", label: "stars earned" },
-  { value: `${new Date().getFullYear() - 2014}y`, label: "on GitHub" },
+  { value: posts.length, label: "posts published", href: "/blog/" },
+  { value: shipped, label: "tools & projects", href: "/projects/" },
+  { value: new Date().getFullYear() - 2014, label: "years building", href: "/timeline/" },
 ];
 
 const stack = ["TypeScript", "Astro", "Next.js", "Node.js", "PHP", "Python", "PowerShell", "Bash", "Chrome Extensions"];
@@ -82,10 +84,10 @@ const jsonLd = [
 
     <section aria-label="Stats" class="rise grid grid-cols-3 divide-x rounded-xl border bg-card/50" style="--d:320ms">
       {stats.map((s) => (
-        <div class="flex flex-col gap-1 p-4 sm:p-5">
-          <span class="font-mono text-2xl font-semibold tabular-nums sm:text-3xl">{s.value}</span>
-          <span class="font-mono text-[11px] text-muted-foreground sm:text-xs">{s.label}</span>
-        </div>
+        <a href={s.href} class="group flex flex-col gap-1 p-4 transition first:rounded-l-xl last:rounded-r-xl hover:bg-card focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:p-5">
+          <span class="font-mono text-2xl font-semibold tabular-nums group-hover:text-primary sm:text-3xl">{s.value}</span>
+          <span class="font-mono text-[11px] text-muted-foreground sm:text-xs">{s.label} <span class="opacity-0 transition group-hover:opacity-100" aria-hidden="true">→</span></span>
+        </a>
       ))}
     </section>
 

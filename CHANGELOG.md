@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.5.0] - 2026-11-12
+
+### Added
+- Custom 404 page (#10): terminal-style "no such file or directory" with the requested path, buttons for search, home, blog and projects, and the 3 latest posts. `noindex`; GitHub Pages serves it for every missing URL.
+- Redirect from `/blog/category/ai-tools/` to `/blog/category/ai/`.
+
+### Changed
+- Categories are a fixed list (#11): `AI`, `Guides`, `Windows`, `Web`. Any other value fails the build with a clear message. "Craft Anything" moved from "AI Tools" to "AI", so `/blog/category/ai/` now has both AI posts.
+- Home page stats (#12): **posts published**, **tools & projects** (hand-picked items and public repos, counted once) and **years building**, each linking to its page. "Stars earned" removed.
+
 ## [1.4.0] - 2026-11-11
 
 ### Added

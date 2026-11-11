@@ -32,7 +32,7 @@ Start with the first paragraph. Don't repeat the title as a `#` heading; the pag
 | `description` | yes | About 140–160 characters. |
 | `date` | yes | `YYYY-MM-DD`. Posts sort newest first. |
 | `updated` | no | Set it when you meaningfully change a post. |
-| `category` | no | Defaults to `General`. Keep to a small set (Windows, AI, Web…). The URL slug is generated from it. |
+| `category` | yes | One of `AI`, `Guides`, `Windows`, `Web`. Anything else fails the build. To add a category, add it to the list in `src/content.config.ts`. Each category gets an indexable page at `/blog/category/<slug>/`. |
 | `tags` | no | Free-form. Tag pages are `noindex` so they don't compete with categories. |
 | `image` | no | Path relative to the post. Use 16:9, at least 1200×675. |
 | `imageAlt` | with image | Describe the image for screen readers. |

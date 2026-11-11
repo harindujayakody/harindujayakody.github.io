@@ -46,7 +46,7 @@ src/
 
 | Route | File | Notes |
 |---|---|---|
-| `/` | `pages/index.astro` | Hero, stats (live from GitHub), featured projects, latest posts, recent repos, X posts. `ProfilePage` + `WebSite` JSON-LD |
+| `/` | `pages/index.astro` | Hero, stats (posts, tools & projects, years; each links to its page), featured projects, latest posts, recent repos, X posts. `ProfilePage` + `WebSite` JSON-LD |
 | `/blog/` | `pages/blog/index.astro` → `BlogIndex` | Category filter chips |
 | `/blog/category/<slug>/` | `pages/blog/category/[slug].astro` | Indexable; `CollectionPage` + breadcrumbs |
 | `/blog/tag/<slug>/` | `pages/blog/tag/[slug].astro` | `noindex, follow` |
@@ -55,6 +55,8 @@ src/
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
 | `/timeline/` | `pages/timeline.astro` | Every repo grouped by year |
 | `/search/` | `pages/search.astro` + `search.json.ts` | Client-side filter over a JSON index; `noindex` |
+| `/404.html` | `pages/404.astro` | Custom not-found page: requested path, search and nav buttons, latest posts; `noindex` |
+| `/blog/category/ai-tools/` | `astro.config.mjs` `redirects` | Redirect page to `/blog/category/ai/` (category merged) |
 | `/sitemap.xml` `/robots.txt` `/rss.xml` `/llms.txt` `/llms-full.txt` | `pages/*.ts` | Generated endpoints; no extra dependencies |
 
 ## External data and failure modes

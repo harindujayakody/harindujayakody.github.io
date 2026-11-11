@@ -7,6 +7,7 @@ import Button from "../components/ui/Button.astro";
 import Badge from "../components/ui/Badge.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import { items } from "../data/projects";
+import { author, authorJsonLd } from "../data/author";
 import Socials from "../components/Socials.astro";
 import PostList from "../components/PostList.astro";
 import Timeline from "../components/Timeline.astro";
@@ -36,18 +37,13 @@ const jsonLd = [
     "@type": "ProfilePage",
     url: site,
     mainEntity: {
-      "@type": "Person",
-      "@id": `${site}#person`,
-      name: "Harindu Jayakody",
-      url: site,
-      image: new URL("/avatar.png", site).href,
-      email: "mailto:me@harindujayakody.com",
+      ...authorJsonLd(Astro.site!),
+      email: `mailto:${author.email}`,
       jobTitle: "Founder",
       worksFor: { "@type": "Organization", name: "Infiax", url: "https://infiax.com" },
       alumniOf: { "@type": "CollegeOrUniversity", name: "Wrexham University" },
       address: { "@type": "PostalAddress", addressCountry: "LK" },
       knowsAbout: stack,
-      sameAs: ["https://github.com/harindujayakody", "https://x.com/harindu522", "https://www.linkedin.com/in/harindux/"],
     },
   },
   {

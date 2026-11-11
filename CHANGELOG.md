@@ -2,6 +2,14 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.6.0] - 2026-11-12
+
+### Added
+- Table of contents (#8): an "On this page" box on posts with 3 or more sections, listing `##` and `###` headings; collapsible, and two columns on wider screens when long.
+- Linkable headings (#8): every `##`/`###` gets a `#` link to its own section (shown on hover or focus, always faintly visible on touch screens). Headings land below the sticky header. Section ids are unchanged, so existing links keep working.
+- Author box (#9) after every post: photo, name, role, bio and links (X, LinkedIn, GitHub, email, RSS).
+- `src/data/author.ts`: one source for author facts, used by the author box, the home page `Person` and each post's `BlogPosting.author` (now with `image` and `sameAs`).
+
 ## [1.5.0] - 2026-11-12
 
 ### Added

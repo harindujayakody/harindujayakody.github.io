@@ -60,6 +60,8 @@ All CSS, no JavaScript. Everything is disabled under `prefers-reduced-motion: re
 | `ProjectCard` | Same stretched-link pattern; optional "source ↗" |
 | `XFeed` | Mirrors an X post: avatar, name, handle, text, X's like and reply icons |
 | `Timeline` | Year column (sticky on desktop), dashed rail, dots |
+| `Toc` | "On this page" `<details>`, shown on posts with 3+ `##` sections; two columns above `sm` when long |
+| `AuthorBox` | After every post: avatar, name, role, bio, links; reads `src/data/author.ts` |
 
 ## Layout
 

@@ -76,7 +76,15 @@
 .prose > * + * { @apply mt-5; }
 .prose h2 { @apply mt-10 text-xl font-semibold text-foreground; }
 .prose h3 { @apply mt-8 text-lg font-semibold text-foreground; }
-.prose a:not(.x-card a) { @apply text-primary underline underline-offset-4 hover:no-underline; }
+/* Section links: land below the sticky header; "#" drawn by CSS so it stays out of heading text. */
+.prose :is(h2, h3) { @apply scroll-mt-20; }
+.prose .heading-anchor { @apply ml-2 font-mono font-normal text-muted-foreground no-underline opacity-40 transition hover:text-primary focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring rounded-sm; }
+.prose .heading-anchor::after { content: "#"; }
+@media (hover: hover) {
+  .prose .heading-anchor { @apply opacity-0; }
+  .prose :is(h2, h3):hover .heading-anchor { @apply opacity-100; }
+}
+.prose a:not(.x-card a, .heading-anchor) { @apply text-primary underline underline-offset-4 hover:no-underline; }
 .prose strong { @apply font-semibold text-foreground; }
 .prose ul { @apply list-disc pl-6; }
 .prose ol { @apply list-decimal pl-6; }

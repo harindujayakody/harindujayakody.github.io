@@ -30,11 +30,13 @@ src/
   content/blog/          posts (.md) and images/
   data/projects.ts       hand-picked tools & projects
   data/x-posts.ts        X post URLs for the home page
+  data/author.ts         name, role, bio, links; feeds the author box and Person JSON-LD
   lib/
     posts.ts             getPosts, slugify, category/tag URLs, relatedPosts, postMarkdown
     github.ts            repo list from the GitHub API (cached per build, fails soft to [])
     x.ts                 X post fetch (no key; fails soft) and xCardHtml, the one card used everywhere
     x-embed-plugin.ts    Markdown (Sätteri) plugin: pasted X embed code becomes an xCardHtml card at build time
+    heading-anchors-plugin.ts  Markdown plugin: ids + "#" self-links on h2/h3 (GitHub-style slugs)
   layouts/Layout.astro   <head> SEO (canonical, OG, Twitter, robots, JSON-LD), header nav, footer
   components/            PostList, BlogIndex, Timeline, ProjectCard, XFeed, Socials, ui/*
   pages/                 routes (below)
@@ -50,7 +52,7 @@ src/
 | `/blog/` | `pages/blog/index.astro` → `BlogIndex` | Category filter chips |
 | `/blog/category/<slug>/` | `pages/blog/category/[slug].astro` | Indexable; `CollectionPage` + breadcrumbs |
 | `/blog/tag/<slug>/` | `pages/blog/tag/[slug].astro` | `noindex, follow` |
-| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` + breadcrumbs, cover image, related posts, X embeds as static cards |
+| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` (author from `data/author.ts`) + breadcrumbs, cover image, table of contents (3+ sections), heading links, author box, related posts, X embeds as static cards |
 | `/blog/<slug>.md` | `pages/blog/[id].md.ts` | Raw markdown for AI agents |
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
 | `/timeline/` | `pages/timeline.astro` | Every repo grouped by year |

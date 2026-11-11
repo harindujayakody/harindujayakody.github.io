@@ -10,7 +10,10 @@ const blog = defineCollection({
       description: z.string(),
       date: z.coerce.date(),
       updated: z.coerce.date().optional(),
-      category: z.string().default("General"),
+      // A fixed list keeps category pages from splitting into near-duplicates ("AI" vs "AI Tools").
+      category: z.enum(["AI", "Guides", "Windows", "Web"], {
+        error: (iss) => `Unknown category ${JSON.stringify(iss.input)}. Use one of: AI, Guides, Windows, Web (see docs/CONTENT.md).`,
+      }),
       tags: z.array(z.string()).default([]),
       // 16:9 cover, path relative to the post, e.g. ./images/my-post.jpg
       image: image().optional(),

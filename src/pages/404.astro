@@ -1,0 +1,42 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Button from "../components/ui/Button.astro";
+import PostList from "../components/PostList.astro";
+import { getPosts } from "../lib/posts";
+
+const latest = (await getPosts()).slice(0, 3);
+---
+<Layout title="Page not found · Harindu Jayakody" description="This page doesn't exist." noindex>
+  <div class="flex flex-col gap-12">
+    <header class="flex flex-col gap-4">
+      <p class="rise font-mono text-sm text-muted-foreground">
+        <span class="text-primary">~/harindu</span> <span class="text-accent">$</span> cd <span id="missing-path">this-page</span>
+      </p>
+      <p class="rise font-mono text-sm text-[#ff7b72]" style="--d:60ms">bash: cd: no such file or directory</p>
+      <h1 class="rise text-4xl font-semibold sm:text-6xl" style="--d:120ms">404<span class="text-primary">.</span> Page not found</h1>
+      <p class="rise max-w-xl text-muted-foreground" style="--d:180ms">
+        The link may be old or mistyped. Try searching, or start from one of these.
+      </p>
+      <div class="rise flex flex-wrap gap-2" style="--d:240ms">
+        <Button href="/search/">Search the site</Button>
+        <Button href="/" variant="outline">Home</Button>
+        <Button href="/blog/" variant="outline">Blog</Button>
+        <Button href="/projects/" variant="outline">Projects</Button>
+      </div>
+    </header>
+
+    {latest.length > 0 && (
+      <section class="flex flex-col gap-5">
+        <h2 class="font-mono text-sm text-muted-foreground">$ ls ./posts --latest</h2>
+        <PostList posts={latest} />
+      </section>
+    )}
+  </div>
+
+  <script is:inline>
+    // Show the requested path; textContent keeps it from being treated as HTML.
+    let p = location.pathname;
+    try { p = decodeURIComponent(p); } catch {} // malformed %-escapes: show the raw path
+    if (p !== "/404" && p !== "/404.html") document.getElementById("missing-path").textContent = p;
+  </script>
+</Layout>

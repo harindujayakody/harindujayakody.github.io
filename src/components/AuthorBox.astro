@@ -1,0 +1,23 @@
+---
+import { Image } from "astro:assets";
+import avatar from "../assets/avatar.png";
+import { author } from "../data/author";
+---
+<aside aria-label="About the author" class="reveal flex flex-col gap-4 rounded-xl border bg-card/70 p-5 sm:flex-row sm:items-start sm:gap-5">
+  <Image src={avatar} alt="" width={64} height={64} densities={[1, 2]} quality={90} class="size-16 shrink-0 rounded-full ring-1 ring-border" />
+  <div class="flex min-w-0 flex-col gap-2">
+    <p class="font-mono text-xs text-muted-foreground">written by</p>
+    <p class="font-heading text-lg font-semibold leading-tight">
+      <a href="/" class="hover:text-primary">{author.name}</a>
+    </p>
+    <p class="text-sm text-muted-foreground">{author.role}</p>
+    <p class="text-sm leading-relaxed text-foreground/90">{author.bio}</p>
+    <ul class="flex flex-wrap gap-x-4 gap-y-1 pt-1 font-mono text-xs">
+      {author.links.map((l) => (
+        <li><a href={l.href} target="_blank" rel="noopener me" class="text-muted-foreground hover:text-primary">{l.label} ↗</a></li>
+      ))}
+      <li><a href={`mailto:${author.email}`} class="text-muted-foreground hover:text-primary">Email</a></li>
+      <li><a href="/rss.xml" class="text-muted-foreground hover:text-primary">RSS</a></li>
+    </ul>
+  </div>
+</aside>

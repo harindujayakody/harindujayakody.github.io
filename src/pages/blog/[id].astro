@@ -3,6 +3,9 @@ import { render } from "astro:content";
 import { Image, getImage } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
+import AuthorBox from "../../components/AuthorBox.astro";
+import Toc from "../../components/Toc.astro";
+import { authorJsonLd } from "../../data/author";
 import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, type Post } from "../../lib/posts";
 
 export async function getStaticPaths() {
@@ -11,7 +14,7 @@ export async function getStaticPaths() {
 }
 
 const { post, related }: { post: Post; related: Post[] } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const d = post.data;
 const url = new URL(`/blog/${post.id}/`, Astro.site).href;
 // Social networks reject SVG, and Astro won't rasterize it: SVG covers fall back to the default card.
@@ -30,8 +33,8 @@ const jsonLd = [
     keywords: d.tags.join(", "),
     wordCount: post.body?.split(/\s+/).length,
     ...(og && { image: new URL(og, Astro.site).href }),
-    author: { "@type": "Person", name: "Harindu Jayakody", url: Astro.site!.href },
-    publisher: { "@type": "Person", name: "Harindu Jayakody", url: Astro.site!.href },
+    author: authorJsonLd(Astro.site!),
+    publisher: { "@id": authorJsonLd(Astro.site!)["@id"] },
   },
   {
     "@context": "https://schema.org",
@@ -69,7 +72,9 @@ const jsonLd = [
       <Image src={d.image} alt={d.imageAlt} widths={[400, 768, 1200]} sizes="(min-width: 768px) 736px, 100vw"
         loading="eager" fetchpriority="high" class="rise aspect-video w-full rounded-xl border object-cover" style="--d:200ms" />
     )}
+    <Toc headings={headings} />
     <div class="prose rise" style="--d:240ms"><Content /></div>
+    <AuthorBox />
   </article>
 
   {related.length > 0 && (

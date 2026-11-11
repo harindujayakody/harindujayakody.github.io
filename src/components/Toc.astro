@@ -1,0 +1,27 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const items = Astro.props.headings.filter((h) => h.depth === 2 || h.depth === 3);
+// Short posts don't need one: only show with 3+ sections.
+const show = items.filter((h) => h.depth === 2).length >= 3;
+---
+{show && (
+  <details open class="toc rise rounded-xl border bg-card/50 p-4 sm:p-5" style="--d:220ms">
+    <summary class="cursor-pointer font-mono text-xs text-muted-foreground select-none hover:text-foreground">
+      on this page <span class="opacity-60">· {items.filter((h) => h.depth === 2).length} sections</span>
+    </summary>
+    <nav aria-label="On this page" class="mt-3">
+      <ol class:list={["text-sm", items.length > 8 && "sm:columns-2 sm:gap-8"]}>
+        {items.map((h) => (
+          <li class:list={["break-inside-avoid py-0.5", h.depth === 3 && "pl-4"]}>
+            <a href={`#${h.slug}`} class:list={["block truncate transition hover:text-primary", h.depth === 2 ? "text-foreground/90" : "text-muted-foreground"]}>{h.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  </details>
+)}

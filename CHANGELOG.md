@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.2.0] - 2026-11-11
+
+### Added
+- Copy button on every code block in posts. It appears on hover with a mouse and is always visible on touch screens; it shows "copied ✓" after copying. The small script ships only on posts that contain code.
+
 ## [1.1.0] - 2026-11-04
 
 ### Added

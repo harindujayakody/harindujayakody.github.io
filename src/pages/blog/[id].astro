@@ -78,4 +78,32 @@ const jsonLd = [
       <PostList posts={related} />
     </section>
   )}
+
+  {post.body?.includes("```") && (
+    <script is:inline>
+      // Copy button on every code block; only shipped on posts that have code.
+      document.querySelectorAll(".prose pre").forEach((pre) => {
+        const wrap = document.createElement("div");
+        wrap.className = "code-block";
+        pre.replaceWith(wrap);
+        wrap.append(pre);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "copy-btn";
+        btn.textContent = "copy";
+        btn.setAttribute("aria-label", "Copy code");
+        btn.setAttribute("aria-live", "polite");
+        btn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText((pre.querySelector("code") ?? pre).textContent);
+            btn.textContent = "copied ✓";
+          } catch {
+            btn.textContent = "press Ctrl+C";
+          }
+          setTimeout(() => (btn.textContent = "copy"), 1600);
+        });
+        wrap.append(btn);
+      });
+    </script>
+  )}
 </Layout>

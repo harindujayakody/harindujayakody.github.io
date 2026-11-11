@@ -88,5 +88,13 @@
 .prose blockquote.twitter-tweet a { @apply font-mono text-xs; }
 .prose :not(pre) > code { @apply rounded-md bg-muted px-1.5 py-0.5 font-mono text-[0.85em] text-primary; }
 .prose pre { @apply overflow-x-auto rounded-xl border p-4 font-mono text-sm leading-6; }
+.code-block { @apply relative; }
+.code-block pre { @apply pr-20; }
+.copy-btn { @apply absolute top-2.5 right-2.5 rounded-md border bg-background/80 px-2 py-1 font-mono text-xs text-muted-foreground backdrop-blur transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring; }
+/* Mouse users see it on hover; touch screens always show it. */
+@media (hover: hover) {
+  .copy-btn { @apply opacity-0; }
+  .code-block:hover .copy-btn, .copy-btn:focus-visible { @apply opacity-100; }
+}
 .prose p > img { @apply aspect-video w-full rounded-xl border object-cover; }
 .prose hr { @apply my-10; }

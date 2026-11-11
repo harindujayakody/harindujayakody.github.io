@@ -45,7 +45,7 @@ Posts with three or more `##` sections automatically get an "On this page" table
 - Put files in `src/content/blog/images/`.
 - Cover: `image: ./images/name.jpg` in front matter.
 - Inline: `![Alt text](./images/name.jpg)`. Shown in a 16:9 frame and cropped to fill it.
-- SVG works but isn't converted, and an SVG cover can't be a social card (the avatar is used instead). Use JPG, PNG or WebP for real covers.
+- Every post automatically gets a 1200×630 social card (title, category, date, your name and avatar) at `/og/<slug>.png`. Set a JPG, PNG or WebP `image:` cover to use that instead. SVG covers show on the page but the generated card is used for sharing, since social networks reject SVG.
 - Astro converts them to WebP and generates sizes. Don't put post images in `public/`, because they'd skip optimization.
 
 ### Embedding an X post

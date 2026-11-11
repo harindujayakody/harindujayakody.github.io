@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.8.0] - 2026-11-12
+
+### Added
+- Social share images (#7): every post gets a 1200×630 PNG at `/og/<slug>.png`, generated at build time in the site's style: dark background with a mint glow, `~/harindu $ cat post.md`, category tag, the title in Poppins, avatar, name, domain, date and reading time. The home page and blog index get their own cards (`/og/index.png`, `/og/blog.png`).
+- `og:image:width`, `og:image:height` and `og:image:alt` on every page; every page now uses `summary_large_image`.
+- Build-time dev dependencies: `satori` (layout to SVG with embedded fonts), `@resvg/resvg-js` (SVG to PNG), `@types/node` (types for the build-time endpoint). Nothing new ships to visitors.
+
+### Changed
+- Posts without a raster cover (and posts with an SVG cover) now share their generated card instead of the small avatar card. `BlogPosting.image` points to the same image.
+
 ## [1.7.0] - 2026-11-12
 
 ### Added

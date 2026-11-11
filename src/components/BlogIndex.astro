@@ -12,9 +12,10 @@ interface Props {
   posts: Post[];
   noindex?: boolean;
   crumb?: { name: string; url: string };
+  image?: string;
 }
 
-const { title, heading, prompt, intro, posts, noindex = false, crumb } = Astro.props;
+const { title, heading, prompt, intro, posts, noindex = false, crumb, image } = Astro.props;
 
 const categories = Object.entries(Object.groupBy(await getPosts(), (p) => p.data.category))
   .map(([name, list]) => ({ name, count: list!.length }))
@@ -45,7 +46,7 @@ const jsonLd = [
   },
 ];
 ---
-<Layout title={title} description={intro} noindex={noindex} jsonLd={jsonLd}>
+<Layout title={title} description={intro} noindex={noindex} jsonLd={jsonLd} image={image}>
   <div class="flex flex-col gap-8">
     <header class="flex flex-col gap-3">
       <p class="rise font-mono text-sm text-primary">{prompt}</p>

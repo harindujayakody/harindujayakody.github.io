@@ -7,7 +7,12 @@ export async function getStaticPaths() {
   return Object.entries(groups).map(([name, posts]) => ({ params: { slug: slugify(name) }, props: { name, posts } }));
 }
 
-const { name, posts }: { name: string; posts: Post[] } = Astro.props;
+interface Props {
+  name: string;
+  posts: Post[];
+}
+
+const { name, posts } = Astro.props;
 ---
 <BlogIndex
   title={`${name} articles · Harindu Jayakody`}

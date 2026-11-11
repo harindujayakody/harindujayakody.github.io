@@ -1,7 +1,11 @@
 ---
 import { fmtDate, readingTime, categoryUrl, tagUrl, type Post } from "../lib/posts";
 
-const { posts }: { posts: Post[] } = Astro.props;
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
 ---
 <ul class="flex flex-col divide-y rounded-xl border bg-card/50">
   {posts.map((p) => (

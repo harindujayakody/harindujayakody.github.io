@@ -2,7 +2,11 @@
 import type { Item } from "../data/projects";
 import Badge from "./ui/Badge.astro";
 
-const { item: p }: { item: Item } = Astro.props;
+interface Props {
+  item: Item;
+}
+
+const { item: p } = Astro.props;
 ---
 <article class="reveal group relative flex min-w-0 flex-col gap-2 rounded-xl border bg-card/70 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/20">
   <div class="flex items-center justify-between gap-2">

@@ -48,7 +48,8 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 | **Repo timeline** | Every public repository grouped by year, refreshed daily from the GitHub API |
 | **X posts** | Home-page feed and in-article embeds rendered as site-themed cards at build time, with no X script on the page |
 | **Code blocks** | GitHub dark syntax theme with a copy button |
-| **Search** | Client-side search over post text, tools and projects, with shareable `?q=` links |
+| **Search** | `Ctrl/⌘ + K` or `/` opens a search pop-up anywhere: grouped, highlighted results with full keyboard control. `/search/?q=` page for shareable links |
+| **Keyboard shortcuts** | `g` then `h`/`b`/`p`/`t` to jump between sections, `?` for the shortcuts list |
 | **SEO** | Canonical URLs, Open Graph, JSON-LD structured data, sitemap, robots.txt |
 | **AI agents** | `llms.txt`, `llms-full.txt` and a plain-markdown copy of every post |
 | **Design** | Dark terminal-flavoured theme on shadcn/ui tokens, CSS-only motion that respects reduced-motion |
@@ -89,17 +90,17 @@ flowchart LR
 2. **Live data, fetched once per build.** The GitHub API supplies repos and stars for the timeline, stats and projects page. X's public syndication endpoint (no API key) supplies posts for the home feed and article embeds. Both fail soft: a failed request skips that item and the build still succeeds.
 3. **X embeds without X's script.** Pasted X embed code is swapped at build time by a Sätteri hast plugin (`src/lib/x-embed-plugin.ts`) for the same card used on the home page (`xCardHtml` in `src/lib/x.ts`): author, verified badge, text, a photo or video preview and like/reply counts.
 4. **Generated endpoints.** `sitemap.xml`, `robots.txt`, `rss.xml`, `search.json`, `llms.txt`, `llms-full.txt` and `/blog/<slug>.md` are plain Astro endpoints with no extra dependencies.
-5. **Deploy.** Every push to `master`, plus a daily 01:00 UTC schedule, runs `check → lint → build` and publishes `dist/` to GitHub Pages. The daily run keeps repo stats and X counts fresh without commits.
+5. **Deploy.** Every push to `master`, plus a daily 01:00 UTC schedule, runs `check → lint → test → build` and publishes `dist/` to GitHub Pages. The daily run keeps repo stats and X counts fresh without commits.
 
-**Client-side JavaScript** runs in only two places: the search filter on `/search/` (~1 KB) and the copy buttons, which only ship on posts that contain code.
+**Client-side JavaScript** is small and deferred: keyboard shortcuts (~1 KB, inline), the search pop-up (~1.3 KB gzipped, which fetches the search index only when first opened), and the copy buttons, which only ship on posts that contain code.
 
 ## Project structure
 
 ```text
 .
 ├── .github/workflows/
-│   ├── ci.yml              # check, lint, build on every pull request
-│   └── deploy.yml          # check, lint, build, deploy to Pages (push + daily)
+│   ├── ci.yml              # check, lint, test, build on every pull request
+│   └── deploy.yml          # check, lint, test, build, deploy to Pages (push + daily)
 ├── docs/                   # ARCHITECTURE, DESIGN, CONTENT guides
 ├── public/                 # avatar.png, favicon.jpg (fixed URLs)
 ├── src/
@@ -135,6 +136,7 @@ npm run dev        # http://localhost:4321
 | `npm run preview` | Serve the production build locally |
 | `npm run check` | Type-check `.astro` and `.ts` files (`astro check`) |
 | `npm run lint` | Lint with ESLint |
+| `npm test` | Unit tests for the search logic (`src/lib/search.test.mjs`) |
 
 Set `GITHUB_TOKEN` in your shell if you hit GitHub's anonymous API limit (60 requests an hour). CI provides it automatically.
 
@@ -153,7 +155,7 @@ Full front-matter reference: [docs/CONTENT.md](docs/CONTENT.md).
 ## Quality, CI and security
 
 - **Gated deploys.** `deploy.yml` runs `astro check` and ESLint before building; a type or lint error stops the release.
-- **Pull-request checks.** `ci.yml` runs the same check, lint and build on every pull request, so problems show before merging.
+- **Pull-request checks.** `ci.yml` runs the same check, lint, tests and build on every pull request, so problems show before merging.
 - **Pinned actions.** Every GitHub Action is pinned to a full commit SHA, with the matching release in a comment, so a moved tag can't change what runs.
 - **Least-privilege tokens.** Workflows request only `contents: read` (plus `pages` and `id-token` for deploying).
 - **Reproducible installs.** `npm ci` from the committed lockfile.

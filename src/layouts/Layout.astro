@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import Socials from "../components/Socials.astro";
+import SearchDialog from "../components/SearchDialog.astro";
+import Shortcuts from "../components/Shortcuts.astro";
 import poppins from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
 import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { version } from "../../package.json";
@@ -76,9 +78,10 @@ const nav = [
             );
           })}
           <li>
-            <a href="/search/" aria-label="Search" aria-current={path.startsWith("/search/") ? "page" : undefined}
-              class:list={["flex size-8 items-center justify-center rounded-md transition hover:text-primary", path.startsWith("/search/") ? "bg-muted text-primary" : "text-muted-foreground"]}>
+            <a href="/search/" data-search-open aria-label="Search" aria-keyshortcuts="Control+K Meta+K /" aria-current={path.startsWith("/search/") ? "page" : undefined}
+              class:list={["flex h-8 min-w-8 items-center justify-center gap-2 rounded-md px-2 transition hover:text-primary", path.startsWith("/search/") ? "bg-muted text-primary" : "text-muted-foreground"]}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+              <kbd class="kbd-hint" aria-hidden="true"><span data-mod-key>Ctrl</span> K</kbd>
             </a>
           </li>
         </ul>
@@ -89,9 +92,11 @@ const nav = [
     </main>
     <footer class="border-t">
       <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-muted-foreground">
-        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a> · <a href="https://github.com/harindujayakody/harindujayakody.github.io/blob/master/CHANGELOG.md" target="_blank" rel="noopener" class="hover:text-primary">v{version}</a></span>
+        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a> · <a href="https://github.com/harindujayakody/harindujayakody.github.io/blob/master/CHANGELOG.md" target="_blank" rel="noopener" class="hover:text-primary">v{version}</a><span class="kbd-hint"> · <button type="button" data-shortcuts-open class="hover:text-primary">shortcuts <kbd>?</kbd></button></span></span>
         <div class="flex items-center"><Socials /></div>
       </div>
     </footer>
+    <SearchDialog />
+    <Shortcuts />
   </body>
 </html>

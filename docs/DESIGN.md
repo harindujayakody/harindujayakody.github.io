@@ -62,6 +62,8 @@ All CSS, no JavaScript. Everything is disabled under `prefers-reduced-motion: re
 | `Timeline` | Year column (sticky on desktop), dashed rail, dots |
 | `Toc` | "On this page" `<details>`, shown on posts with 3+ `##` sections; two columns above `sm` when long |
 | `AuthorBox` | After every post: avatar, name, role, bio, links; reads `src/data/author.ts` |
+| `SearchDialog` | Native `<dialog>`: opened by the header icon, `Ctrl/⌘+K` or `/`; combobox + grouped listbox, `↑`/`↓`/`↵`/`esc`; full-screen below `sm` |
+| `Shortcuts` | Global keys (`Ctrl/⌘+K`, `/`, `g`+`h`/`b`/`p`/`t`, `?`) and the help dialog; key hints (`kbd`) shown only to fine-pointer devices |
 
 ## Layout
 

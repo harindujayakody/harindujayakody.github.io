@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.7.0] - 2026-11-12
+
+### Added
+- Search pop-up (#13): `Ctrl/⌘ + K`, `/` or the header icon opens search over the current page instead of navigating away. Results are grouped (Posts, Tools, Projects) with matched words highlighted; `↑`/`↓` move, `↵` opens, `esc` or a click outside closes. Full-screen on phones. The index loads only on first open.
+- Keyboard shortcuts (#14): `g` then `h`/`b`/`p`/`t` go to home, blog, projects and timeline; `?` (or the footer "shortcuts" button) shows the list. Ignored while typing in a field. The header shows `⌘ K` on Apple devices and `Ctrl K` elsewhere; key hints are hidden on touch screens.
+- `npm test`: unit tests for the search logic, run in CI and before every deploy.
+
+### Changed
+- `/search/` uses the same shared search module as the pop-up (`src/lib/search.ts`), now with grouped, highlighted results. It stays the target for `?q=` links and Google's `SearchAction`.
+
 ## [1.6.0] - 2026-11-12
 
 ### Added

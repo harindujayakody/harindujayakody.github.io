@@ -107,3 +107,19 @@
 }
 .prose p > img { @apply aspect-video w-full rounded-xl border object-cover; }
 .prose hr { @apply my-10; }
+
+/* Search pop-up and shortcuts help (native <dialog>). Phones get a full-screen search. */
+.search-dialog, .shortcuts-dialog { @apply mx-auto mt-[12vh] w-[min(40rem,calc(100%-2rem))] max-w-none overflow-hidden rounded-xl border bg-background p-0 text-foreground shadow-2xl; }
+.shortcuts-dialog { @apply w-[min(26rem,calc(100%-2rem))]; }
+@media (max-width: 639px) {
+  .search-dialog { @apply m-0 h-dvh max-h-none w-full rounded-none border-0; }
+}
+dialog::backdrop { background: oklch(0 0 0 / 60%); backdrop-filter: blur(3px); }
+html:has(dialog[open]) { overflow: hidden; }
+kbd { @apply inline-flex min-w-5 items-center justify-center rounded border bg-muted px-1 font-mono text-[11px] leading-5 text-muted-foreground; }
+mark { @apply rounded-sm bg-primary/25 text-inherit; }
+/* Key hints only where there's a keyboard-and-mouse setup. */
+.kbd-hint { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .kbd-hint { display: inline-flex; }
+}

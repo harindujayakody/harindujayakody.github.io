@@ -1,0 +1,73 @@
+---
+// Global keyboard shortcuts + the "?" help dialog. Search itself lives in SearchDialog (opened via "search:open").
+const rows = [
+  { keys: ["mod", "K"], or: ["/"], what: "Search" },
+  { keys: ["g", "h"], what: "Go to home" },
+  { keys: ["g", "b"], what: "Go to blog" },
+  { keys: ["g", "p"], what: "Go to projects" },
+  { keys: ["g", "t"], what: "Go to timeline" },
+  { keys: ["?"], what: "Show this help" },
+  { keys: ["esc"], what: "Close search or help" },
+];
+---
+<dialog id="shortcuts-dialog" aria-labelledby="sc-title" class="shortcuts-dialog">
+  <div class="flex flex-col gap-4 p-5">
+    <div class="flex items-center justify-between">
+      <h2 id="sc-title" class="font-heading text-lg font-semibold">Keyboard shortcuts</h2>
+      <button type="button" data-close class="rounded-md border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground hover:text-foreground">esc</button>
+    </div>
+    <table class="w-full text-sm">
+      <tbody class="divide-y">
+        {rows.map((r) => (
+          <tr>
+            <td class="py-2 pr-4 text-muted-foreground">{r.what}</td>
+            <td class="py-2 text-right whitespace-nowrap">
+              {r.keys.map((k, i) => <>{i > 0 && <span class="mx-1 text-xs text-muted-foreground">{r.keys[0] === "g" ? "then" : "+"}</span>}<kbd>{k === "mod" ? <span data-mod-key>Ctrl</span> : k}</kbd></>)}
+              {r.or && <><span class="mx-1 text-xs text-muted-foreground">or</span><kbd>{r.or[0]}</kbd></>}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</dialog>
+
+<script>
+  const help = document.getElementById("shortcuts-dialog") as HTMLDialogElement;
+  const routes: Record<string, string> = { h: "/", b: "/blog/", p: "/projects/", t: "/timeline/" };
+  const openSearch = () => document.dispatchEvent(new Event("search:open"));
+
+  // Show ⌘ on Apple devices, Ctrl elsewhere.
+  if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent))
+    document.querySelectorAll("[data-mod-key]").forEach((el) => (el.textContent = "⌘"));
+
+  let gAt = 0;
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+      e.preventDefault();
+      return openSearch();
+    }
+    const el = e.target as HTMLElement;
+    const typing = el.closest?.("input, textarea, select, [contenteditable]:not([contenteditable='false'])");
+    if (typing || e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented || document.querySelector("dialog[open]")) return;
+
+    if (e.key === "/") {
+      e.preventDefault();
+      openSearch();
+    } else if (e.key === "?") {
+      e.preventDefault();
+      help.showModal();
+    } else if (e.key === "g") {
+      gAt = Date.now();
+    } else if (gAt && Date.now() - gAt < 1200 && routes[e.key]) {
+      gAt = 0;
+      location.href = routes[e.key];
+    } else {
+      gAt = 0;
+    }
+  });
+
+  document.querySelectorAll("[data-shortcuts-open]").forEach((b) => b.addEventListener("click", () => help.showModal()));
+  help.querySelector("[data-close]")!.addEventListener("click", () => help.close());
+  help.addEventListener("click", (e) => e.target === help && help.close());
+</script>

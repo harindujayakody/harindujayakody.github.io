@@ -1,0 +1,119 @@
+---
+// Ctrl/⌘+K search pop-up. Opened by [data-search-open] links (they keep href="/search/" as the no-JS fallback)
+// and by the "search:open" event from Shortcuts. The index loads on first open only.
+---
+<dialog id="search-dialog" aria-label="Search the site" class="search-dialog">
+  <div class="flex h-full flex-col">
+    <div class="flex h-14 shrink-0 items-center gap-3 border-b px-4">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4 shrink-0 text-muted-foreground" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+      <input id="sd-input" type="search" role="combobox" aria-expanded="false" aria-controls="sd-list" aria-autocomplete="list"
+        autocomplete="off" spellcheck="false" placeholder="Search posts, tools and projects…"
+        class="h-full min-w-0 flex-1 bg-transparent font-mono text-sm outline-none placeholder:text-muted-foreground" />
+      <button type="button" data-close class="rounded-md border px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground hover:text-foreground">esc</button>
+    </div>
+    <div id="sd-list" role="listbox" aria-label="Search results" class="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 sm:max-h-[min(60vh,28rem)]"></div>
+    <p id="sd-empty" class="px-5 py-8 text-center text-sm text-muted-foreground">Type to search posts, tools and projects.</p>
+    <p id="sd-status" class="sr-only" aria-live="polite"></p>
+    <div class="hidden shrink-0 items-center gap-4 border-t px-4 py-2.5 font-mono text-[11px] text-muted-foreground sm:flex">
+      <span><kbd>↑</kbd> <kbd>↓</kbd> move</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>esc</kbd> close</span>
+      <a href="/search/" class="ml-auto hover:text-primary">full search page →</a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import { loadIndex, search, terms, highlight, esc, GROUPS } from "../lib/search";
+
+  const dlg = document.getElementById("search-dialog") as HTMLDialogElement;
+  const input = document.getElementById("sd-input") as HTMLInputElement;
+  const list = document.getElementById("sd-list")!;
+  const empty = document.getElementById("sd-empty")!;
+  const status = document.getElementById("sd-status")!;
+  let options: HTMLAnchorElement[] = [];
+  let active = -1;
+
+  function setActive(i: number) {
+    options[active]?.setAttribute("aria-selected", "false");
+    active = options.length ? (i + options.length) % options.length : -1;
+    const opt = options[active];
+    opt?.setAttribute("aria-selected", "true");
+    opt?.scrollIntoView({ block: "nearest" });
+    if (opt) input.setAttribute("aria-activedescendant", opt.id);
+    else input.removeAttribute("aria-activedescendant");
+  }
+
+  async function run() {
+    const words = terms(input.value);
+    if (!words.length) return show("", "Type to search posts, tools and projects.");
+    let docs;
+    try {
+      docs = await loadIndex();
+    } catch {
+      return show("", "Search couldn't load. Check your connection and try again.");
+    }
+    if (terms(input.value).join(" ") !== words.join(" ")) return; // a newer keystroke already ran
+    const hits = search(docs, words);
+    let n = 0;
+    const html = GROUPS.map((g) => {
+      const group = hits.filter((h) => h.doc.type === g.type);
+      if (!group.length) return "";
+      return `<div role="group" aria-labelledby="sd-g-${g.type}" class="mb-2">
+        <p id="sd-g-${g.type}" class="px-3 py-1.5 font-mono text-[11px] text-muted-foreground">${g.label}</p>
+        ${group.map(({ doc }) => `<a role="option" id="sd-o-${n++}" aria-selected="false" href="${esc(doc.url)}"
+          class="flex flex-col gap-0.5 rounded-lg px-3 py-2.5 transition aria-selected:bg-muted hover:bg-muted/60">
+          <span class="text-sm font-medium">${highlight(doc.title, words)}</span>
+          <span class="line-clamp-1 text-xs text-muted-foreground">${highlight(doc.desc, words)}</span>
+        </a>`).join("")}
+      </div>`;
+    }).join("");
+    show(html, hits.length ? "" : `No results for “${input.value.trim()}”.`, `${hits.length} result${hits.length === 1 ? "" : "s"}`);
+  }
+
+  function show(html: string, message: string, announce = message) {
+    list.innerHTML = html;
+    options = [...list.querySelectorAll<HTMLAnchorElement>('[role="option"]')];
+    active = -1;
+    setActive(0);
+    empty.textContent = message;
+    empty.hidden = !message;
+    input.setAttribute("aria-expanded", String(options.length > 0));
+    status.textContent = announce;
+  }
+
+  function open() {
+    document.querySelectorAll<HTMLDialogElement>("dialog[open]").forEach((d) => d !== dlg && d.close()); // e.g. the help dialog
+    if (!dlg.open) dlg.showModal();
+    input.focus();
+    input.select();
+    loadIndex().catch(() => {}); // warm the index while the reader types
+  }
+
+  input.addEventListener("input", run);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setActive(active + (e.key === "ArrowDown" ? 1 : -1));
+    } else if (e.key === "Enter" && options[active]) {
+      e.preventDefault();
+      options[active].click();
+    }
+  });
+  list.addEventListener("mousemove", (e) => {
+    const i = options.indexOf((e.target as Element).closest('[role="option"]') as HTMLAnchorElement);
+    if (i >= 0 && i !== active) setActive(i);
+  });
+  dlg.querySelector("[data-close]")!.addEventListener("click", () => dlg.close());
+  // A click on the dialog element itself (not its content) is a click on the backdrop.
+  dlg.addEventListener("click", (e) => e.target === dlg && dlg.close());
+
+  document.addEventListener("search:open", open);
+  document.querySelectorAll("[data-search-open]").forEach((a) =>
+    a.addEventListener("click", (e) => {
+      if ((e as MouseEvent).ctrlKey || (e as MouseEvent).metaKey || (e as MouseEvent).shiftKey) return; // new tab/window: let it through
+      e.preventDefault();
+      open();
+    }),
+  );
+</script>

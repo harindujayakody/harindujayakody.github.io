@@ -1,7 +1,7 @@
 # Architecture
 
 A static site. All data is fetched and all HTML is rendered at build time; the browser gets HTML, inlined CSS, fonts and images.
-The only JavaScript is on `/search/` (a ~1 KB filter). X embeds in posts are turned into static cards at build time, so no X script is loaded.
+JavaScript is limited to: keyboard shortcuts (~1 KB, inline on every page), the search pop-up (~1.3 KB gzipped, deferred; it fetches `/search.json` only on first open), and copy buttons on posts with code. X embeds in posts are turned into static cards at build time, so no X script is loaded.
 
 ```
  src/content/blog/*.md ─┐
@@ -37,6 +37,7 @@ src/
     x.ts                 X post fetch (no key; fails soft) and xCardHtml, the one card used everywhere
     x-embed-plugin.ts    Markdown (Sätteri) plugin: pasted X embed code becomes an xCardHtml card at build time
     heading-anchors-plugin.ts  Markdown plugin: ids + "#" self-links on h2/h3 (GitHub-style slugs)
+    search.ts            browser search: lazy index load, matching, grouping, safe highlighting (+ search.test.mjs)
   layouts/Layout.astro   <head> SEO (canonical, OG, Twitter, robots, JSON-LD), header nav, footer
   components/            PostList, BlogIndex, Timeline, ProjectCard, XFeed, Socials, ui/*
   pages/                 routes (below)
@@ -56,7 +57,7 @@ src/
 | `/blog/<slug>.md` | `pages/blog/[id].md.ts` | Raw markdown for AI agents |
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
 | `/timeline/` | `pages/timeline.astro` | Every repo grouped by year |
-| `/search/` | `pages/search.astro` + `search.json.ts` | Client-side filter over a JSON index; `noindex` |
+| `/search/` | `pages/search.astro` + `search.json.ts` | Full-page search for `?q=` links (and `SearchAction`); same logic as the pop-up via `lib/search.ts`; `noindex` |
 | `/404.html` | `pages/404.astro` | Custom not-found page: requested path, search and nav buttons, latest posts; `noindex` |
 | `/blog/category/ai-tools/` | `astro.config.mjs` `redirects` | Redirect page to `/blog/category/ai/` (category merged) |
 | `/sitemap.xml` `/robots.txt` `/rss.xml` `/llms.txt` `/llms-full.txt` | `pages/*.ts` | Generated endpoints; no extra dependencies |
@@ -74,9 +75,9 @@ The deploy workflow passes `GITHUB_TOKEN` so the GitHub API isn't rate-limited i
 ## Deploy
 
 `.github/workflows/deploy.yml`: on push to `master`, daily at 01:00 UTC, or manually.
-Steps (Node 24): `npm ci` → `npm run check` → `npm run lint` → `npm run build` → `actions/upload-pages-artifact` → `actions/deploy-pages`. A failed check or lint stops the release. Every action is pinned to a full commit SHA with its release in a comment; bump them deliberately. Repo setting: Pages → Source: GitHub Actions.
+Steps (Node 24): `npm ci` → `npm run check` → `npm run lint` → `npm test` → `npm run build` → `actions/upload-pages-artifact` → `actions/deploy-pages`. A failed check or lint stops the release. Every action is pinned to a full commit SHA with its release in a comment; bump them deliberately. Repo setting: Pages → Source: GitHub Actions.
 
-`.github/workflows/ci.yml` runs the same check, lint and build on every pull request (no deploy).
+`.github/workflows/ci.yml` runs the same check, lint, test and build on every pull request (no deploy). Deploy runs the same steps before publishing.
 
 ### Cloudflare (in front of harindujayakody.com)
 

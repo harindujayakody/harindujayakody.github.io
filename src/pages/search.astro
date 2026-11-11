@@ -7,7 +7,7 @@ import Layout from "../layouts/Layout.astro";
       <p class="rise font-mono text-sm text-primary">$ grep -ri</p>
       <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">Search</h1>
     </header>
-    <form role="search" action="/search/" class="rise" style="--d:160ms" onsubmit="return false">
+    <form role="search" action="/search/" class="rise" style="--d:160ms">
       <label for="q" class="sr-only">Search posts, tools and projects</label>
       <div class="flex h-12 items-center gap-3 rounded-xl border bg-card/70 px-4 focus-within:border-primary/50 focus-within:ring-[3px] focus-within:ring-ring/40">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4 shrink-0 text-muted-foreground" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
@@ -16,39 +16,51 @@ import Layout from "../layouts/Layout.astro";
       </div>
     </form>
     <p id="status" class="font-mono text-xs text-muted-foreground" aria-live="polite"></p>
-    <ul id="results" class="flex flex-col divide-y rounded-xl border bg-card/50 empty:hidden"></ul>
+    <div id="results" class="flex flex-col gap-6"></div>
   </div>
 
-  <script is:inline>
-    const q = document.getElementById("q");
-    const list = document.getElementById("results");
-    const status = document.getElementById("status");
-    let index;
-    const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  <script>
+    import { loadIndex, search, terms, highlight, esc, GROUPS } from "../lib/search";
+
+    const form = document.querySelector("form[role=search]") as HTMLFormElement;
+    const q = document.getElementById("q") as HTMLInputElement;
+    const list = document.getElementById("results")!;
+    const status = document.getElementById("status")!;
 
     async function run() {
-      index ??= await fetch("/search.json").then((r) => r.json());
-      const terms = q.value.toLowerCase().split(/\s+/).filter(Boolean);
-      history.replaceState(null, "", terms.length ? `?q=${encodeURIComponent(q.value)}` : location.pathname);
-      if (!terms.length) { list.innerHTML = ""; status.textContent = ""; return; }
-      // Every term must match; title hits rank above body hits.
-      const hits = index
-        .map((d) => {
-          const title = d.title.toLowerCase(), all = `${title} ${d.desc} ${d.text}`.toLowerCase();
-          if (!terms.every((t) => all.includes(t))) return null;
-          return { d, score: terms.filter((t) => title.includes(t)).length };
-        })
-        .filter(Boolean)
-        .sort((a, b) => b.score - a.score);
+      const words = terms(q.value);
+      history.replaceState(null, "", words.length ? `?q=${encodeURIComponent(q.value)}` : location.pathname);
+      if (!words.length) {
+        list.innerHTML = "";
+        status.textContent = "";
+        return;
+      }
+      let docs;
+      try {
+        docs = await loadIndex();
+      } catch {
+        status.textContent = "Search couldn't load. Check your connection and try again.";
+        return;
+      }
+      if (terms(q.value).join(" ") !== words.join(" ")) return; // a newer keystroke already ran
+      const hits = search(docs, words);
       status.textContent = `${hits.length} result${hits.length === 1 ? "" : "s"}`;
-      list.innerHTML = hits.map(({ d }) => `
-        <li><a href="${esc(d.url)}" class="group flex flex-col gap-1 p-5 transition hover:bg-card">
-          <span class="font-mono text-xs text-primary">${esc(d.meta)}</span>
-          <span class="font-semibold group-hover:text-primary">${esc(d.title)}</span>
-          <span class="text-sm text-muted-foreground">${esc(d.desc)}</span>
-        </a></li>`).join("");
+      list.innerHTML = GROUPS.map((g) => {
+        const group = hits.filter((h) => h.doc.type === g.type);
+        if (!group.length) return "";
+        return `<section class="flex flex-col gap-2">
+          <h2 class="font-mono text-xs text-muted-foreground">${g.label} · ${group.length}</h2>
+          <ul class="flex flex-col divide-y rounded-xl border bg-card/50">${group.map(({ doc }) => `
+            <li><a href="${esc(doc.url)}" class="group flex flex-col gap-1 p-5 transition hover:bg-card">
+              <span class="font-mono text-xs text-primary">${esc(doc.meta)}</span>
+              <span class="font-semibold group-hover:text-primary">${highlight(doc.title, words)}</span>
+              <span class="text-sm text-muted-foreground">${highlight(doc.desc, words)}</span>
+            </a></li>`).join("")}</ul>
+        </section>`;
+      }).join("");
     }
 
+    form.addEventListener("submit", (e) => e.preventDefault()); // results update as you type
     q.value = new URLSearchParams(location.search).get("q") ?? "";
     q.addEventListener("input", run);
     if (q.value) run();

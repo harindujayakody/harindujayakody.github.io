@@ -51,6 +51,7 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 | **Search** | `Ctrl/⌘ + K` or `/` opens a search pop-up anywhere: grouped, highlighted results with full keyboard control. `/search/?q=` page for shareable links |
 | **Keyboard shortcuts** | `g` then `h`/`b`/`p`/`t` to jump between sections, `?` for the shortcuts list |
 | **SEO** | Canonical URLs, Open Graph, JSON-LD structured data, sitemap, robots.txt |
+| **Social cards** | A 1200×630 share image generated for every post (title, category, date, avatar) so links get large previews |
 | **AI agents** | `llms.txt`, `llms-full.txt` and a plain-markdown copy of every post |
 | **Design** | Dark terminal-flavoured theme on shadcn/ui tokens, CSS-only motion that respects reduced-motion |
 
@@ -64,6 +65,7 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 | Components | Astro components using [shadcn/ui](https://ui.shadcn.com) token names | shadcn's look and theming model without shipping React |
 | Typography | Poppins (headings), Inter (body), JetBrains Mono (numbers and code) via Fontsource | Self-hosted, so no third-party font requests; above-the-fold fonts preloaded |
 | Images | `astro:assets` | Responsive WebP with `srcset`, social-card images generated at build |
+| Social cards | [satori](https://github.com/vercel/satori) + [resvg-js](https://github.com/thx/resvg-js) | Build-time 1200×630 PNGs in the site style; no runtime service, nothing shipped to visitors |
 | Syntax highlighting | Shiki, `github-dark-default` | Same colours as GitHub dark mode, rendered at build time |
 | Language | TypeScript (strict) | Typed props, content schema (Zod) and data helpers |
 | Quality | `astro check`, ESLint | Type checking and linting gate every deploy and pull request |
@@ -163,7 +165,7 @@ Full front-matter reference: [docs/CONTENT.md](docs/CONTENT.md).
 
 ## SEO and AI-agent support
 
-- One canonical URL per page; Open Graph and Twitter cards with large-image previews.
+- One canonical URL per page; Open Graph and Twitter cards with large-image previews, using a generated card per post (`/og/<slug>.png`, with width, height and alt declared).
 - JSON-LD structured data: `ProfilePage` and `Person`, `WebSite` with `SearchAction`, `BlogPosting`, `BreadcrumbList`, `CollectionPage`.
 - `sitemap.xml` with `lastmod`, `robots.txt` and an RSS 2.0 feed.
 - Category pages are indexable; tag pages and search are `noindex, follow` so they don't compete with categories.

@@ -1,7 +1,7 @@
 {
   "name": "harindu-site",
   "type": "module",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "private": true,
   "engines": {
     "node": ">=22"
@@ -26,7 +26,10 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
     "@eslint/js": "^10.0.1",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^24.19.2",
     "eslint": "^10.14.0",
+    "satori": "^0.63.2",
     "typescript": "^6.0.3"
   }
 }

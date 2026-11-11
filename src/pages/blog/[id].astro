@@ -18,7 +18,8 @@ const { Content, headings } = await render(post);
 const d = post.data;
 const url = new URL(`/blog/${post.id}/`, Astro.site).href;
 // Social networks reject SVG, and Astro won't rasterize it: SVG covers fall back to the default card.
-const og = d.image && d.image.format !== "svg" ? (await getImage({ src: d.image, width: 1200, height: 675, format: "jpg" })).src : undefined;
+// A raster cover becomes the share image; otherwise (no cover, or SVG, which platforms reject) the generated card.
+const og = d.image && d.image.format !== "svg" ? (await getImage({ src: d.image, width: 1200, height: 675, format: "jpg" })).src : `/og/${post.id}.png`;
 const jsonLd = [
   {
     "@context": "https://schema.org",
@@ -32,7 +33,7 @@ const jsonLd = [
     articleSection: d.category,
     keywords: d.tags.join(", "),
     wordCount: post.body?.split(/\s+/).length,
-    ...(og && { image: new URL(og, Astro.site).href }),
+    image: new URL(og, Astro.site).href,
     author: authorJsonLd(Astro.site!),
     publisher: { "@id": authorJsonLd(Astro.site!)["@id"] },
   },

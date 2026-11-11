@@ -19,7 +19,8 @@ JavaScript is limited to: keyboard shortcuts (~1 KB, inline on every page), the 
 | Styling | Tailwind v4 via `@tailwindcss/vite`, CSS inlined into each page | No render-blocking stylesheet request |
 | Components | Astro components with shadcn/ui token names (`Button`, `Card`, `Badge`) | shadcn's look without shipping React |
 | Fonts | Self-hosted via Fontsource: Poppins 600, Inter variable, JetBrains Mono variable | No third-party font request; above-the-fold fonts preloaded |
-| Images | `astro:assets` | WebP, responsive `srcset`, OG image generation |
+| Images | `astro:assets` | WebP, responsive `srcset`, cover-image social cards |
+| Social cards | `satori` + `@resvg/resvg-js` (build-time only) | 1200×630 PNG per post plus home and blog, in the site style with real Poppins glyphs |
 | Hosting | GitHub Pages via Actions | Free, a push deploys |
 
 ## Source layout
@@ -60,6 +61,7 @@ src/
 | `/search/` | `pages/search.astro` + `search.json.ts` | Full-page search for `?q=` links (and `SearchAction`); same logic as the pop-up via `lib/search.ts`; `noindex` |
 | `/404.html` | `pages/404.astro` | Custom not-found page: requested path, search and nav buttons, latest posts; `noindex` |
 | `/blog/category/ai-tools/` | `astro.config.mjs` `redirects` | Redirect page to `/blog/category/ai/` (category merged) |
+| `/og/<slug>.png`, `/og/index.png`, `/og/blog.png` | `pages/og/[...slug].png.ts` | Generated social cards (satori → resvg); used for `og:image` / `twitter:image` unless a post has a raster cover |
 | `/sitemap.xml` `/robots.txt` `/rss.xml` `/llms.txt` `/llms-full.txt` | `pages/*.ts` | Generated endpoints; no extra dependencies |
 
 ## External data and failure modes

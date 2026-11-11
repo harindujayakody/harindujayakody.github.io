@@ -2,6 +2,18 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.4.0] - 2026-11-11
+
+### Added
+- `ci.yml`: `astro check`, ESLint and a full build on every pull request (closes #3 together with the deploy gate).
+- `LICENSE` (MIT), `npm run check` and `npm run lint` scripts, ESLint config, and typed `Props` interfaces in components (PR #5).
+
+### Changed
+- Deploy runs `check` and `lint` before building, so type or lint errors stop a release.
+- All GitHub Actions pinned to full commit SHAs on their latest releases: checkout v7.0.1, setup-node v7.1.0, upload-pages-artifact v5.0.0, deploy-pages v5.0.1 (closes #4).
+- Deploy installs dependencies once (`npm ci`, then check, lint and build) instead of a second install inside `withastro/action`.
+- README rewritten: highlights, tech stack, how it works (with a build diagram), project structure, scripts, CI and security, SEO, performance and badges.
+
 ## [1.3.0] - 2026-11-11
 
 ### Changed

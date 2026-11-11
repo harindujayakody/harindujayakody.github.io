@@ -70,7 +70,9 @@ The deploy workflow passes `GITHUB_TOKEN` so the GitHub API isn't rate-limited i
 ## Deploy
 
 `.github/workflows/deploy.yml`: on push to `master`, daily at 01:00 UTC, or manually.
-`withastro/action@v3` (Node 24) builds, then `actions/deploy-pages@v4` publishes. Repo setting: Pages → Source: GitHub Actions.
+Steps (Node 24): `npm ci` → `npm run check` → `npm run lint` → `npm run build` → `actions/upload-pages-artifact` → `actions/deploy-pages`. A failed check or lint stops the release. Every action is pinned to a full commit SHA with its release in a comment; bump them deliberately. Repo setting: Pages → Source: GitHub Actions.
+
+`.github/workflows/ci.yml` runs the same check, lint and build on every pull request (no deploy).
 
 ### Cloudflare (in front of harindujayakody.com)
 

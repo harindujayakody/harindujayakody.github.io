@@ -51,6 +51,7 @@ All CSS, no JavaScript. Everything is disabled under `prefers-reduced-motion: re
 Scroll-linked animations must use longhand properties (`animation-name`, `animation-timeline`, …). The CSS minifier folds `animation` plus `animation-timeline` into one shorthand, and browsers reject a shorthand with a timeline, so the animation silently disappears.
 | `.caret` | Blinking cursor in the hero |
 | `.ping` | Pulse on the newest timeline repo |
+| `.tl-dot` | Timeline dots: grey until their row reaches the middle of the screen, then mint (`animation-timeline: view()`, range `entry 100%` → `cover 50%`); `.is-newest` is always mint. Static grey where unsupported |
 | Cards | `-translate-y-0.5` and a brighter border on hover |
 
 ## Components

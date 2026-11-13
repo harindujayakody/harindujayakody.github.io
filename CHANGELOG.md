@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.14.0] - 2026-11-13
+
+### Changed
+- Timeline dots react to scrolling (#35): on `/timeline/` and the home page's "Recently shipped" list, each dot turns from grey to mint as its row reaches the middle of the screen, so the rail fills as you scroll down and empties as you scroll up. CSS scroll timeline, no JavaScript. The newest repo stays mint with its pulse; browsers without scroll timelines keep the static look.
+
 ## [1.13.0] - 2026-11-13
 
 ### Added

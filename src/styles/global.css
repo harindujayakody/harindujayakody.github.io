@@ -67,6 +67,15 @@
   .reveal { animation-name: rise; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
 }
 
+/* Timeline dots: grey until their row reaches the middle of the screen, then mint (scroll-linked, no JS).
+   The newest repo is always mint. Unsupported browsers keep the static look. */
+.tl-dot { background-color: oklch(0.7 0.012 265 / 40%); }
+.tl-dot.is-newest { background-color: var(--primary); }
+@keyframes tl-dot { to { background-color: var(--primary); } }
+@supports (animation-timeline: view()) {
+  .tl-dot:not(.is-newest) { animation-name: tl-dot; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); animation-range: entry 100% cover 50%; }
+}
+
 /* Page transitions (no JS): header and footer are named so they hold still while the page content cross-fades. */
 @view-transition { navigation: auto; }
 ::view-transition-group(root) { animation-duration: 200ms; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }

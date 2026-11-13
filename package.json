@@ -1,7 +1,7 @@
 {
   "name": "harindu-site",
   "type": "module",
-  "version": "1.16.1",
+  "version": "1.17.0",
   "private": true,
   "engines": {
     "node": ">=22"

@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.17.0] - 2026-11-13
+
+### Changed
+- Compact table of contents (#40): the "On this page" box lists top-level sections only (sub-headings keep their own `#` links), numbers them `01`, `02`…, and starts collapsed to a single line on posts with more than 6 sections, so long guides start right under the title. Short posts (3–6 sections) still show it open. The CC Switch guide went from about 35 lines to one line (15 numbered entries when opened).
+
 ## [1.16.1] - 2026-11-13
 
 ### Changed

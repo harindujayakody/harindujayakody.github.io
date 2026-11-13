@@ -1,5 +1,5 @@
 import type { APIContext } from "astro";
-import { getPosts, categoryUrl } from "../lib/posts";
+import { getPosts, categoryUrl, allSeries, seriesUrl } from "../lib/posts";
 
 // Indexable pages only: tag pages and search are noindex, so they stay out.
 export async function GET({ site }: APIContext) {
@@ -11,6 +11,9 @@ export async function GET({ site }: APIContext) {
     ["/projects/", new Date()],
     ["/timeline/", new Date()],
     ...[...new Set(posts.map((p) => p.data.category))].map((c): [string, Date] => [categoryUrl(c), latest]),
+    ...allSeries(posts)
+      .filter((s) => s.parts.length > 1)
+      .map(({ name, parts }): [string, Date] => [seriesUrl(name), new Date(Math.max(...parts.map((p) => +(p.data.updated ?? p.data.date))))]),
     ...posts.map((p): [string, Date] => [`/blog/${p.id}/`, p.data.updated ?? p.data.date]),
   ];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

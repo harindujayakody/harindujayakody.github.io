@@ -2,22 +2,27 @@
 import Card from "./ui/Card.astro";
 import { fmtDate, type Post } from "../lib/posts";
 
+// Chronological older/newer by default; series parts pass their own labels.
 interface Props {
   older?: Post;
   newer?: Post;
+  label?: string;
+  olderText?: string;
+  newerText?: string;
+  class?: string;
 }
 
-const { older, newer } = Astro.props;
+const { older, newer, label = "Older and newer posts", olderText = "← older", newerText = "newer →", class: className = "mt-12" } = Astro.props;
 const links = [
-  older && { post: older, rel: "prev", label: "← older", class: "" },
-  newer && { post: newer, rel: "next", label: "newer →", class: "sm:col-start-2 sm:text-right" },
+  older && { post: older, rel: "prev", text: olderText, class: "" },
+  newer && { post: newer, rel: "next", text: newerText, class: "sm:col-start-2 sm:text-right" },
 ].filter((l) => l !== undefined);
 ---
 {links.length > 0 && (
-  <nav aria-label="Older and newer posts" class="mt-12 grid gap-3 sm:grid-cols-2">
+  <nav aria-label={label} class:list={["grid gap-3 sm:grid-cols-2", className]}>
     {links.map((l) => (
       <Card href={`/blog/${l.post.id}/`} rel={l.rel} class={`reveal ${l.class}`}>
-        <span class="font-mono text-xs text-muted-foreground">{l.label}</span>
+        <span class="font-mono text-xs text-muted-foreground">{l.text}</span>
         <span class="line-clamp-2 font-semibold group-hover:text-primary">{l.post.data.title}</span>
         <time datetime={l.post.data.date.toISOString()} class="font-mono text-xs text-muted-foreground">{fmtDate(l.post.data.date)}</time>
       </Card>

@@ -15,6 +15,9 @@ const blog = defineCollection({
         error: (iss) => `Unknown category ${JSON.stringify(iss.input)}. Use one of: AI, Guides, Windows, Web (see docs/CONTENT.md).`,
       }),
       tags: z.array(z.string()).default([]),
+      // Posts sharing the exact same name form a series (2+ published parts); parts read oldest first unless seriesOrder is set.
+      series: z.string().trim().min(1).optional(),
+      seriesOrder: z.number().int().positive().optional(),
       // 16:9 cover, path relative to the post, e.g. ./images/my-post.jpg
       image: image().optional(),
       imageAlt: z.string().default(""),

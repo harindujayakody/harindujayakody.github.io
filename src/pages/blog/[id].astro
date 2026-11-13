@@ -6,19 +6,22 @@ import PostList from "../../components/PostList.astro";
 import AuthorBox from "../../components/AuthorBox.astro";
 import Toc from "../../components/Toc.astro";
 import PostNav from "../../components/PostNav.astro";
+import SeriesBox from "../../components/SeriesBox.astro";
 import { authorJsonLd } from "../../data/author";
-import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, type Post } from "../../lib/posts";
+import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, seriesOf, seriesUrl, type Post } from "../../lib/posts";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
   // posts are newest first, so the next index is the older post.
   return posts.map((post, i) => ({
     params: { id: post.id },
-    props: { post, related: relatedPosts(post, posts), newer: posts[i - 1], older: posts[i + 1] },
+    props: { post, related: relatedPosts(post, posts), newer: posts[i - 1], older: posts[i + 1], series: seriesOf(post, posts) },
   }));
 }
 
-const { post, related, newer, older }: { post: Post; related: Post[]; newer?: Post; older?: Post } = Astro.props;
+const { post, related, newer, older, series }: {
+  post: Post; related: Post[]; newer?: Post; older?: Post; series?: ReturnType<typeof seriesOf>;
+} = Astro.props;
 const { Content, headings } = await render(post);
 const d = post.data;
 const url = new URL(`/blog/${post.id}/`, Astro.site).href;
@@ -41,6 +44,10 @@ const jsonLd = [
     image: new URL(og, Astro.site).href,
     author: authorJsonLd(Astro.site!),
     publisher: { "@id": authorJsonLd(Astro.site!)["@id"] },
+    ...(series && {
+      position: series.index + 1,
+      isPartOf: { "@type": "CreativeWorkSeries", name: series.name, url: new URL(seriesUrl(series.name), Astro.site).href },
+    }),
   },
   {
     "@context": "https://schema.org",
@@ -79,12 +86,17 @@ const jsonLd = [
       <Image src={d.image} alt={d.imageAlt} widths={[400, 768, 1200]} sizes="(min-width: 768px) 736px, 100vw"
         loading="eager" fetchpriority="high" class="rise aspect-video w-full rounded-xl border object-cover" style="--d:200ms" />
     )}
+    {series && <SeriesBox name={series.name} parts={series.parts} index={series.index} />}
     <Toc headings={headings} />
     <div class="prose rise" style="--d:240ms"><Content /></div>
     <AuthorBox />
   </article>
 
-  <PostNav older={older} newer={newer} />
+  {series && (
+    <PostNav older={series.parts[series.index - 1]} newer={series.parts[series.index + 1]} label={`${series.name}: previous and next part`}
+      olderText="← previous part" newerText="next part →" />
+  )}
+  <PostNav older={older} newer={newer} class={series ? "mt-3" : undefined} />
 
   {related.length > 0 && (
     <section class="mt-20 flex flex-col gap-5">

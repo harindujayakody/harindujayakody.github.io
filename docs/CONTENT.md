@@ -39,8 +39,13 @@ Posts with three or more `##` sections automatically get an "On this page" table
 | `image` | no | Path relative to the post. Use 16:9, at least 1200×675. |
 | `imageAlt` | with image | Describe the image for screen readers. |
 | `draft` | no | `true` keeps the post off the live site, sitemap and RSS. Drafts still show in `npm run dev` for previewing. |
+| `comments` | no | `false` hides the comments section on that post. Default `true`. |
 | `series` | no | Name of a multi-part series. See below. |
 | `seriesOrder` | no | Part number (1, 2, 3…). Set it on every part or on none. |
+
+### Comments
+
+Every post has a comments section (giscus). Readers sign in with GitHub, and each post gets its own thread in the repo's **Discussions → Announcements** category, created when the first comment is posted. Moderate there: edit, hide or delete comments, or lock a thread. Set `comments: false` to turn comments off for one post.
 
 ### Series
 

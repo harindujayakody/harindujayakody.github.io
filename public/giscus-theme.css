@@ -1,0 +1,24 @@
+/* giscus theme for the site's comments: giscus's transparent dark base, recoloured with the tokens in src/styles/global.css.
+   Loaded by giscus inside its iframe from https://harindujayakody.com/giscus-theme.css, so it must stay in public/. */
+@import url("https://giscus.app/themes/transparent_dark.css");
+
+main {
+  --color-fg-default: oklch(0.96 0.004 265 / 90%);
+  --color-fg-muted: oklch(0.7 0.012 265);
+  --color-fg-subtle: oklch(0.55 0.012 265);
+  --color-border-default: oklch(1 0 0 / 9%);
+  --color-border-muted: oklch(1 0 0 / 6%);
+  --color-canvas-overlay: oklch(0.175 0.01 265 / 95%);
+  --color-neutral-muted: oklch(0.23 0.012 265 / 60%);
+  --color-neutral-subtle: oklch(0.23 0.012 265 / 40%);
+  --color-accent-fg: oklch(0.82 0.09 165);
+  --color-accent-emphasis: oklch(0.82 0.09 165);
+  --color-accent-muted: oklch(0.82 0.09 165 / 40%);
+  --color-accent-subtle: oklch(0.82 0.09 165 / 10%);
+  --color-btn-primary-text: oklch(0.2 0.02 165);
+  --color-btn-primary-bg: oklch(0.82 0.09 165);
+  --color-btn-primary-hover-bg: oklch(0.82 0.09 165 / 85%);
+  --color-btn-primary-disabled-text: oklch(0.2 0.02 165 / 60%);
+  --color-btn-primary-disabled-bg: oklch(0.82 0.09 165 / 40%);
+  --color-scale-blue-8: oklch(0.82 0.09 165 / 15%);
+}

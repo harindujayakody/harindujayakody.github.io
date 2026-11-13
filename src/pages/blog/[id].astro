@@ -7,6 +7,7 @@ import AuthorBox from "../../components/AuthorBox.astro";
 import Toc from "../../components/Toc.astro";
 import PostNav from "../../components/PostNav.astro";
 import SeriesBox from "../../components/SeriesBox.astro";
+import Comments from "../../components/Comments.astro";
 import { authorJsonLd } from "../../data/author";
 import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, seriesOf, seriesUrl, type Post } from "../../lib/posts";
 
@@ -97,6 +98,8 @@ const jsonLd = [
       olderText="← previous part" newerText="next part →" />
   )}
   <PostNav older={older} newer={newer} class={series ? "mt-3" : undefined} />
+
+  {d.comments && <Comments />}
 
   {related.length > 0 && (
     <section class="mt-20 flex flex-col gap-5">

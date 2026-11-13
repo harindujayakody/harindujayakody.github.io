@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.12.0] - 2026-11-13
+
+### Added
+- Comments on posts (#24) with [giscus](https://giscus.app): each post gets its own GitHub Discussions thread in this repo's Announcements category (only giscus and the owner can open threads). Readers sign in with GitHub to comment or react.
+  - Loads only when the comments come within 600px of the screen, or when "load comments" is clicked, so readers who stop earlier download nothing from giscus.
+  - Matches the site: `public/giscus-theme.css` recolours giscus's transparent dark theme with the site's ink, mint and border tokens.
+  - `$ cat comments.log` heading, placed after the older/newer links and before related posts. Without JavaScript, a link to the Discussions page shows instead.
+  - `comments: false` in front matter turns comments off for a post.
+- GitHub Discussions enabled on the repo.
+
 ## [1.11.0] - 2026-11-13
 
 ### Added

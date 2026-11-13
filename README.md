@@ -50,6 +50,7 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 | **Contribution graph** | The last year of GitHub activity on the home page, built at build time in the site's mint, no JavaScript |
 | **Comments** | giscus (GitHub Discussions) on every post, in the site's colours; loads only when you scroll to it. `comments: false` turns it off per post |
 | **Newsletter** | Buttondown email sign-up after every post and on the blog pages; a plain form, no JavaScript or tracking script |
+| **Newsletter** | Buttondown email sign-up after every post and on the blog pages; a plain form, no JavaScript or tracking script |
 | **X posts** | Home-page feed and in-article embeds rendered as site-themed cards at build time, with no X script on the page |
 | **Code blocks** | GitHub dark syntax theme with a copy button |
 | **Search** | `Ctrl/⌘ + K` or `/` opens a search pop-up anywhere: grouped, highlighted results with full keyboard control. `/search/?q=` page for shareable links |

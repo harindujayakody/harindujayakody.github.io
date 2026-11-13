@@ -51,7 +51,7 @@ All CSS, no JavaScript. Everything is disabled under `prefers-reduced-motion: re
 Scroll-linked animations must use longhand properties (`animation-name`, `animation-timeline`, …). The CSS minifier folds `animation` plus `animation-timeline` into one shorthand, and browsers reject a shorthand with a timeline, so the animation silently disappears.
 | `.caret` | Blinking cursor in the hero |
 | `.ping` | Pulse on the newest timeline repo |
-| `.tl-dot` | Timeline dots: grey until their row reaches the middle of the screen, then mint (`animation-timeline: view()`, range `entry 100%` → `cover 50%`); `.is-newest` is always mint. Static grey where unsupported |
+| `.tl-dot` | Timeline dots as a scroll spotlight: mint while their row is about 28–38% down the screen (keyframes 62–72% of `animation-timeline: view()`), grey above and below; `.is-newest` is always mint. Static grey where unsupported |
 | Cards | `-translate-y-0.5` and a brighter border on hover |
 
 ## Components
@@ -71,9 +71,9 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 | `Comments` | `$ cat comments.log` heading; giscus iframe injected on scroll (600px early) or click; theme `public/giscus-theme.css` recolours giscus's transparent dark theme with the site tokens |
 | `Subscribe` | `$ subscribe --email` card after each post (`compact` on blog list pages): plain HTML form posting to Buttondown, works without JavaScript; username in `src/data/author.ts` |
 | `Toc` | "On this page" `<details>`, shown on posts with 3+ `##` sections; two columns above `sm` when long |
-| `AuthorBox` | After every post: avatar, name, role, bio, links; reads `src/data/author.ts` |
+| `AuthorBox` | After every post: avatar, name, role, bio, and icon links (X, LinkedIn, GitHub, email, RSS, newsletter) as ghost icon buttons with labels and hover titles; reads `src/data/author.ts` |
 | `SearchDialog` | Native `<dialog>`: opened by the header icon, `Ctrl/⌘+K` or `/`; combobox + grouped listbox, `↑`/`↓`/`↵`/`esc`; full-screen below `sm` |
-| `Shortcuts` | Global keys (`Ctrl/⌘+K`, `/`, `g`+`h`/`b`/`p`/`t`, `?`) and the help dialog; key hints (`kbd`) shown only to fine-pointer devices |
+| `Shortcuts` | Global keys (`Ctrl/⌘+K`, `/`, `g`+`h`/`b`/`p`/`t`, `?`) and the help dialog; key hints (`kbd`) shown only to fine-pointer devices. `[data-mod-key]` renders `⌘` or `Ctrl` from CSS, based on `html[data-mac]` set by an inline script in the head before first paint |
 
 ## Layout
 

@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.16.0] - 2026-11-13
+
+### Changed
+- Timeline dots are a scroll spotlight (#35 follow-up): instead of every dot above the middle staying lit, a dot turns mint only while its row is about a third of the way down the screen, then dims again. Only the rows near the top glow, and the glow follows you as you scroll. The newest repo stays mint with its pulse.
+- Author box links are icons (X, LinkedIn, GitHub, Email, RSS, Newsletter), with accessible names and hover titles, instead of text links.
+
+### Fixed
+- `⌘ K` on Macs: the key label is now chosen before the first paint (no "Ctrl" flash), and detection also covers Chrome on macOS, which reports its platform as `macOS` and was missed by the old case-sensitive check. Windows, Linux and Android still show `Ctrl K`.
+- Missing spaces in key hints: the footer read `v1.15.0·shortcuts` and the header read `CtrlK`. The footer hint is now inline, and the header hint uses a gap.
+
 ## [1.15.0] - 2026-11-13
 
 ### Added

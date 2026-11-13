@@ -23,7 +23,7 @@ draft: false                  # true keeps it out of the build
 
 Start with the first paragraph. Don't repeat the title as a `#` heading; the page already shows it.
 
-Posts with three or more `##` sections automatically get an "On this page" table of contents, and every `##`/`###` heading gets a `#` link readers can copy. The author box at the end of each post comes from `src/data/author.ts`; edit your bio there once.
+Posts with three or more `##` sections automatically get an "On this page" table of contents (top-level sections only; collapsed by default when there are more than 6), and every `##`/`###` heading gets a `#` link readers can copy. The author box at the end of each post comes from `src/data/author.ts`; edit your bio there once.
 
 ## Use h2 for sections
 ```

@@ -70,7 +70,7 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 | `PostNav` | Older/newer (or previous/next part) cards, stacked on phones |
 | `Comments` | `$ cat comments.log` heading; giscus iframe injected on scroll (600px early) or click; theme `public/giscus-theme.css` recolours giscus's transparent dark theme with the site tokens |
 | `Subscribe` | `$ subscribe --email` card after each post (`compact` on blog list pages): plain HTML form posting to Buttondown, works without JavaScript; username in `src/data/author.ts` |
-| `Toc` | "On this page" `<details>`, shown on posts with 3+ `##` sections; two columns above `sm` when long |
+| `Toc` | "On this page" `<details>` on posts with 3+ `##` sections: top-level sections only, numbered `01`, `02`…; open for up to 6 sections, collapsed to one line above that; two columns above `sm` when long |
 | `AuthorBox` | After every post: avatar, name, role, bio, and icon links (X, LinkedIn, GitHub, email, RSS, newsletter) as ghost icon buttons with labels and hover titles; reads `src/data/author.ts` |
 | `SearchDialog` | Native `<dialog>`: opened by the header icon, `Ctrl/⌘+K` or `/`; combobox + grouped listbox, `↑`/`↓`/`↵`/`esc`; full-screen below `sm` |
 | `Shortcuts` | Global keys (`Ctrl/⌘+K`, `/`, `g`+`h`/`b`/`p`/`t`, `?`) and the help dialog; key hints (`kbd`) shown only to fine-pointer devices. `[data-mod-key]` renders `⌘` or `Ctrl` from CSS, based on `html[data-mac]` set by an inline script in the head before first paint |

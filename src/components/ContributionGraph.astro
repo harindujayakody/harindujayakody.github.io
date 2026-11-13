@@ -1,0 +1,50 @@
+---
+import type { ContributionCalendar } from "../lib/github";
+
+interface Props {
+  calendar: ContributionCalendar;
+}
+
+const { calendar } = Astro.props;
+const fmt = (date: string, opts: Intl.DateTimeFormatOptions) => new Date(date).toLocaleDateString("en-GB", { ...opts, timeZone: "UTC" });
+
+// GitHub's own quartile levels → .cg .l0–.l4 in global.css (short classes: there are ~370 cells).
+const levels = { NONE: "l0", FIRST_QUARTILE: "l1", SECOND_QUARTILE: "l2", THIRD_QUARTILE: "l3", FOURTH_QUARTILE: "l4" };
+let lastLabel = -3;
+const weeks = calendar.weeks.map((w, i) => {
+  const days = w.contributionDays;
+  // Weeks run Sunday to Saturday; pad the first week so day 0 lands in the right row.
+  const pad = i === 0 ? new Date(days[0].date).getUTCDay() : 0;
+  const prev = calendar.weeks[i - 1]?.contributionDays[0];
+  // Label a column when its month starts, unless the previous label is under 3 weeks away (they'd overlap).
+  const newMonth = !prev || prev.date.slice(5, 7) !== days[0].date.slice(5, 7);
+  const month = newMonth && i - lastLabel >= 3 ? fmt(days[0].date, { month: "short" }).slice(0, 3) : "";
+  if (month) lastLabel = i;
+  return { days, pad, month };
+});
+// Phones show the last 26 weeks so cells stay readable.
+const phoneStart = weeks.length - 26;
+const total = calendar.totalContributions.toLocaleString("en");
+const first = calendar.weeks[0].contributionDays[0].date;
+---
+<section aria-label="GitHub contributions" class="reveal flex flex-col gap-3 rounded-xl border bg-card/50 p-4 sm:p-5">
+  <div class="flex flex-wrap items-baseline justify-between gap-2 font-mono text-xs text-muted-foreground">
+    <p><span class="text-sm font-semibold text-foreground tabular-nums">{total}</span> contributions in the last year</p>
+    <a href="https://github.com/harindujayakody" target="_blank" rel="noopener" class="hover:text-primary">@harindujayakody ↗</a>
+  </div>
+  <div role="img" aria-label={`${total} GitHub contributions between ${fmt(first, { day: "numeric", month: "long", year: "numeric" })} and today`} class="cg flex gap-[3px]">
+    {weeks.map((w, i) => (
+      <div class:list={["flex min-w-0 flex-1 flex-col gap-[3px]", i < phoneStart && "max-sm:hidden"]} aria-hidden="true">
+        <span class="h-3.5 font-mono text-[10px] leading-none whitespace-nowrap text-muted-foreground">{w.month}</span>
+        {Array.from({ length: w.pad }, () => <i class="pad" />)}
+        {w.days.map((d) => (
+          <i class={levels[d.contributionLevel]}
+            title={`${d.contributionCount === 0 ? "No" : d.contributionCount.toLocaleString("en")} contribution${d.contributionCount === 1 ? "" : "s"} on ${fmt(d.date, { day: "numeric", month: "short", year: "numeric" })}`} />
+        ))}
+      </div>
+    ))}
+  </div>
+  <div class="cg flex items-center justify-end gap-1.5 font-mono text-[10px] text-muted-foreground" aria-hidden="true">
+    less {Object.values(levels).map((c) => <i class:list={[c, "size-2.5"]} />)} more
+  </div>
+</section>

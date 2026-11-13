@@ -34,7 +34,7 @@ src/
   data/author.ts         name, role, bio, links; feeds the author box and Person JSON-LD
   lib/
     posts.ts             getPosts, slugify, category/tag URLs, relatedPosts, postMarkdown
-    github.ts            repo list from the GitHub API (cached per build, fails soft to [])
+    github.ts            repo list (REST) and contribution calendar (GraphQL), each cached per build and failing soft
     x.ts                 X post fetch (no key; fails soft) and xCardHtml, the one card used everywhere
     x-embed-plugin.ts    Markdown (Sätteri) plugin: pasted X embed code becomes an xCardHtml card at build time
     heading-anchors-plugin.ts  Markdown plugin: ids + "#" self-links on h2/h3 (GitHub-style slugs)
@@ -50,7 +50,7 @@ src/
 
 | Route | File | Notes |
 |---|---|---|
-| `/` | `pages/index.astro` | Hero, stats (posts, tools & projects, years; each links to its page), featured projects, latest posts, recent repos, X posts. `ProfilePage` + `WebSite` JSON-LD |
+| `/` | `pages/index.astro` | Hero, stats (posts, tools & projects, years; each links to its page), GitHub contribution graph, featured projects, latest posts, recent repos, X posts. `ProfilePage` + `WebSite` JSON-LD |
 | `/blog/` | `pages/blog/index.astro` → `BlogIndex` | Category filter chips |
 | `/blog/category/<slug>/` | `pages/blog/category/[slug].astro` | Indexable; `CollectionPage` + breadcrumbs |
 | `/blog/tag/<slug>/` | `pages/blog/tag/[slug].astro` | `noindex, follow` |
@@ -69,6 +69,7 @@ src/
 | Source | Used for | If it fails |
 |---|---|---|
 | `api.github.com/users/harindujayakody/repos` | timeline, stats, repo list | Build continues; timeline shows a notice, stats fall back |
+| `api.github.com/graphql` (needs `GITHUB_TOKEN`) | contribution graph on the home page | Build continues; the graph is hidden and the log says why |
 | `cdn.syndication.twimg.com/tweet-result` | X cards on the home page and in posts | Home: that post is skipped. Posts: the pasted embed shows as a styled quote |
 | `pbs.twimg.com` (browser) | avatars, photo and video previews in X cards (680px JPG) | Image fails to load; the card text still shows |
 

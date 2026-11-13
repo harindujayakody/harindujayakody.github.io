@@ -11,14 +11,15 @@ import { author, authorJsonLd } from "../data/author";
 import Socials from "../components/Socials.astro";
 import PostList from "../components/PostList.astro";
 import Timeline from "../components/Timeline.astro";
-import { getRepos } from "../lib/github";
+import ContributionGraph from "../components/ContributionGraph.astro";
+import { getRepos, getContributions } from "../lib/github";
 import { getPosts } from "../lib/posts";
 import XFeed from "../components/XFeed.astro";
 import { getXPosts } from "../lib/x";
 import { xPosts } from "../data/x-posts";
 
 const gh = "https://github.com/harindujayakody";
-const [repos, posts, tweets] = await Promise.all([getRepos(), getPosts(), getXPosts(xPosts)]);
+const [repos, posts, tweets, contributions] = await Promise.all([getRepos(), getPosts(), getXPosts(xPosts), getContributions()]);
 
 // Hand-picked items and public repos overlap (most items are repos), so count unique names.
 const shipped = new Set([...items, ...repos].map((x) => x.name.toLowerCase())).size;
@@ -86,6 +87,8 @@ const jsonLd = [
         </a>
       ))}
     </section>
+
+    {contributions && <ContributionGraph calendar={contributions} />}
 
     <section class="flex flex-col gap-5">
       <div class="reveal flex items-baseline justify-between">

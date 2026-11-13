@@ -47,6 +47,7 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 | **Fast navigation** | Pages prerender on hover (Speculation Rules) and cross-fade with View Transitions; both need no JavaScript and fall back to normal links |
 | **Projects & Tools** | Hand-picked tools and projects plus every public GitHub repo, sorted by stars |
 | **Repo timeline** | Every public repository grouped by year, refreshed daily from the GitHub API |
+| **Contribution graph** | The last year of GitHub activity on the home page, built at build time in the site's mint, no JavaScript |
 | **X posts** | Home-page feed and in-article embeds rendered as site-themed cards at build time, with no X script on the page |
 | **Code blocks** | GitHub dark syntax theme with a copy button |
 | **Search** | `Ctrl/⌘ + K` or `/` opens a search pop-up anywhere: grouped, highlighted results with full keyboard control. `/search/?q=` page for shareable links |
@@ -141,7 +142,7 @@ npm run dev        # http://localhost:4321
 | `npm run lint` | Lint with ESLint |
 | `npm test` | Unit tests for the search logic (`src/lib/search.test.mjs`) |
 
-Set `GITHUB_TOKEN` in your shell if you hit GitHub's anonymous API limit (60 requests an hour). CI provides it automatically.
+Set `GITHUB_TOKEN` in your shell if you hit GitHub's anonymous API limit (60 requests an hour). It's also needed for the contribution graph, because GitHub's GraphQL API doesn't allow anonymous requests; without it the graph is simply left out. With the GitHub CLI: `GITHUB_TOKEN=$(gh auth token) npm run build`. CI provides it automatically.
 
 ## Publishing content
 

@@ -70,6 +70,7 @@ src/
 |---|---|---|
 | `api.github.com/users/harindujayakody/repos` | timeline, stats, repo list | Build continues; timeline shows a notice, stats fall back |
 | `api.github.com/graphql` (needs `GITHUB_TOKEN`) | contribution graph on the home page | Build continues; the graph is hidden and the log says why |
+| `static.cloudflareinsights.com` (browser, injected by Cloudflare) | Web Analytics beacon on every page, reporting to `/cdn-cgi/rum` | Stats are missed; the page is unaffected |
 | `giscus.app` (browser, on demand) | comments on posts, loaded when the reader scrolls near them or clicks "load comments" | The comments area stays empty; the rest of the post is unaffected |
 | `cdn.syndication.twimg.com/tweet-result` | X cards on the home page and in posts | Home: that post is skipped. Posts: the pasted embed shows as a styled quote |
 | `pbs.twimg.com` (browser) | avatars, photo and video previews in X cards (680px JPG) | Image fails to load; the card text still shows |
@@ -90,7 +91,7 @@ GitHub Pages can't set cache headers, so long caching is done in Cloudflare:
 - **Cache rule:** URI path starts with `/_astro/` → Edge TTL and Browser TTL **1 year**. Everything in `/_astro/` has a content hash in its file name, so it never goes stale.
 - Leave HTML on the default short cache so new posts appear right after a deploy.
 - **Email Address Obfuscation** (Scrape Shield) adds `email-decode.min.js` to every page; turn it off to keep pages script-free.
-- **Web Analytics** adds `beacon.min.js` (about 10 KB, flagged as legacy JavaScript by PageSpeed). Keep it only if you use the stats.
+- **Web Analytics** is the site's analytics (#25), on with automatic setup: Cloudflare adds `beacon.min.js` (about 10 KB, flagged as legacy JavaScript by PageSpeed) to every HTML page at the edge, so it's not in the code and never runs in local builds. It sets no cookies, and it waits for `prerenderingchange`, so pages prerendered by the Speculation Rules aren't counted until opened. Stats: Cloudflare dashboard → Web Analytics → harindujayakody.com.
 
 ## SEO model
 

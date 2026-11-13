@@ -143,7 +143,18 @@ npm run dev        # http://localhost:4321
 | `npm run lint` | Lint with ESLint |
 | `npm test` | Unit tests for the search logic (`src/lib/search.test.mjs`) |
 
-Set `GITHUB_TOKEN` in your shell if you hit GitHub's anonymous API limit (60 requests an hour). It's also needed for the contribution graph, because GitHub's GraphQL API doesn't allow anonymous requests; without it the graph is simply left out. With the GitHub CLI: `GITHUB_TOKEN=$(gh auth token) npm run build`. CI provides it automatically.
+Set `GITHUB_TOKEN` in your shell if you hit GitHub's anonymous API limit (60 requests an hour). It's also needed for the contribution graph, because GitHub's GraphQL API doesn't allow anonymous requests; without it the graph is simply left out. CI provides it automatically. Locally, with the GitHub CLI:
+
+```bash
+# Bash / Git Bash / macOS / Linux
+GITHUB_TOKEN=$(gh auth token) npm run build
+```
+
+```powershell
+# Windows PowerShell (stays set for this terminal; remove with: Remove-Item Env:GITHUB_TOKEN)
+$env:GITHUB_TOKEN = gh auth token
+npm run build
+```
 
 ## Publishing content
 
@@ -165,6 +176,7 @@ Full front-matter reference: [docs/CONTENT.md](docs/CONTENT.md).
 - **Least-privilege tokens.** Workflows request only `contents: read` (plus `pages` and `id-token` for deploying).
 - **Reproducible installs.** `npm ci` from the committed lockfile.
 - **No secrets in the repo.** The only token used is GitHub's built-in `GITHUB_TOKEN`.
+- **Cookie-free analytics.** Cloudflare Web Analytics, added by Cloudflare at the edge (not in the code); no cookies, so no consent banner. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#cloudflare-in-front-of-harindujayakodycom).
 
 ## SEO and AI-agent support
 

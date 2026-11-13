@@ -47,6 +47,10 @@ Posts with three or more `##` sections automatically get an "On this page" table
 
 Every post has a comments section (giscus). Readers sign in with GitHub, and each post gets its own thread in the repo's **Discussions → Announcements** category, created when the first comment is posted. Moderate there: edit, hide or delete comments, or lock a thread. Set `comments: false` to turn comments off for one post.
 
+### Newsletter
+
+A `$ subscribe --email` form appears after every post and under the post lists on the blog pages. It posts straight to Buttondown (username `harindu`, set in `src/data/author.ts`). Subscribers, confirmation emails (double opt-in) and sending live in the Buttondown dashboard; nothing about the newsletter is stored in this repo.
+
 ### Series
 
 Give each part the same `series` name, spelled exactly the same:

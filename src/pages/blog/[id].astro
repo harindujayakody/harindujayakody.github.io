@@ -8,6 +8,7 @@ import Toc from "../../components/Toc.astro";
 import PostNav from "../../components/PostNav.astro";
 import SeriesBox from "../../components/SeriesBox.astro";
 import Comments from "../../components/Comments.astro";
+import Subscribe from "../../components/Subscribe.astro";
 import { authorJsonLd } from "../../data/author";
 import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, seriesOf, seriesUrl, type Post } from "../../lib/posts";
 
@@ -91,6 +92,7 @@ const jsonLd = [
     <Toc headings={headings} />
     <div class="prose rise" style="--d:240ms"><Content /></div>
     <AuthorBox />
+    <Subscribe />
   </article>
 
   {series && (

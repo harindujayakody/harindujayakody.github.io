@@ -69,6 +69,7 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 | `SeriesBox` | "series · part N of M" `<details>` listing every part, current one highlighted |
 | `PostNav` | Older/newer (or previous/next part) cards, stacked on phones |
 | `Comments` | `$ cat comments.log` heading; giscus iframe injected on scroll (600px early) or click; theme `public/giscus-theme.css` recolours giscus's transparent dark theme with the site tokens |
+| `Subscribe` | `$ subscribe --email` card after each post (`compact` on blog list pages): plain HTML form posting to Buttondown, works without JavaScript; username in `src/data/author.ts` |
 | `Toc` | "On this page" `<details>`, shown on posts with 3+ `##` sections; two columns above `sm` when long |
 | `AuthorBox` | After every post: avatar, name, role, bio, links; reads `src/data/author.ts` |
 | `SearchDialog` | Native `<dialog>`: opened by the header icon, `Ctrl/⌘+K` or `/`; combobox + grouped listbox, `↑`/`↓`/`↵`/`esc`; full-screen below `sm` |

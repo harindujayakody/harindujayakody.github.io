@@ -5,15 +5,20 @@ import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
 import AuthorBox from "../../components/AuthorBox.astro";
 import Toc from "../../components/Toc.astro";
+import PostNav from "../../components/PostNav.astro";
 import { authorJsonLd } from "../../data/author";
 import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, type Post } from "../../lib/posts";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
-  return posts.map((post) => ({ params: { id: post.id }, props: { post, related: relatedPosts(post, posts) } }));
+  // posts are newest first, so the next index is the older post.
+  return posts.map((post, i) => ({
+    params: { id: post.id },
+    props: { post, related: relatedPosts(post, posts), newer: posts[i - 1], older: posts[i + 1] },
+  }));
 }
 
-const { post, related }: { post: Post; related: Post[] } = Astro.props;
+const { post, related, newer, older }: { post: Post; related: Post[]; newer?: Post; older?: Post } = Astro.props;
 const { Content, headings } = await render(post);
 const d = post.data;
 const url = new URL(`/blog/${post.id}/`, Astro.site).href;
@@ -51,6 +56,7 @@ const jsonLd = [
 ---
 <Layout title={`${d.title} · Harindu Jayakody`} description={d.description} image={og} type="article"
   published={d.date} modified={d.updated ?? d.date} jsonLd={jsonLd}>
+  <div class="read-progress" aria-hidden="true"></div>
   <article class="flex flex-col gap-8">
     <header class="flex flex-col gap-4">
       <nav aria-label="Breadcrumb" class="rise flex flex-wrap items-center gap-1.5 font-mono text-sm text-muted-foreground">
@@ -77,6 +83,8 @@ const jsonLd = [
     <div class="prose rise" style="--d:240ms"><Content /></div>
     <AuthorBox />
   </article>
+
+  <PostNav older={older} newer={newer} />
 
   {related.length > 0 && (
     <section class="mt-20 flex flex-col gap-5">

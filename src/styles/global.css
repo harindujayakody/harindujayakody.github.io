@@ -62,13 +62,31 @@
 .caret { animation: blink 1s steps(1) infinite; }
 .ping { animation: ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite; }
 
+/* Scroll-linked animations use longhands only: the minifier folds `animation` + `animation-timeline` into one shorthand, which browsers reject. */
 @supports (animation-timeline: view()) {
-  .reveal { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
+  .reveal { animation-name: rise; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
 }
+
+/* Page transitions (no JS): header and footer are named so they hold still while the page content cross-fades. */
+@view-transition { navigation: auto; }
+::view-transition-group(root) { animation-duration: 200ms; animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+/* Reading progress on posts: scroll-linked, so nothing runs per frame in JS. Hidden where scroll timelines aren't supported. */
+.read-progress { display: none; }
+@keyframes read-progress { to { transform: scaleX(1); } }
+@supports (animation-timeline: scroll()) {
+  .read-progress {
+    display: block; position: fixed; inset-inline: 0; top: calc(3.5rem + 1px); z-index: 20; height: 2px;
+    background: oklch(0.82 0.09 165 / 70%); transform: scaleX(0); transform-origin: 0 50%;
+    animation-name: read-progress; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: scroll(root);
+  }
+}
+@media print { .read-progress { display: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   .rise, .reveal, .caret, .ping { animation: none !important; }
   html { scroll-behavior: auto; }
+  @view-transition { navigation: none; }
 }
 
 /* Markdown post body */

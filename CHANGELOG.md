@@ -2,6 +2,17 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.9.0] - 2026-11-13
+
+### Added
+- Instant page loads (#20): Speculation Rules prerender same-site pages when you hover a link (or press on touch screens), so they open immediately in Chrome and Edge. Feeds, markdown copies, share images, `search.json` and external links are excluded. Other browsers ignore the rules. No JavaScript file added.
+- Page transitions (#21): pages cross-fade in 200ms while the header and footer hold still, using cross-document View Transitions (CSS only). Off under `prefers-reduced-motion`; browsers without support navigate as before.
+- Reading progress bar (#22): a 2px mint bar under the header on posts, driven by a scroll timeline (no JavaScript). Hidden where unsupported and in print.
+- Older / newer links (#23) at the end of every post, above related posts, with `rel="prev"` / `rel="next"`. Stacked on phones; the newest and oldest posts show one link.
+
+### Fixed
+- The scroll-reveal fade on sections never ran in production: the CSS minifier folded `animation` and `animation-timeline` into one shorthand, which browsers reject. Scroll-linked animations now use longhand properties (noted in `docs/DESIGN.md`).
+
 ## [1.8.0] - 2026-11-12
 
 ### Added

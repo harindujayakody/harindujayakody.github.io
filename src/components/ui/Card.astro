@@ -1,5 +1,5 @@
 ---
-const { href, class: className = "" } = Astro.props;
+const { href, class: className = "", ...rest } = Astro.props;
 const Tag = href ? "a" : "div";
 ---
 <Tag
@@ -9,6 +9,7 @@ const Tag = href ? "a" : "div";
     href && "hover:-translate-y-0.5 hover:border-foreground/20 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring",
     className,
   ]}
+  {...rest}
 >
   <slot />
 </Tag>

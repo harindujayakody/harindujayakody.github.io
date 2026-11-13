@@ -54,7 +54,7 @@ src/
 | `/blog/` | `pages/blog/index.astro` → `BlogIndex` | Category filter chips |
 | `/blog/category/<slug>/` | `pages/blog/category/[slug].astro` | Indexable; `CollectionPage` + breadcrumbs |
 | `/blog/tag/<slug>/` | `pages/blog/tag/[slug].astro` | `noindex, follow` |
-| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` (author from `data/author.ts`) + breadcrumbs, cover image, table of contents (3+ sections), heading links, author box, related posts, X embeds as static cards |
+| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` (author from `data/author.ts`) + breadcrumbs, cover image, table of contents (3+ sections), heading links, author box, older/newer links (`PostNav`), related posts, reading progress bar, X embeds as static cards |
 | `/blog/<slug>.md` | `pages/blog/[id].md.ts` | Raw markdown for AI agents |
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
 | `/timeline/` | `pages/timeline.astro` | Every repo grouped by year |

@@ -45,6 +45,10 @@ All CSS, no JavaScript. Everything is disabled under `prefers-reduced-motion: re
 |---|---|
 | `.rise` | Fade and rise 14px on load; stagger with `style="--d:80ms"` |
 | `.reveal` | Same rise, driven by scroll position (`animation-timeline: view()`), in browsers that support it; elsewhere the content just shows |
+| `.read-progress` | 2px mint bar under the header on posts, filled by `animation-timeline: scroll(root)`; hidden where unsupported and in print |
+| Page transitions | `@view-transition { navigation: auto; }`: the page cross-fades in 200ms while the header and footer (`view-transition-name`) hold still |
+
+Scroll-linked animations must use longhand properties (`animation-name`, `animation-timeline`, …). The CSS minifier folds `animation` plus `animation-timeline` into one shorthand, and browsers reject a shorthand with a timeline, so the animation silently disappears.
 | `.caret` | Blinking cursor in the hero |
 | `.ping` | Pulse on the newest timeline repo |
 | Cards | `-translate-y-0.5` and a brighter border on hover |

@@ -43,7 +43,8 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 
 | | |
 |---|---|
-| **Blog** | Markdown posts with categories (indexable) and tags, 16:9 cover and inline images, related posts, reading time and RSS |
+| **Blog** | Markdown posts with categories (indexable) and tags, 16:9 cover and inline images, related posts, older/newer links, reading progress bar, reading time and RSS |
+| **Fast navigation** | Pages prerender on hover (Speculation Rules) and cross-fade with View Transitions; both need no JavaScript and fall back to normal links |
 | **Projects & Tools** | Hand-picked tools and projects plus every public GitHub repo, sorted by stars |
 | **Repo timeline** | Every public repository grouped by year, refreshed daily from the GitHub API |
 | **X posts** | Home-page feed and in-article embeds rendered as site-themed cards at build time, with no X script on the page |

@@ -26,6 +26,17 @@ const ogImage = new URL(image, Astro.site);
 const large = image !== "/avatar.png";
 // Generated cards (src/pages/og) are always 1200×630; declaring it lets platforms render the preview on first share.
 const generated = image.startsWith("/og/");
+// Prerender same-site pages on hover / pointer-down (Chrome, Edge); other browsers ignore it. Files that aren't pages are excluded.
+const speculation = {
+  prerender: [{
+    where: { and: [
+      { href_matches: "/*" },
+      { not: { href_matches: ["/rss.xml", "/sitemap.xml", "/robots.txt", "/search.json", "/llms*.txt", "/*.md", "/og/*"] } },
+      { not: { selector_matches: "[target=_blank], [download]" } },
+    ] },
+    eagerness: "moderate",
+  }],
+};
 const nav = [
   { href: "/blog/", label: "blog" },
   { href: "/projects/", label: "projects" },
@@ -64,10 +75,11 @@ const nav = [
     <link rel="icon" href="/favicon.jpg" type="image/jpeg" />
     <link rel="apple-touch-icon" href="/favicon.jpg" />
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+    <script is:inline type="speculationrules" set:html={JSON.stringify(speculation)} />
   </head>
   <body class="flex flex-col">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">Skip to content</a>
-    <header class="sticky top-0 z-20 border-b bg-background/70 backdrop-blur-md">
+    <header class="sticky top-0 z-20 border-b bg-background/70 backdrop-blur-md [view-transition-name:site-header]">
       <nav aria-label="Main" class="mx-auto flex h-14 max-w-3xl items-center justify-between gap-2 px-4">
         <a href="/" class="font-mono text-sm font-semibold"><span class="text-primary">~/</span>harindu</a>
         <ul class="flex items-center gap-0.5 font-mono text-xs sm:gap-1 sm:text-sm">
@@ -95,7 +107,7 @@ const nav = [
     <main id="main" class="mx-auto w-full max-w-3xl flex-1 px-4 py-14 sm:py-20">
       <slot />
     </main>
-    <footer class="border-t">
+    <footer class="border-t [view-transition-name:site-footer]">
       <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-muted-foreground">
         <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a> · <a href="https://github.com/harindujayakody/harindujayakody.github.io/blob/master/CHANGELOG.md" target="_blank" rel="noopener" class="hover:text-primary">v{version}</a><span class="kbd-hint"> · <button type="button" data-shortcuts-open class="hover:text-primary">shortcuts <kbd>?</kbd></button></span></span>
         <div class="flex items-center"><Socials /></div>

@@ -22,7 +22,7 @@ const newest = repos[0]?.name;
           <li class="relative">
             <span class="absolute top-[1.2rem] -left-[1.65rem] flex size-2.5">
               {r.name === newest && <span class="ping absolute inline-flex size-full rounded-full bg-primary/60" />}
-              <span class:list={["relative inline-flex size-2.5 rounded-full ring-4 ring-background", r.name === newest ? "bg-primary" : "bg-muted-foreground/40"]} />
+              <span class:list={["tl-dot relative inline-flex size-2.5 rounded-full ring-4 ring-background", r.name === newest && "is-newest"]} />
             </span>
             <a href={r.homepage || r.html_url} target="_blank" rel="noopener" class="group block min-w-0 rounded-lg px-3 py-3 transition hover:bg-card">
               <div class="flex flex-wrap items-center gap-x-3 gap-y-1">

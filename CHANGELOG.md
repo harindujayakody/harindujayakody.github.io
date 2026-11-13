@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.16.1] - 2026-11-13
+
+### Changed
+- The home page "GitHub" button shows the GitHub mark before its label.
+
 ## [1.16.0] - 2026-11-13
 
 ### Changed

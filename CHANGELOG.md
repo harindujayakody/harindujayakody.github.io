@@ -2,6 +2,14 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.13.0] - 2026-11-13
+
+### Added
+- Analytics (#25): Cloudflare Web Analytics is on for harindujayakody.com with automatic setup. Cloudflare adds its beacon to every page at the edge, so there's no code change. It's cookie-free (no consent banner), skips prerendered pages until they're opened, and never runs in local builds. Documented in `docs/ARCHITECTURE.md` and the README.
+
+### Changed
+- README: the local `GITHUB_TOKEN` command now has a Windows PowerShell version next to the Bash one, with how to unset it.
+
 ## [1.12.0] - 2026-11-13
 
 ### Added

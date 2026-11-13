@@ -2,6 +2,12 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.11.0] - 2026-11-13
+
+### Added
+- GitHub contribution graph (#27) on the home page, under the stats: the last year of contributions from GitHub's GraphQL API, drawn as a static grid in mint using GitHub's own 5 activity levels. It has month labels, a less/more legend, the total and a link to the GitHub profile. Hovering a day shows its count and date, and screen readers get a one-line summary. Phones show the last 26 weeks. No JavaScript; refreshed by the daily rebuild.
+- `getContributions()` in `src/lib/github.ts`, cached per build. If there's no token or the API fails, the graph is left out and the build log says why.
+
 ## [1.10.0] - 2026-11-13
 
 ### Added

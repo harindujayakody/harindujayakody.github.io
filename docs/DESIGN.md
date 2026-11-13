@@ -64,6 +64,9 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 | `ProjectCard` | Same stretched-link pattern; optional "source ↗" |
 | `XFeed` | Mirrors an X post: avatar, name, handle, text, X's like and reply icons |
 | `Timeline` | Year column (sticky on desktop), dashed rail, dots |
+| `ContributionGraph` | Last year of GitHub contributions: GitHub's 5 levels as `.cg .l0`–`.l4` (grey, then mint at 25/50/75/100%), month labels, legend, hover titles; one `role="img"` summary for screen readers. Last 26 weeks below `sm` |
+| `SeriesBox` | "series · part N of M" `<details>` listing every part, current one highlighted |
+| `PostNav` | Older/newer (or previous/next part) cards, stacked on phones |
 | `Toc` | "On this page" `<details>`, shown on posts with 3+ `##` sections; two columns above `sm` when long |
 | `AuthorBox` | After every post: avatar, name, role, bio, links; reads `src/data/author.ts` |
 | `SearchDialog` | Native `<dialog>`: opened by the header icon, `Ctrl/⌘+K` or `/`; combobox + grouped listbox, `↑`/`↓`/`↵`/`esc`; full-screen below `sm` |

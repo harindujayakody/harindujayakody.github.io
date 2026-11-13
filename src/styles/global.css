@@ -126,6 +126,15 @@
 .prose p > img { @apply aspect-video w-full rounded-xl border object-cover; }
 .prose hr { @apply my-10; }
 
+/* GitHub contribution graph: GitHub's 5 levels in mint; .pad fills the first week's empty days. */
+.cg i { @apply block aspect-square rounded-[2px]; }
+.cg .pad { @apply invisible; }
+.cg .l0 { @apply bg-muted/70; }
+.cg .l1 { @apply bg-primary/25; }
+.cg .l2 { @apply bg-primary/50; }
+.cg .l3 { @apply bg-primary/75; }
+.cg .l4 { @apply bg-primary; }
+
 /* Search pop-up and shortcuts help (native <dialog>). Phones get a full-screen search. */
 .search-dialog, .shortcuts-dialog { @apply mx-auto mt-[12vh] w-[min(40rem,calc(100%-2rem))] max-w-none overflow-hidden rounded-xl border bg-background p-0 text-foreground shadow-2xl; }
 .shortcuts-dialog { @apply w-[min(26rem,calc(100%-2rem))]; }

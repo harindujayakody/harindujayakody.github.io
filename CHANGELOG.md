@@ -2,6 +2,19 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.10.0] - 2026-11-13
+
+### Added
+- Post series (#28): posts with the same `series` name become a multi-part series once 2 or more parts are published.
+  - A "series · part N of M" box under the post header lists every part, highlights the current one and links to the series page. Collapsible.
+  - "← previous part / next part →" links at the end of each part, above the older/newer links.
+  - Series page at `/blog/series/<slug>/` listing the parts in reading order; added to the sitemap.
+  - `BlogPosting.isPartOf` (`CreativeWorkSeries`) and `position` in each part's structured data.
+  - A `Series:` line in the markdown copy of each part (`/blog/<slug>.md`, `llms-full.txt`).
+- Optional `seriesOrder` to set the reading order; otherwise parts read oldest first.
+- Build warnings: a series with only one published part (usually a typo in the name; the post shows as a normal post and no series page is built), and a series where only some parts set `seriesOrder` (ignored, so date order is used).
+- `docs/CONTENT.md` "Series" section and commented `series` fields in the sample post.
+
 ## [1.9.0] - 2026-11-13
 
 ### Added

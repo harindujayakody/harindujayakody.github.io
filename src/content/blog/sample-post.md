@@ -6,6 +6,8 @@ date: 2026-11-04
 updated: 2026-11-04           # optional: set when you edit a published post
 category: "Guides"            # ONE category → /blog/category/guides/
 tags: ["markdown", "reference"]   # any number → /blog/tag/markdown/
+# series: "Series name"       # optional: same name on 2+ posts → "part N of M" box and /blog/series/<slug>/
+# seriesOrder: 1              # optional: set on every part or none (otherwise parts read oldest first)
 image: ./images/sample-cover.svg  # optional 16:9 cover (jpg/png/webp/svg)
 imageAlt: "Terminal window reading cat sample-post.md"
 draft: true                   # true = only visible in `npm run dev`, never on the live site

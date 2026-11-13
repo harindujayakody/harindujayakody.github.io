@@ -39,6 +39,22 @@ Posts with three or more `##` sections automatically get an "On this page" table
 | `image` | no | Path relative to the post. Use 16:9, at least 1200×675. |
 | `imageAlt` | with image | Describe the image for screen readers. |
 | `draft` | no | `true` keeps the post off the live site, sitemap and RSS. Drafts still show in `npm run dev` for previewing. |
+| `series` | no | Name of a multi-part series. See below. |
+| `seriesOrder` | no | Part number (1, 2, 3…). Set it on every part or on none. |
+
+### Series
+
+Give each part the same `series` name, spelled exactly the same:
+
+```md
+series: "Build an AI agent"
+seriesOrder: 2      # optional
+```
+
+- Parts read oldest first. To choose the order yourself, set `seriesOrder` on **every** part; if only some parts have it, it's ignored and the build warns.
+- Each part gets a "part N of M" box under the header listing all parts, plus "← previous part / next part →" links at the end.
+- The series gets its own page at `/blog/series/<slug>/` (in the sitemap), and each post's structured data says which series it belongs to.
+- A series needs **2 or more published parts**. With only one (often a typo in the name), the post shows as a normal post and the build prints a `[series]` warning. Drafts don't count on the live site, so publishing part 1 before part 2 is fine: the series appears when part 2 goes live.
 
 ### Images
 

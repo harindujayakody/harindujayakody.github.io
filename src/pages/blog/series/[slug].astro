@@ -1,0 +1,34 @@
+---
+import BlogIndex from "../../../components/BlogIndex.astro";
+import { getPosts, allSeries, slugify, seriesUrl, type Post } from "../../../lib/posts";
+
+export async function getStaticPaths() {
+  return allSeries(await getPosts()).flatMap(({ name, parts }) => {
+    // A lone part is usually a typo in the series name; don't publish a one-part series page.
+    if (parts.length < 2) {
+      console.warn(`[series] "${name}" has only one published part (${parts[0].id}); check the series name. No series page built.`);
+      return [];
+    }
+    const numbered = parts.filter((p) => p.data.seriesOrder !== undefined).length;
+    if (numbered > 0 && numbered < parts.length) {
+      console.warn(`[series] "${name}": only ${numbered} of ${parts.length} parts set seriesOrder, so parts are ordered by date. Set it on every part or none.`);
+    }
+    return [{ params: { slug: slugify(name) }, props: { name, parts } }];
+  });
+}
+
+interface Props {
+  name: string;
+  parts: Post[];
+}
+
+const { name, parts } = Astro.props;
+---
+<BlogIndex
+  title={`${name}: a ${parts.length}-part series · Harindu Jayakody`}
+  heading={name}
+  prompt={`$ ls ./series/${slugify(name)}`}
+  intro={`A ${parts.length}-part series by Harindu Jayakody, in reading order.`}
+  posts={parts}
+  crumb={{ name, url: seriesUrl(name) }}
+/>

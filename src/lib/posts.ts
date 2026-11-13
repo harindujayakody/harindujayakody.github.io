@@ -31,15 +31,38 @@ export const relatedPosts = (post: Post, all: Post[], n = 3) =>
     .slice(0, n)
     .map((x) => x.p);
 
+export const seriesUrl = (name: string) => `/blog/series/${slugify(name)}/`;
+
+// Reading order: seriesOrder when every part has one (a partial set is ambiguous, so it's ignored), else oldest first.
+const seriesParts = (name: string, all: Post[]) => {
+  const parts = all.filter((p) => p.data.series === name);
+  const numbered = parts.every((p) => p.data.seriesOrder !== undefined);
+  return parts.sort((a, b) => (numbered ? a.data.seriesOrder! - b.data.seriesOrder! : 0) || +a.data.date - +b.data.date);
+};
+
+// Every series with its parts. A one-part "series" (usually a typo in the name) is listed so the caller can warn.
+export const allSeries = (all: Post[]) =>
+  [...new Set(all.flatMap((p) => p.data.series ?? []))].map((name) => ({ name, parts: seriesParts(name, all) }));
+
+// The post's series, only when it has 2+ parts; otherwise the post is treated as a normal post.
+export const seriesOf = (post: Post, all: Post[]) => {
+  if (!post.data.series) return undefined;
+  const parts = seriesParts(post.data.series, all);
+  return parts.length > 1 ? { name: post.data.series, parts, index: parts.findIndex((p) => p.id === post.id) } : undefined;
+};
+
 // Plain-markdown version of a post for AI agents (/blog/<id>.md and /llms-full.txt).
-export const postMarkdown = (p: Post, site: URL) => `# ${p.data.title}
+export const postMarkdown = (p: Post, site: URL, all: Post[] = []) => {
+  const s = seriesOf(p, all);
+  return `# ${p.data.title}
 
 > ${p.data.description}
 
 - URL: ${new URL(`/blog/${p.id}/`, site)}
 - Published: ${p.data.date.toISOString().slice(0, 10)}${p.data.updated ? `\n- Updated: ${p.data.updated.toISOString().slice(0, 10)}` : ""}
 - Category: ${p.data.category}
-- Tags: ${p.data.tags.join(", ")}
+- Tags: ${p.data.tags.join(", ")}${s ? `\n- Series: ${s.name} (part ${s.index + 1} of ${s.parts.length}, ${new URL(seriesUrl(s.name), site)})` : ""}
 - Author: Harindu Jayakody
 
 ${(p.body ?? "").trim()}`;
+};

@@ -22,7 +22,7 @@ const rows = [
           <tr>
             <td class="py-2 pr-4 text-muted-foreground">{r.what}</td>
             <td class="py-2 text-right whitespace-nowrap">
-              {r.keys.map((k, i) => <>{i > 0 && <span class="mx-1 text-xs text-muted-foreground">{r.keys[0] === "g" ? "then" : "+"}</span>}<kbd>{k === "mod" ? <span data-mod-key>Ctrl</span> : k}</kbd></>)}
+              {r.keys.map((k, i) => <>{i > 0 && <span class="mx-1 text-xs text-muted-foreground">{r.keys[0] === "g" ? "then" : "+"}</span>}<kbd>{k === "mod" ? <span data-mod-key /> : k}</kbd></>)}
               {r.or && <><span class="mx-1 text-xs text-muted-foreground">or</span><kbd>{r.or[0]}</kbd></>}
             </td>
           </tr>
@@ -36,10 +36,6 @@ const rows = [
   const help = document.getElementById("shortcuts-dialog") as HTMLDialogElement;
   const routes: Record<string, string> = { h: "/", b: "/blog/", p: "/projects/", t: "/timeline/" };
   const openSearch = () => document.dispatchEvent(new Event("search:open"));
-
-  // Show ⌘ on Apple devices, Ctrl elsewhere.
-  if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent))
-    document.querySelectorAll("[data-mod-key]").forEach((el) => (el.textContent = "⌘"));
 
   let gAt = 0;
   document.addEventListener("keydown", (e) => {

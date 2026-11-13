@@ -67,13 +67,17 @@
   .reveal { animation-name: rise; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); animation-range: entry 0% entry 60%; }
 }
 
-/* Timeline dots: grey until their row reaches the middle of the screen, then mint (scroll-linked, no JS).
-   The newest repo is always mint. Unsupported browsers keep the static look. */
+/* Timeline dots: a scroll spotlight (no JS). Over the view timeline (0% = row at the bottom edge, 100% = past the top),
+   a dot is mint at 62–72%, i.e. while its row is about 28–38% down the screen, and grey elsewhere,
+   so only the rows near the top glow. The newest repo is always mint. Unsupported browsers keep the static look. */
 .tl-dot { background-color: oklch(0.7 0.012 265 / 40%); }
 .tl-dot.is-newest { background-color: var(--primary); }
-@keyframes tl-dot { to { background-color: var(--primary); } }
+@keyframes tl-dot {
+  0%, 50%, 84%, 100% { background-color: oklch(0.7 0.012 265 / 40%); }
+  62%, 72% { background-color: var(--primary); }
+}
 @supports (animation-timeline: view()) {
-  .tl-dot:not(.is-newest) { animation-name: tl-dot; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); animation-range: entry 100% cover 50%; }
+  .tl-dot:not(.is-newest) { animation-name: tl-dot; animation-timing-function: linear; animation-fill-mode: both; animation-timeline: view(); }
 }
 
 /* Page transitions (no JS): header and footer are named so they hold still while the page content cross-fades. */
@@ -154,8 +158,13 @@ dialog::backdrop { background: oklch(0 0 0 / 60%); backdrop-filter: blur(3px); }
 html:has(dialog[open]) { overflow: hidden; }
 kbd { @apply inline-flex min-w-5 items-center justify-center rounded border bg-muted px-1 font-mono text-[11px] leading-5 text-muted-foreground; }
 mark { @apply rounded-sm bg-primary/25 text-inherit; }
-/* Key hints only where there's a keyboard-and-mouse setup. */
-.kbd-hint { display: none; }
+/* Key hints only where there's a keyboard-and-mouse setup. Flex drops edge spaces, so kbd hints use a gap;
+   .kbd-hint-inline wraps plain text (footer) and stays inline to keep its spaces. */
+.kbd-hint, .kbd-hint-inline { display: none; }
 @media (hover: hover) and (pointer: fine) {
-  .kbd-hint { display: inline-flex; }
+  .kbd-hint { display: inline-flex; gap: 0.5ch; }
+  .kbd-hint-inline { display: inline; }
 }
+/* Modifier key label: ⌘ on Apple devices (html[data-mac], set in Layout's head), Ctrl elsewhere. */
+[data-mod-key]::before { content: "Ctrl"; }
+html[data-mac] [data-mod-key]::before { content: "⌘"; }

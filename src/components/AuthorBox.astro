@@ -1,7 +1,30 @@
 ---
 import { Image } from "astro:assets";
 import avatar from "../assets/avatar.png";
+import Button from "./ui/Button.astro";
 import { author } from "../data/author";
+
+// Brand marks are filled (Simple Icons); the rest are Lucide outlines. Each link keeps an accessible name and a hover title.
+const brand: Record<string, string> = {
+  X: "M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.47l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.48 3.24H4.3l13.31 17.41z",
+  LinkedIn: "M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z",
+  GitHub: "M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12",
+};
+const links = [
+  ...author.links.map((l) => ({ label: l.label, href: l.href, rel: "noopener me", brand: brand[l.label], outline: "" })),
+  {
+    label: "Email", href: `mailto:${author.email}`, rel: undefined, brand: "",
+    outline: `<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>`,
+  },
+  {
+    label: "RSS feed", href: "/rss.xml", rel: undefined, brand: "",
+    outline: `<path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/>`,
+  },
+  {
+    label: "Newsletter", href: `https://buttondown.com/${author.newsletter}`, rel: "noopener", brand: "",
+    outline: `<path d="M15 18h-5"/><path d="M18 14h-8"/><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-4 0v-9a2 2 0 0 1 2-2h2"/><rect width="8" height="4" x="10" y="6" rx="1"/>`,
+  },
+];
 ---
 <aside aria-label="About the author" class="reveal flex flex-col gap-4 rounded-xl border bg-card/70 p-5 sm:flex-row sm:items-start sm:gap-5">
   <Image src={avatar} alt="" width={64} height={64} densities={[1, 2]} quality={90} class="size-16 shrink-0 rounded-full ring-1 ring-border" />
@@ -12,13 +35,17 @@ import { author } from "../data/author";
     </p>
     <p class="text-sm text-muted-foreground">{author.role}</p>
     <p class="text-sm leading-relaxed text-foreground/90">{author.bio}</p>
-    <ul class="flex flex-wrap gap-x-4 gap-y-1 pt-1 font-mono text-xs">
-      {author.links.map((l) => (
-        <li><a href={l.href} target="_blank" rel="noopener me" class="text-muted-foreground hover:text-primary">{l.label} ↗</a></li>
+    <ul aria-label="Find Harindu elsewhere" class="-ml-2 flex flex-wrap items-center gap-0.5 pt-1">
+      {links.map((l) => (
+        <li>
+          <Button href={l.href} variant="ghost" size="icon" aria-label={l.label} title={l.label}
+            target={l.href.startsWith("http") ? "_blank" : undefined} rel={l.rel}>
+            {l.brand
+              ? <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={l.brand} /></svg>
+              : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={l.outline} />}
+          </Button>
+        </li>
       ))}
-      <li><a href={`mailto:${author.email}`} class="text-muted-foreground hover:text-primary">Email</a></li>
-      <li><a href="/rss.xml" class="text-muted-foreground hover:text-primary">RSS</a></li>
-      <li><a href={`https://buttondown.com/${author.newsletter}`} target="_blank" rel="noopener" class="text-muted-foreground hover:text-primary">Newsletter ↗</a></li>
     </ul>
   </div>
 </aside>

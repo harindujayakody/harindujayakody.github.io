@@ -76,6 +76,11 @@ const nav = [
     <link rel="apple-touch-icon" href="/favicon.jpg" />
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
     <script is:inline type="speculationrules" set:html={JSON.stringify(speculation)} />
+    <script is:inline>
+      // Apple devices get ⌘ instead of Ctrl in key hints ([data-mod-key] in global.css); set before first paint so it never flashes.
+      // Case-insensitive: Chrome reports "macOS", Safari "MacIntel", iOS "iPhone"/"iPad".
+      if (/mac|iphone|ipad/i.test(navigator.userAgentData?.platform || navigator.platform || navigator.userAgent)) document.documentElement.dataset.mac = "";
+    </script>
   </head>
   <body class="flex flex-col">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground">Skip to content</a>
@@ -98,7 +103,7 @@ const nav = [
             <a href="/search/" data-search-open aria-label="Search" aria-keyshortcuts="Control+K Meta+K /" aria-current={path.startsWith("/search/") ? "page" : undefined}
               class:list={["flex h-8 min-w-8 items-center justify-center gap-2 rounded-md px-2 transition hover:text-primary", path.startsWith("/search/") ? "bg-muted text-primary" : "text-muted-foreground"]}>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-              <kbd class="kbd-hint" aria-hidden="true"><span data-mod-key>Ctrl</span> K</kbd>
+              <kbd class="kbd-hint" aria-hidden="true"><span data-mod-key /> K</kbd>
             </a>
           </li>
         </ul>
@@ -109,7 +114,7 @@ const nav = [
     </main>
     <footer class="border-t [view-transition-name:site-footer]">
       <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-muted-foreground">
-        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a> · <a href="https://github.com/harindujayakody/harindujayakody.github.io/blob/master/CHANGELOG.md" target="_blank" rel="noopener" class="hover:text-primary">v{version}</a><span class="kbd-hint"> · <button type="button" data-shortcuts-open class="hover:text-primary">shortcuts <kbd>?</kbd></button></span></span>
+        <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a> · <a href="https://github.com/harindujayakody/harindujayakody.github.io/blob/master/CHANGELOG.md" target="_blank" rel="noopener" class="hover:text-primary">v{version}</a><span class="kbd-hint-inline"> · <button type="button" data-shortcuts-open class="hover:text-primary">shortcuts <kbd>?</kbd></button></span></span>
         <div class="flex items-center"><Socials /></div>
       </div>
     </footer>

@@ -5,6 +5,8 @@ export const author = {
   bio: "I build web apps, browser extensions and small tools that automate the boring parts. Here I write about AI coding tools, Windows fixes and the setups I actually use.",
   url: "https://harindujayakody.com/",
   email: "me@harindujayakody.com",
+  // Buttondown username: the sign-up form posts to its embed endpoint; the archive lives at buttondown.com/<username>.
+  newsletter: "harindu",
   links: [
     { label: "X", href: "https://x.com/harindu522" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/harindux/" },

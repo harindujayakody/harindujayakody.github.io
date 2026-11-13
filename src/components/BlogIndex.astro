@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import PostList from "./PostList.astro";
+import Subscribe from "./Subscribe.astro";
 import { getPosts, categoryUrl, slugify, type Post } from "../lib/posts";
 
 // Shared by /blog, /blog/category/*, /blog/tag/*
@@ -62,5 +63,6 @@ const jsonLd = [
       ))}
     </nav>
     <PostList posts={posts} />
+    <Subscribe compact />
   </div>
 </Layout>

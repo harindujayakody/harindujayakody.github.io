@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.15.0] - 2026-11-13
+
+### Added
+- Newsletter sign-up (#26) with Buttondown (`buttondown.com/harindu`):
+  - A `$ subscribe --email` card after every post, below the author box, and a compact version under the post list on the blog, category, tag and series pages.
+  - A plain HTML form that posts straight to Buttondown's embed endpoint, so it works without JavaScript and loads nothing from Buttondown until someone subscribes. Buttondown's confirmation page opens in a new tab.
+  - Labelled `type="email"` field with `autocomplete="email"` and `required`; stacks on phones.
+  - A "Newsletter ↗" link in the author box.
+- `newsletter` (Buttondown username) in `src/data/author.ts`.
+
 ## [1.14.0] - 2026-11-13
 
 ### Changed

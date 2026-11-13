@@ -54,7 +54,7 @@ src/
 | `/blog/` | `pages/blog/index.astro` → `BlogIndex` | Category filter chips |
 | `/blog/category/<slug>/` | `pages/blog/category/[slug].astro` | Indexable; `CollectionPage` + breadcrumbs |
 | `/blog/tag/<slug>/` | `pages/blog/tag/[slug].astro` | `noindex, follow` |
-| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` (author from `data/author.ts`) + breadcrumbs, cover image, table of contents (3+ sections), heading links, series box and part links (`SeriesBox`, `isPartOf`), author box, older/newer links (`PostNav`), comments (`Comments`, giscus), related posts, reading progress bar, X embeds as static cards |
+| `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` (author from `data/author.ts`) + breadcrumbs, cover image, table of contents (3+ sections), heading links, series box and part links (`SeriesBox`, `isPartOf`), author box, older/newer links (`PostNav`), comments (`Comments`, giscus), newsletter sign-up (`Subscribe`), related posts, reading progress bar, X embeds as static cards |
 | `/blog/<slug>.md` | `pages/blog/[id].md.ts` | Raw markdown for AI agents |
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
 | `/timeline/` | `pages/timeline.astro` | Every repo grouped by year |
@@ -72,6 +72,7 @@ src/
 | `api.github.com/graphql` (needs `GITHUB_TOKEN`) | contribution graph on the home page | Build continues; the graph is hidden and the log says why |
 | `static.cloudflareinsights.com` (browser, injected by Cloudflare) | Web Analytics beacon on every page, reporting to `/cdn-cgi/rum` | Stats are missed; the page is unaffected |
 | `giscus.app` (browser, on demand) | comments on posts, loaded when the reader scrolls near them or clicks "load comments" | The comments area stays empty; the rest of the post is unaffected |
+| `buttondown.com` (form submit only) | newsletter sign-up after posts and on blog list pages | Nothing is sent until a reader submits; the form opens Buttondown in a new tab |
 | `cdn.syndication.twimg.com/tweet-result` | X cards on the home page and in posts | Home: that post is skipped. Posts: the pasted embed shows as a styled quote |
 | `pbs.twimg.com` (browser) | avatars, photo and video previews in X cards (680px JPG) | Image fails to load; the card text still shows |
 

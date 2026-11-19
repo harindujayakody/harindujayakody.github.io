@@ -49,9 +49,16 @@
     vt.ready
       .then(() => {
         const circle = [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`];
+        // fill "forwards" holds the final clip until the transition tears down. Without it, switching to dark
+        // painted the full light snapshot again for a frame after the circle closed: a white flash.
         d.animate(
           { clipPath: opening ? circle : [...circle].reverse() },
-          { duration: 520, easing: "cubic-bezier(0.4, 0, 0.2, 1)", pseudoElement: opening ? "::view-transition-new(root)" : "::view-transition-old(root)" },
+          {
+            duration: 520,
+            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+            fill: "forwards",
+            pseudoElement: opening ? "::view-transition-new(root)" : "::view-transition-old(root)",
+          },
         );
       })
       // A second click before this one finishes skips it; the theme still applies, so the rejection is expected.

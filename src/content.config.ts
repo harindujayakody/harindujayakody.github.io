@@ -23,6 +23,8 @@ const blog = defineCollection({
       // 16:9 cover, path relative to the post, e.g. ./images/my-post.jpg
       image: image().optional(),
       imageAlt: z.string().default(""),
+      // Shown in the blog index sidebar under "popular" (no analytics here, so you pick them).
+      popular: z.boolean().default(false),
       draft: z.boolean().default(false),
       comments: z.boolean().default(true),
     }),

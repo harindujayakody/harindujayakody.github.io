@@ -4,6 +4,7 @@ import { Image, getImage } from "astro:assets";
 import Layout from "../../layouts/Layout.astro";
 import PostList from "../../components/PostList.astro";
 import AuthorBox from "../../components/AuthorBox.astro";
+import TocSidebar from "../../components/TocSidebar.astro";
 import Toc from "../../components/Toc.astro";
 import PostNav from "../../components/PostNav.astro";
 import SeriesBox from "../../components/SeriesBox.astro";
@@ -68,7 +69,8 @@ const jsonLd = [
 <Layout title={`${d.title} · Harindu Jayakody`} description={d.description} image={og} type="article"
   published={d.date} modified={d.updated ?? d.date} jsonLd={jsonLd}>
   <div class="read-progress" aria-hidden="true"></div>
-  <article class="flex flex-col gap-8">
+  <article class="relative flex flex-col gap-8">
+    <TocSidebar headings={headings} />
     <header class="flex flex-col gap-4">
       <nav aria-label="Breadcrumb" class="rise flex flex-wrap items-center gap-1.5 font-mono text-sm text-muted-foreground">
         <a href="/blog/" class="hover:text-primary">blog</a>

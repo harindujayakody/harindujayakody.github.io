@@ -2,6 +2,12 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.28.0] - 2026-11-20
+
+### Changed
+- Free tools page (#81): each tool is a card with its share image on top, tag chips, name, description, an open or get link, and links to its blog post and source. Hover lifts the card.
+- Share images for each tool and for `/free-tools/` now show the description and tag pills with a colour bar, like the post cards, and say "Free download" for the anti detect browser.
+
 ## [1.27.1] - 2026-11-20
 
 ### Changed

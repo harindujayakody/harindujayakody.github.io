@@ -36,18 +36,25 @@ const jsonLd = [
       <p class="rise max-w-xl text-muted-foreground" style="--d:160ms">Small tools I built for my own work and made public. Most run in your browser: no sign-up, no tracking, and nothing you type is saved on a server. The anti detect browser is a free desktop app you download.</p>
     </header>
 
-    <ul class="grid gap-3 sm:grid-cols-2">
+    <ul class="grid gap-5 sm:grid-cols-2">
       {freeTools.map((t) => (
-        <li class="reveal group relative flex min-w-0 flex-col gap-2 rounded-xl border bg-card/70 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/20">
-          <h2 class="font-mono text-sm font-medium group-hover:text-primary">
-            <a href={t.href} class="after:absolute after:inset-0">{t.name}</a>
-          </h2>
-          <p class="text-sm leading-relaxed text-muted-foreground">{t.desc}</p>
-          <div class="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
-            {t.tags.map((tag) => <Badge variant="outline">{tag}</Badge>)}
-            {t.source && (
-              <a href={t.source} target="_blank" rel="noopener" class="relative z-10 ml-auto font-mono text-xs text-muted-foreground hover:text-primary">source ↗</a>
-            )}
+        <li class="reveal group relative flex min-w-0 flex-col overflow-hidden rounded-2xl border bg-card/70 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
+          <img src={`/og/free-tools/${t.slug}.png`} alt="" width="1200" height="630" loading="lazy" class="aspect-[1200/630] w-full border-b object-cover transition duration-500 group-hover:scale-[1.02]" />
+          <div class="flex flex-1 flex-col gap-3 p-5">
+            <div class="flex flex-wrap items-center gap-1.5">
+              {t.tags.map((tag) => <Badge variant="outline">{tag}</Badge>)}
+            </div>
+            <h2 class="text-lg font-semibold leading-snug group-hover:text-primary">
+              <a href={t.href} class="after:absolute after:inset-0">{t.name}</a>
+            </h2>
+            <p class="text-sm leading-relaxed text-muted-foreground">{t.desc}</p>
+            <div class="mt-auto flex items-center justify-between gap-3 pt-2 font-mono text-xs">
+              <span class="inline-flex items-center gap-1.5 text-primary">{t.tags.includes("Download") ? "Get it" : "Open tool"} <span aria-hidden="true" class="transition group-hover:translate-x-1">→</span></span>
+              <span class="relative z-10 flex items-center gap-3 text-muted-foreground">
+                {t.post && <a href={t.post} class="hover:text-primary">read the post</a>}
+                {t.source && <a href={t.source} target="_blank" rel="noopener" class="hover:text-primary">source ↗</a>}
+              </span>
+            </div>
           </div>
         </li>
       ))}

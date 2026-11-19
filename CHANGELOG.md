@@ -2,6 +2,21 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.19.0] - 2026-11-19
+
+### Added
+- HTTP status codes reference (#43) at `/free-tools/http-status-codes/`: all 63 codes in plain HTML grouped 1xx to 5xx, an instant filter with class chips (Enter opens a single match), links to the most searched codes, and a FAQ (401 vs 403, 404 vs 410, 502 vs 504, which redirect to use).
+- A page for each code (`/free-tools/http-status-codes/404/` and so on): what it means, common causes and fixes for errors, related headers, an example response, cURL/JavaScript/Python/Go snippets (redirect codes turn off automatic redirects), related codes, previous/next, and the RFC section. Titles written for how people search and kept under 60 characters.
+- Structured data: `DefinedTermSet` on the hub, `DefinedTerm` per code, `FAQPage`, breadcrumbs.
+- "Star on GitHub" cards (#48) with live star counts from the build-time GitHub data: on tool pages, on posts with the new `repo:` front-matter field, and on project cards. A zero count is hidden.
+- Post: "HTTP Status Codes Explained: A Free Reference for All 63".
+- Share cards for `/free-tools/` and each tool.
+
+### Changed
+- SEO fixes for the free tools (#44): keyword title, description and heading on `/free-tools/`; breadcrumbs on the hub; each tool has an `updated` date that the sitemap uses as `lastmod` instead of the build date; tools and all status codes appear in site search; `llms.txt` lists the new tool.
+- 2FA copy follows the plain-writing rules: no dashes, and the post's bold-label list is now prose.
+- The header's `Ctrl K` hint is hidden below 640px, so the header fits a narrow desktop window.
+
 ## [1.18.0] - 2026-11-19
 
 ### Added

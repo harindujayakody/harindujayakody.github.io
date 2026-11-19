@@ -1,5 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import StarCard from "../../components/StarCard.astro";
 
 const title = "Free 2FA Code Generator Online (TOTP) · Harindu Jayakody";
 const description =
@@ -59,7 +60,7 @@ const csp = [
   "form-action 'self'",
 ].join("; ");
 ---
-<Layout title={title} description={description} jsonLd={jsonLd} csp={csp}>
+<Layout title={title} description={description} jsonLd={jsonLd} csp={csp} image="/og/free-tools/2fa-online.png">
   <div class="flex flex-col gap-8">
     <header class="flex flex-col gap-3">
       <nav aria-label="Breadcrumb" class="rise flex items-center gap-1.5 font-mono text-sm text-muted-foreground">
@@ -69,6 +70,7 @@ const csp = [
       <p class="rise max-w-xl text-muted-foreground" style="--d:160ms">
         Paste your 2FA secret key and get the live 6-digit code, the same one an authenticator app would show. No app or sign-up needed.
       </p>
+      <StarCard repo="harindujayakody/2fa-tools" compact class="rise" />
     </header>
 
     <aside class="rise flex gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4 text-sm leading-relaxed" style="--d:200ms">
@@ -112,6 +114,8 @@ const csp = [
         ))}
       </div>
     </section>
+
+    <StarCard repo="harindujayakody/2fa-tools" />
 
     <p class="font-mono text-xs text-muted-foreground">
       Open source (MIT): <a href="https://github.com/harindujayakody/2fa-tools" target="_blank" rel="noopener" class="text-primary hover:underline">github.com/harindujayakody/2fa-tools</a>
@@ -179,7 +183,7 @@ const csp = [
             codeEl.textContent = "--- ---";
             delete codeEl.dataset.value;
             err.hidden = false;
-            err.textContent = `${(e as Error).message}. Keys use letters A–Z and digits 2–7.`;
+            err.textContent = `${(e as Error).message}. Keys use the letters A to Z and the digits 2 to 7.`;
             li.querySelector<HTMLElement>("[data-timer]")!.hidden = true;
             li.querySelector<HTMLButtonElement>("[data-copy]")!.hidden = true;
           }

@@ -1,27 +1,39 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Badge from "../../components/ui/Badge.astro";
-import { freeTools } from "../../data/free-tools";
+import { freeTools, toolsUpdated } from "../../data/free-tools";
 
-const description = "Free, private browser tools by Harindu Jayakody. Everything runs on your device: no sign-up, no tracking, nothing saved on a server.";
-const jsonLd = [{
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: "Free tools",
-  description,
-  url: new URL("/free-tools/", Astro.site).href,
-  mainEntity: {
-    "@type": "ItemList",
-    itemListElement: freeTools.map((t, i) => ({ "@type": "ListItem", position: i + 1, name: t.name, url: new URL(t.href, Astro.site).href })),
+const description =
+  "Free online developer tools that run in your browser: an HTTP status codes reference and a 2FA (TOTP) code generator. No sign-up, nothing saved on a server.";
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Free online tools",
+    description,
+    url: new URL("/free-tools/", Astro.site).href,
+    dateModified: toolsUpdated.toISOString(),
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: freeTools.map((t, i) => ({ "@type": "ListItem", position: i + 1, name: t.name, url: new URL(t.href, Astro.site).href })),
+    },
   },
-}];
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Free tools", item: "/free-tools/" },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
 ---
-<Layout title="Free tools · Harindu Jayakody" description={description} jsonLd={jsonLd}>
+<Layout title="Free Online Developer Tools (No Sign-up) · Harindu Jayakody" description={description} jsonLd={jsonLd} image="/og/free-tools.png">
   <div class="flex flex-col gap-10">
     <header class="flex flex-col gap-3">
       <p class="rise font-mono text-sm text-primary">$ ls ~/free-tools</p>
-      <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">Free tools</h1>
-      <p class="rise max-w-xl text-muted-foreground" style="--d:160ms">{description}</p>
+      <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">Free online tools</h1>
+      <p class="rise max-w-xl text-muted-foreground" style="--d:160ms">Small tools I built for my own work and made public. They run in your browser: no sign-up, no tracking, and nothing you type is saved on a server.</p>
     </header>
 
     <ul class="grid gap-3 sm:grid-cols-2">

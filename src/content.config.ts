@@ -18,6 +18,8 @@ const blog = defineCollection({
       // Posts sharing the exact same name form a series (2+ published parts); parts read oldest first unless seriesOrder is set.
       series: z.string().trim().min(1).optional(),
       seriesOrder: z.number().int().positive().optional(),
+      // GitHub repo the post is about ("owner/name"); shows a "Star on GitHub" card after the article.
+      repo: z.string().regex(/^[\w.-]+\/[\w.-]+$/, "repo must look like owner/name").optional(),
       // 16:9 cover, path relative to the post, e.g. ./images/my-post.jpg
       image: image().optional(),
       imageAlt: z.string().default(""),

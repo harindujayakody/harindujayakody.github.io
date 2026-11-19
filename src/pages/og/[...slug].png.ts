@@ -5,6 +5,7 @@ import satori from "satori";
 import { Resvg } from "@resvg/resvg-js";
 import { getPosts, fmtDate, readingTime } from "../../lib/posts";
 import { author } from "../../data/author";
+import { freeTools } from "../../data/free-tools";
 
 // Build-time Open Graph images (1200×630): satori lays out the card with real Poppins glyphs, resvg rasterizes it.
 // Poppins is the only site font shipped as static .woff (satori can't read woff2 or variable fonts).
@@ -19,6 +20,11 @@ export async function getStaticPaths() {
     })),
     { params: { slug: "index" }, props: { title: author.name, kicker: "Founder of Infiax", meta: "Web apps · browser extensions · tools", cmd: "whoami" } },
     { params: { slug: "blog" }, props: { title: "Notes on AI tools, Windows fixes and building for the web", kicker: "Blog", meta: `${posts.length} posts`, cmd: "ls ./posts" } },
+    { params: { slug: "free-tools" }, props: { title: "Free online tools that run in your browser", kicker: "Free tools", meta: "No sign-up · nothing saved on a server", cmd: "ls ~/free-tools" } },
+    ...freeTools.map((t) => ({
+      params: { slug: `free-tools/${t.slug}` },
+      props: { title: t.name, kicker: "Free tool", meta: "Free · runs in your browser", cmd: `./${t.slug}` },
+    })),
   ];
 }
 

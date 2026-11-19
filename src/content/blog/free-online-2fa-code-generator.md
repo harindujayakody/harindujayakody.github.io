@@ -4,6 +4,7 @@ description: "Get a 2FA code from a secret key in your browser. How my free TOTP
 date: 2026-11-19
 category: "Web"
 tags: ["2fa", "totp", "security", "free tools", "authenticator"]
+repo: "harindujayakody/2fa-tools"
 ---
 
 I built a small tool that turns a 2FA secret key into the 6-digit code an authenticator app would show. It now lives on this site at [/free-tools/2fa-online/](/free-tools/2fa-online/), in the same theme as everything else.
@@ -27,13 +28,13 @@ Spaces, dashes and lowercase letters don't matter, so you can paste keys exactly
 
 ## Your keys stay on your device
 
-This was the main goal, so here's exactly what happens to a key you paste:
+This was the main goal, so here's exactly what happens to a key you paste.
 
-- **It isn't sent anywhere.** The code is calculated with the browser's built-in Web Crypto API. The page makes no requests with your key.
-- **It isn't saved.** Not on a server, and not in your browser either: no cookies, no `localStorage`. It exists only in the open tab's memory.
-- **It's wiped automatically:** when you press **Clear all**, after 5 minutes without activity, when the tab sits in the background for over 2 minutes, and when you leave the page.
-- **It isn't shown in full.** Results label each key like `Key 1 · JBSW…PXP`, so a glance at your screen doesn't reveal the secret.
-- **The page can't talk to other sites.** It has a strict Content Security Policy that blocks third-party scripts and any connection to another domain. Even if something went wrong, the browser itself would refuse to send your key elsewhere.
+The code is calculated with the browser's built-in Web Crypto API, and the page makes no requests with your key. Nothing is saved either: not on a server, and not in your browser (no cookies, no `localStorage`). The key exists only in the open tab's memory.
+
+The tool wipes it when you press Clear all, after 5 minutes without activity, when the tab sits in the background for over 2 minutes, and when you leave the page. Results label each key like `Key 1 · JBSW…PXP`, so someone glancing at your screen doesn't see the secret.
+
+The page also has a strict Content Security Policy that blocks third-party scripts and any connection to another domain. If something did go wrong, the browser itself would refuse to send your key elsewhere.
 
 Once the page has loaded, generating codes doesn't need an internet connection at all.
 

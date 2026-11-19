@@ -9,6 +9,7 @@ import PostNav from "../../components/PostNav.astro";
 import SeriesBox from "../../components/SeriesBox.astro";
 import Comments from "../../components/Comments.astro";
 import Subscribe from "../../components/Subscribe.astro";
+import StarCard from "../../components/StarCard.astro";
 import { authorJsonLd } from "../../data/author";
 import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, seriesOf, seriesUrl, type Post } from "../../lib/posts";
 
@@ -91,6 +92,7 @@ const jsonLd = [
     {series && <SeriesBox name={series.name} parts={series.parts} index={series.index} />}
     <Toc headings={headings} />
     <div class="prose rise" style="--d:240ms"><Content /></div>
+    {d.repo && <StarCard repo={d.repo} />}
     <AuthorBox />
     <Subscribe />
   </article>

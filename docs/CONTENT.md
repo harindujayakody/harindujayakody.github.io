@@ -41,6 +41,7 @@ Posts with three or more `##` sections automatically get an "On this page" table
 | `draft` | no | `true` keeps the post off the live site, sitemap and RSS. Drafts still show in `npm run dev` for previewing. |
 | `comments` | no | `false` hides the comments section on that post. Default `true`. |
 | `series` | no | Name of a multi-part series. See below. |
+| `repo` | no | GitHub repo the post is about, as `owner/name` (e.g. `harindujayakody/2fa-tools`). Shows a "Star on GitHub" card after the article. |
 | `seriesOrder` | no | Part number (1, 2, 3…). Set it on every part or on none. |
 
 ### Comments
@@ -89,7 +90,7 @@ Use fenced blocks with a language: ```` ```powershell ````. Highlighting uses th
 
 ## Free tools
 
-Tool pages live in `src/pages/free-tools/<name>.astro` and are listed from `src/data/free-tools.ts` (name, href, description, tags, optional source repo and blog post). Pages that handle anything sensitive should pass a strict `csp` to `Layout` (see `2fa-online.astro`) and keep user input in memory only.
+Tool pages live in `src/pages/free-tools/<name>.astro` (or a folder for multi-page tools) and are listed from `src/data/free-tools.ts` (slug, name, href, description, tags, `updated` date, optional source repo and blog post). The `slug` also names the share card (`/og/free-tools/<slug>.png`); bump `updated` when the tool changes, since the sitemap uses it as `lastmod`. HTTP status code texts are in `src/data/http-status-codes.ts`. Pages that handle anything sensitive should pass a strict `csp` to `Layout` (see `2fa-online.astro`) and keep user input in memory only.
 
 ## Projects & Tools
 

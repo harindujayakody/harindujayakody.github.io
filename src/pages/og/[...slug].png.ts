@@ -9,14 +9,14 @@ import { freeTools } from "../../data/free-tools";
 
 // Build-time Open Graph images (1200×630): satori lays out the card with real Poppins glyphs, resvg rasterizes it.
 // Poppins is the only site font shipped as static .woff (satori can't read woff2 or variable fonts).
-type Card = { title: string; kicker: string; meta: string; cmd: string };
+type Card = { title: string; kicker: string; meta: string; cmd: string; desc?: string; tags?: string[] };
 
 export async function getStaticPaths() {
   const posts = await getPosts();
   return [
     ...posts.map((p) => ({
       params: { slug: p.id },
-      props: { title: p.data.title, kicker: p.data.category, meta: `${fmtDate(p.data.date)} · ${readingTime(p.body)} min read`, cmd: "cat post.md" },
+      props: { title: p.data.title, kicker: p.data.category, meta: `${fmtDate(p.data.date)} · ${readingTime(p.body)} min read`, cmd: "cat post.md", desc: p.data.description, tags: p.data.tags.slice(0, 4) },
     })),
     { params: { slug: "index" }, props: { title: author.name, kicker: "Founder of Infiax", meta: "Web apps · browser extensions · tools", cmd: "whoami" } },
     { params: { slug: "blog" }, props: { title: "Notes on AI tools, Windows fixes and building for the web", kicker: "Blog", meta: `${posts.length} posts`, cmd: "ls ./posts" } },
@@ -49,17 +49,23 @@ const h = (type: string, style: Record<string, unknown>, ...children: unknown[])
 
 const C = { bg: "#0b0d12", fg: "#eef0f4", muted: "#9aa0ab", mint: "#7fd6b4", border: "rgba(255,255,255,0.12)" };
 
-function card({ title, kicker, meta, cmd }: Card, avatar: string) {
-  const size = title.length > 70 ? 52 : title.length > 45 ? 60 : 72;
+// Tag colours for the GitHub-style language bar under the card; cycles for tag counts beyond the list.
+const BAR = ["#7fd6b4", "#6ea8fe", "#f5a97f", "#c6a0f6", "#f5d76e"];
+
+function card({ title, kicker, meta, cmd, desc, tags = [] }: Card, avatar: string) {
+  const size = desc ? (title.length > 60 ? 50 : title.length > 40 ? 58 : 66) : title.length > 70 ? 52 : title.length > 45 ? 60 : 72;
+  const pills = tags.map((t, i) =>
+    h("div", { fontSize: 22, fontWeight: 500, color: BAR[i % BAR.length], border: `2px solid ${BAR[i % BAR.length]}55`, borderRadius: 999, padding: "4px 18px", marginRight: 12 }, `#${t}`),
+  );
   return h(
     "div",
     {
       // satori sizes this box without its padding, so subtract it to land exactly on the 1200×630 canvas.
       width: 1200 - 2 * 80,
-      height: 630 - 2 * 64,
+      height: 630 - 2 * 56,
       flexDirection: "column",
       justifyContent: "space-between",
-      padding: "64px 80px",
+      padding: "56px 80px",
       boxSizing: "content-box",
       backgroundColor: C.bg,
       backgroundImage: "radial-gradient(circle at 50% -20%, rgba(127,214,180,0.16), rgba(127,214,180,0) 60%), radial-gradient(circle at 2px 2px, rgba(255,255,255,0.07) 1.5px, rgba(255,255,255,0) 0)",
@@ -73,17 +79,29 @@ function card({ title, kicker, meta, cmd }: Card, avatar: string) {
       h("div", { fontSize: 28, fontWeight: 500, color: C.muted }, h("span", { color: C.mint }, "~/harindu"), h("span", { marginLeft: 14 }, `$ ${cmd}`)),
       h("div", { fontSize: 24, fontWeight: 500, color: C.mint, border: `2px solid ${C.mint}`, borderRadius: 999, padding: "6px 22px" }, kicker),
     ),
-    h("div", { fontSize: size, fontWeight: 600, lineHeight: 1.12, letterSpacing: -1.5, maxWidth: 1040 }, title),
     h(
       "div",
-      { justifyContent: "space-between", alignItems: "center", borderTop: `2px solid ${C.border}`, paddingTop: 32 },
+      { flexDirection: "column" },
+      h("div", { fontSize: size, fontWeight: 600, lineHeight: 1.12, letterSpacing: -1.5, maxWidth: 1040 }, title),
+      desc ? h("div", { fontSize: 26, color: C.muted, marginTop: 22, maxWidth: 980, lineHeight: 1.35 }, desc.length > 120 ? `${desc.slice(0, 117).replace(/\s+\S*$/, "")}...` : desc) : "",
+      pills.length ? h("div", { marginTop: 26 }, ...pills) : "",
+    ),
+    h(
+      "div",
+      { flexDirection: "column" },
+      // GitHub-style segmented bar: one slice per tag (or one mint bar when there are none).
+      h("div", { height: 10, borderRadius: 999, overflow: "hidden", marginBottom: 28 }, ...(tags.length ? tags : [""]).map((_, i) => h("div", { flex: 1, backgroundColor: BAR[i % BAR.length] }))),
       h(
         "div",
-        { alignItems: "center" },
-        { type: "img", props: { src: avatar, width: 64, height: 64, style: { borderRadius: 999, border: `2px solid ${C.border}` } } },
-        h("div", { flexDirection: "column", marginLeft: 20 }, h("div", { fontSize: 26, fontWeight: 600 }, author.name), h("div", { fontSize: 22, color: C.muted }, "harindujayakody.com")),
+        { justifyContent: "space-between", alignItems: "center" },
+        h(
+          "div",
+          { alignItems: "center" },
+          { type: "img", props: { src: avatar, width: 56, height: 56, style: { borderRadius: 999, border: `2px solid ${C.border}` } } },
+          h("div", { flexDirection: "column", marginLeft: 18 }, h("div", { fontSize: 24, fontWeight: 600 }, author.name), h("div", { fontSize: 20, color: C.muted }, "harindujayakody.com")),
+        ),
+        h("div", { fontSize: 24, color: C.muted }, meta),
       ),
-      h("div", { fontSize: 24, color: C.muted }, meta),
     ),
   );
 }

@@ -1,0 +1,41 @@
+---
+import { votesApi } from "../data/votes";
+
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+---
+<aside aria-label="Was this helpful?" class="reveal flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border bg-card/50 px-5 py-4" data-vote data-id={id} data-api={votesApi}>
+  <p class="font-medium">Was this helpful?</p>
+  <div class="flex items-center gap-2" data-vote-buttons>
+    <button type="button" data-yes class="rounded-md border px-3 py-1 font-mono text-sm transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Yes</button>
+    <button type="button" data-no class="rounded-md border px-3 py-1 font-mono text-sm transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">No</button>
+  </div>
+  <p class="font-mono text-xs text-muted-foreground" role="status" data-vote-msg></p>
+</aside>
+<script>
+  // Only a "Yes" is sent: the Worker counts helpful votes, one per visitor per post. A "No" just says thanks.
+  const box = document.querySelector<HTMLElement>("[data-vote]");
+  if (box) {
+    const { id, api } = box.dataset as { id: string; api: string };
+    const msg = box.querySelector<HTMLElement>("[data-vote-msg]")!;
+    const buttons = box.querySelector<HTMLElement>("[data-vote-buttons]")!;
+    const key = `voted:${id}`;
+    const done = (text: string) => { buttons.hidden = true; msg.textContent = text; };
+    const plural = (n: number) => `${n} ${n === 1 ? "reader" : "readers"} found this helpful`;
+    let voted = false;
+    try { voted = !!localStorage.getItem(key); } catch { /* storage blocked: the Worker still blocks repeats */ }
+    const show = () => fetch(`${api}/votes`).then((r) => r.json()).then((c) => { if (c[id] > 0) msg.textContent = plural(c[id]); }).catch(() => {});
+    if (voted) { buttons.hidden = true; show(); } else show();
+    box.querySelector("[data-no]")!.addEventListener("click", () => done("Thanks for the feedback."));
+    box.querySelector("[data-yes]")!.addEventListener("click", async () => {
+      try { localStorage.setItem(key, "1"); } catch { /* ignore */ }
+      try {
+        const r = await fetch(`${api}/vote`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) });
+        const { count } = await r.json();
+        done(`Thanks! ${plural(count)}.`);
+      } catch { done("Thanks!"); }
+    });
+  }
+</script>

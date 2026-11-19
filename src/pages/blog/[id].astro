@@ -9,6 +9,7 @@ import Toc from "../../components/Toc.astro";
 import PostNav from "../../components/PostNav.astro";
 import SeriesBox from "../../components/SeriesBox.astro";
 import Comments from "../../components/Comments.astro";
+import HelpfulVote from "../../components/HelpfulVote.astro";
 import Subscribe from "../../components/Subscribe.astro";
 import StarCard from "../../components/StarCard.astro";
 import NicDecoder from "../../components/NicDecoder.astro";
@@ -92,10 +93,15 @@ const jsonLd = [
       <Image src={d.image} alt={d.imageAlt} widths={[400, 768, 1200]} sizes="(min-width: 768px) 736px, 100vw"
         loading="eager" fetchpriority="high" class="rise aspect-video w-full rounded-xl border object-cover" style="--d:200ms" />
     )}
+    {!d.image && (
+      <img src={`/og/${post.id}.png`} alt="" width="1200" height="630" loading="eager" fetchpriority="high"
+        class="rise aspect-video w-full rounded-xl border object-cover" style="--d:200ms" />
+    )}
     {series && <SeriesBox name={series.name} parts={series.parts} index={series.index} />}
     <Toc headings={headings} />
     <div class="prose rise" style="--d:240ms"><Content /></div>
     {d.repo && <StarCard repo={d.repo} />}
+    <HelpfulVote id={post.id} />
     <AuthorBox />
     <Subscribe />
   </article>

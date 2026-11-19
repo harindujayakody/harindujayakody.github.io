@@ -144,7 +144,7 @@ const csp = [
         <div class="min-w-0 flex-1">
           <p class="font-mono text-xs text-muted-foreground" data-label></p>
           <p class="font-mono text-2xl font-semibold tracking-wider tabular-nums sm:text-3xl" data-code>··· ···</p>
-          <p class="text-xs text-[#f85149]" data-error hidden></p>
+          <p class="text-xs text-(--danger)" data-error hidden></p>
         </div>
         <button type="button" data-copy class="flex size-9 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
@@ -178,7 +178,7 @@ const csp = [
             li.querySelector("[data-secs]")!.textContent = String(remaining);
             const ring = li.querySelector<SVGCircleElement>("[data-ring]")!;
             ring.style.strokeDashoffset = String(RING * (1 - remaining / 30));
-            ring.style.stroke = remaining <= 5 ? "#f85149" : remaining <= 10 ? "#d29922" : "var(--primary)";
+            ring.style.stroke = remaining <= 5 ? "var(--danger)" : remaining <= 10 ? "var(--warning)" : "var(--primary)";
           } catch (e) {
             codeEl.textContent = "--- ---";
             delete codeEl.dataset.value;

@@ -3,6 +3,7 @@ import "../styles/global.css";
 import Socials from "../components/Socials.astro";
 import SearchDialog from "../components/SearchDialog.astro";
 import Shortcuts from "../components/Shortcuts.astro";
+import ThemeToggle from "../components/ThemeToggle.astro";
 import poppins from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
 import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { version } from "../../package.json";
@@ -55,6 +56,25 @@ const nav = [
     {csp && <meta http-equiv="Content-Security-Policy" content={csp} />}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0d0e12" />
+    <script is:inline>
+      // Theme before first paint (no flash): the saved choice, otherwise the system setting, which keeps being followed live.
+      // ThemeToggle saves a choice only when it differs from the system; choosing the system's theme clears it.
+      (() => {
+        const d = document.documentElement;
+        const m = matchMedia("(prefers-color-scheme: light)");
+        const saved = () => { try { const t = localStorage.getItem("theme"); return t === "light" || t === "dark" ? t : null; } catch { return null; } };
+        const set = (t) => {
+          d.dataset.theme = t;
+          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", t === "light" ? "#f8f9fb" : "#0d0e12");
+        };
+        set(saved() || (m.matches ? "light" : "dark"));
+        m.addEventListener("change", (e) => {
+          if (saved()) return;
+          set(e.matches ? "light" : "dark");
+          document.dispatchEvent(new Event("theme:change"));
+        });
+      })();
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Harindu Jayakody" />
@@ -112,6 +132,7 @@ const nav = [
               <kbd class="kbd-hint" aria-hidden="true"><span data-mod-key /> K</kbd>
             </a>
           </li>
+          <li><ThemeToggle /></li>
         </ul>
       </nav>
     </header>

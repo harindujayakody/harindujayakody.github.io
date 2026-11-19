@@ -92,13 +92,13 @@ const jsonLd = [
       )}
 
       <h2 id="example">Example response</h2>
-      <Code code={exampleResponse(s)} lang="http" theme="github-dark-default" />
+      <Code code={exampleResponse(s)} lang="http" themes={{ light: "github-light-default", dark: "github-dark-default" }} defaultColor={false} />
 
       <h2 id="check">How to check for a {s.code} response</h2>
       {snippets(s.code).map((x) => (
         <>
           <h3>{x.label}</h3>
-          <Code code={x.code} lang={x.lang as "bash"} theme="github-dark-default" />
+          <Code code={x.code} lang={x.lang as "bash"} themes={{ light: "github-light-default", dark: "github-dark-default" }} defaultColor={false} />
         </>
       ))}
 

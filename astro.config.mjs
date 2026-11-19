@@ -9,6 +9,6 @@ export default defineConfig({
   build: { inlineStylesheets: "always" },
   // Old category merged into AI (issue #11).
   redirects: { "/blog/category/ai-tools": "/blog/category/ai/" },
-  markdown: { shikiConfig: { theme: "github-dark-default" }, processor: satteri({ hastPlugins: [xEmbed, headingAnchors] }) },
+  markdown: { shikiConfig: { themes: { light: "github-light-default", dark: "github-dark-default" }, defaultColor: false }, processor: satteri({ hastPlugins: [xEmbed, headingAnchors] }) },
   vite: { plugins: [tailwindcss()] },
 });

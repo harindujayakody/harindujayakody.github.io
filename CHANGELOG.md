@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.22.2] - 2026-11-20
+
+### Changed
+- Post "Fix Windows Installer Error 2502 and 2503 in PowerShell" rewritten (was 2503 only, Command Prompt). Covers both codes from an administrator PowerShell window: run the MSI elevated, re-register the Windows Installer service, reset Temp and Installer folder permissions, read a verbose log. Adds screenshots of both errors; same URL, `updated` date set.
+
 ## [1.22.1] - 2026-11-20
 
 ### Changed

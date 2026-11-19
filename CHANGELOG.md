@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.26.0] - 2026-11-20
+
+### Added
+- Noto Sans Sinhala (self-hosted, variable weight) is now the font for Sinhala script in body text and headings, after Inter and Poppins in the font stack. Latin text still uses Inter and Poppins. The browser only downloads the Sinhala file on pages that contain Sinhala (#79).
+
 ## [1.25.3] - 2026-11-20
 
 ### Changed

@@ -16,9 +16,12 @@ const {
   modified,
   noindex = false,
   jsonLd = [],
+  csp,
 }: {
   title?: string; description?: string; image?: string; type?: "website" | "article";
   published?: Date; modified?: Date; noindex?: boolean; jsonLd?: object[];
+  /** Content-Security-Policy for this page only (meta tag, so first in <head>). */
+  csp?: string;
 } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
@@ -39,14 +42,17 @@ const speculation = {
 };
 const nav = [
   { href: "/blog/", label: "blog" },
+  { href: "/free-tools/", label: "tools" },
   { href: "/projects/", label: "projects" },
-  { href: "/timeline/", label: "timeline" },
+  // Hidden below 640px so the header fits a 360px phone; still linked from the home page and via "g t".
+  { href: "/timeline/", label: "timeline", desktopOnly: true },
 ];
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    {csp && <meta http-equiv="Content-Security-Policy" content={csp} />}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0d0e12" />
     <title>{title}</title>
@@ -91,7 +97,7 @@ const nav = [
           {nav.map((n) => {
             const active = path.startsWith(n.href);
             return (
-              <li>
+              <li class:list={[n.desktopOnly && "hidden sm:block"]}>
                 <a href={n.href} aria-current={active ? "page" : undefined}
                   class:list={["rounded-md px-2 py-1.5 transition hover:text-primary sm:px-2.5", active ? "bg-muted text-primary" : "text-muted-foreground"]}>
                   {n.label}

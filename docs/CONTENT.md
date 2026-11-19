@@ -87,6 +87,10 @@ Use fenced blocks with a language: ```` ```powershell ````. Highlighting uses th
 
 `src/data/x-posts.ts`: a list of post URLs, newest first. Each is fetched at build time and drawn as a site-themed card. If X stops serving a post, it's skipped and the build still succeeds.
 
+## Free tools
+
+Tool pages live in `src/pages/free-tools/<name>.astro` and are listed from `src/data/free-tools.ts` (name, href, description, tags, optional source repo and blog post). Pages that handle anything sensitive should pass a strict `csp` to `Layout` (see `2fa-online.astro`) and keep user input in memory only.
+
 ## Projects & Tools
 
 `src/data/projects.ts`. Each item:

@@ -11,7 +11,7 @@ const { item: p } = Astro.props;
 <article class="reveal group relative flex min-w-0 flex-col gap-2 rounded-xl border bg-card/70 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/20">
   <div class="flex items-center justify-between gap-2">
     <h3 class="min-w-0 truncate font-mono text-sm font-medium group-hover:text-primary">
-      <a href={p.href} target="_blank" rel="noopener" class="after:absolute after:inset-0">{p.name}</a>
+      <a href={p.href} target={p.href.startsWith("http") ? "_blank" : undefined} rel={p.href.startsWith("http") ? "noopener" : undefined} class="after:absolute after:inset-0">{p.name}</a>
     </h3>
     <Badge>{p.kind}</Badge>
   </div>

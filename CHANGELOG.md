@@ -2,6 +2,24 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.18.0] - 2026-11-19
+
+### Added
+- **Free tools** at `/free-tools/`, with a **tools** item in the main menu.
+- **2FA code generator** at `/free-tools/2fa-online/`, ported from [2fa-tools](https://github.com/harindujayakody/2fa-tools) into the site theme: paste one or more TOTP secret keys, get live 6-digit codes with a countdown ring and copy buttons; `Ctrl/⌘ + Enter` generates.
+  - No data is saved on any server, or in the browser: keys live only in the tab's memory and are wiped on **Clear all**, after 5 minutes idle, after 2+ minutes in the background, and on leaving the page.
+  - Keys are masked in results (`JBSW…PXP`); invalid keys say which character is wrong; typed keys are inserted as text, never HTML.
+  - Page-only Content-Security-Policy: no third-party scripts and no connections to other sites.
+  - FAQ with `FAQPage` structured data, plus `WebApplication` and breadcrumb structured data.
+- `src/lib/totp.ts` (Base32 + RFC 6238 on Web Crypto) with tests against the RFC 6238 vectors, run by `npm test` in CI and before deploy.
+- Post: "Free Online 2FA Code Generator That Never Sees Your Keys".
+- Optional per-page `csp` prop on `Layout`.
+
+### Changed
+- The 2fa-tools project card now links to the on-site tool; project cards only open external links in a new tab.
+- `timeline` is hidden from the header below 640px so the four-item menu fits on a 360px phone.
+- `llms.txt` lists free tools and uses absolute URLs for projects; the sitemap includes the tool pages.
+
 ## [1.17.0] - 2026-11-13
 
 ### Changed

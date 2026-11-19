@@ -42,6 +42,16 @@ export const freeTools: FreeTool[] = [
     source: "https://github.com/harindujayakody/2fa-tools",
     post: "/blog/free-online-2fa-code-generator/",
   },
+  {
+    slug: "anti-detect-browser",
+    name: "Anti detect browser (Octopus Agent)",
+    href: "/free-tools/anti-detect-browser/",
+    desc: "Free, open source anti detect browser for Windows and Mac. Unlimited profiles, one proxy per profile, 220 device fingerprints, local API and MCP.",
+    tags: ["Download", "Open source", "Privacy"],
+    updated: new Date("2026-11-20"),
+    source: "https://github.com/harindujayakody/octopus-agent",
+    post: "/blog/octopus-agent-free-anti-detect-web-browser/",
+  },
 ];
 
 export const toolsUpdated = new Date(Math.max(...freeTools.map((t) => +t.updated)));

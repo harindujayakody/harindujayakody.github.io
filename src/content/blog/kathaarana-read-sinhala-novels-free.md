@@ -1,7 +1,7 @@
 ---
 title: "Read Sinhala Novels and Short Stories Free on Kathaarana.com"
 description: "Kathaarana.com is a free library of Sinhala novels and short stories (කෙටිකතා). Read chapter by chapter, no account needed, and download any story as a PDF."
-date: 2026-11-20
+date: 2026-11-20T02:30:50+05:30
 category: "Web"
 tags: ["kathaarana", "sinhala", "novels", "short stories", "free"]
 repo: "harindujayakody/kathaarana"

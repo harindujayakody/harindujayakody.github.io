@@ -1,7 +1,7 @@
 ---
 title: "Octopus Agent: Free Anti Detect Web Browser with Unlimited Profiles"
 description: "Octopus Agent is a free, open source anti detect web browser for Windows and Mac. Unlimited profiles, one proxy per profile, 220 device fingerprints and a local API."
-date: 2026-11-20
+date: 2026-11-20T03:01:49+05:30
 category: "Web"
 tags: ["anti detect browser", "octopus agent", "open source", "privacy", "multi accounting", "chromium"]
 repo: "harindujayakody/octopus-agent"

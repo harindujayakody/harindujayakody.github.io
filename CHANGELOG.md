@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.25.1] - 2026-11-20
+
+### Fixed
+- Posts published on the same day had no fixed order, so the home page Writing section and the blog list could show an older post above a newer one. The six posts from 19 and 20 Nov now carry their publish time, and docs/CONTENT.md says to add a time when two posts share a day.
+
 ## [1.25.0] - 2026-11-20
 
 ### Added

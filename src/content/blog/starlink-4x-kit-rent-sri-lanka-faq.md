@@ -1,7 +1,7 @@
 ---
 title: "Starlink Free 4X Kit Rent in Sri Lanka: Cancel, Buyout FAQ"
 description: "Starlink 4X Kit rent in Sri Lanka explained: activation deadline, cancelling, returning the Kit, buyout and Residential Lite, from a call with Starlink Support."
-date: 2026-11-19
+date: 2026-11-19T19:49:55+05:30
 category: "Guides"
 tags: ["starlink", "starlink sri lanka", "starlink rental", "starlink 4x kit", "starlink buyout", "residential lite"]
 ---

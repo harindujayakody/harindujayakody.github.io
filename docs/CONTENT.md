@@ -32,7 +32,7 @@ Posts with three or more `##` sections automatically get an "On this page" table
 |---|---|---|
 | `title` | yes | Keep it under about 60 characters for search results. |
 | `description` | yes | About 140–160 characters. |
-| `date` | yes | `YYYY-MM-DD`. Posts sort newest first. |
+| `date` | yes | `YYYY-MM-DD`. Posts sort newest first. When two posts share a day, add the time (`2026-11-20T14:30:00+05:30`) so the newer one is listed first; with date only, same-day posts have no fixed order. |
 | `updated` | no | Set it when you meaningfully change a post. |
 | `category` | yes | One of `AI`, `Guides`, `Windows`, `Web`. Anything else fails the build. To add a category, add it to the list in `src/content.config.ts`. Each category gets an indexable page at `/blog/category/<slug>/`. |
 | `tags` | no | Free-form. Tag pages are `noindex` so they don't compete with categories. |

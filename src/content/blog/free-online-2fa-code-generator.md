@@ -1,7 +1,7 @@
 ---
 title: "Free Online 2FA Code Generator That Never Sees Your Keys"
 description: "Get a 2FA code from a secret key in your browser. How my free TOTP tool works, why nothing is saved on a server, and when to use an app instead."
-date: 2026-11-19
+date: 2026-11-19T20:08:57+05:30
 popular: true
 category: "Web"
 tags: ["2fa", "totp", "security", "free tools", "authenticator"]

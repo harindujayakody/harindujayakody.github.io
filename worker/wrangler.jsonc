@@ -1,0 +1,6 @@
+{
+  "name": "harindu-votes",
+  "main": "index.js",
+  "compatibility_date": "2026-11-01",
+  "kv_namespaces": [{ "binding": "VOTES", "id": "63c9f0d9b727490eb4cddee9f63edd54" }]
+}

@@ -7,6 +7,8 @@ import ThemeToggle from "../components/ThemeToggle.astro";
 import poppins from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
 import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { version } from "../../package.json";
+import { votesApi } from "../data/votes";
+import { getPosts } from "../lib/posts";
 
 const {
   title = "Harindu Jayakody",
@@ -24,6 +26,7 @@ const {
   /** Content-Security-Policy for this page only (meta tag, so first in <head>). */
   csp?: string;
 } = Astro.props;
+const titles = Object.fromEntries((await getPosts()).map((p) => [p.id, p.data.title]));
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
 const ogImage = new URL(image, Astro.site);
@@ -131,6 +134,10 @@ const nav = [
       <slot />
     </main>
     <footer class="border-t [view-transition-name:site-footer]">
+      <section id="popular-posts" hidden aria-label="Popular posts" class="mx-auto max-w-3xl border-b px-4 py-6">
+        <h2 class="mb-3 font-mono text-xs text-muted-foreground">$ ls --popular</h2>
+        <ol class="flex flex-col gap-1.5 text-sm"></ol>
+      </section>
       <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-2 px-4 py-6 text-muted-foreground">
         <span class="font-mono text-xs">© {new Date().getFullYear()} Harindu Jayakody · <a href="/rss.xml" class="hover:text-primary">rss</a> · <a href="/llms.txt" class="hover:text-primary">llms.txt</a> · <a href="https://github.com/harindujayakody/harindujayakody.github.io/blob/master/CHANGELOG.md" target="_blank" rel="noopener" class="hover:text-primary">v{version}</a><span class="kbd-hint-inline"> · <button type="button" data-shortcuts-open class="hover:text-primary">shortcuts <kbd>?</kbd></button></span></span>
         <div class="flex items-center"><Socials /></div>
@@ -138,5 +145,31 @@ const nav = [
     </footer>
     <SearchDialog />
     <Shortcuts />
+    <script is:inline define:vars={{ api: votesApi, titles }}>
+      // Footer "popular posts": top 3 by helpful votes. Hidden until there is at least one vote, and if the counter is unreachable.
+      (() => {
+        const box = document.getElementById("popular-posts");
+        if (!box) return;
+        fetch(api + "/votes").then((r) => r.json()).then((counts) => {
+          const top = Object.entries(counts).filter(([id, n]) => n > 0 && titles[id]).sort((a, b) => b[1] - a[1]).slice(0, 3);
+          if (!top.length) return;
+          const ol = box.querySelector("ol");
+          ol.textContent = "";
+          for (const [id, n] of top) {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = "/blog/" + id + "/";
+            a.className = "hover:text-primary";
+            a.textContent = titles[id];
+            const c = document.createElement("span");
+            c.className = "ml-2 font-mono text-xs text-muted-foreground";
+            c.textContent = n + (n === 1 ? " vote" : " votes");
+            li.append(a, c);
+            ol.append(li);
+          }
+          box.hidden = false;
+        }).catch(() => {});
+      })();
+    </script>
   </body>
 </html>

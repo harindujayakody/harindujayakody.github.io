@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.24.0] - 2026-11-20
+
+### Added
+- "Was this helpful?" Yes/No box at the end of every post. Yes is counted, one vote per visitor per post; No only says thanks. Counts live in a small Cloudflare Worker (`worker/`, KV storage, no GitHub login). Deploy it from `worker/` with `CLOUDFLARE_ACCOUNT_ID=<id> npx wrangler deploy`; the site reads it from `src/data/votes.ts`.
+- Footer "popular posts": top 3 by helpful votes, hidden until the first vote or if the counter is unreachable.
+- Posts without a cover image now show their generated card as the featured image.
+
+### Changed
+- Generated post cards (`/og/<post>.png`) redesigned GitHub-style: title, description, tag pills and a segmented colour bar with one slice per tag.
+
 ## [1.23.1] - 2026-11-20
 
 ### Fixed

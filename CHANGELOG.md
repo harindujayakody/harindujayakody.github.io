@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.22.1] - 2026-11-20
+
+### Changed
+- Homepage meta: title "Harindu's Blog: What I Build, Fix and Learn" and a new description. Open Graph tags follow.
+
 ## [1.22.0] - 2026-11-19
 
 ### Changed

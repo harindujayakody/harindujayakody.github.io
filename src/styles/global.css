@@ -272,10 +272,11 @@ html[data-theme="light"] .astro-code, html[data-theme="light"] .astro-code span 
 .theme-toggle .moon, html[data-theme="light"] .theme-toggle .sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
 html[data-theme="light"] .theme-toggle .moon { opacity: 1; transform: none; }
 /* During the switch the whole page is one snapshot: no named parts (the header normally holds still across page
-   transitions), no default cross-fade. The script clips the old view closed into the toggle (kept on top), for both directions. */
+   transitions), no default cross-fade. The script clips the new view open (to light), or the old view closed (to dark, kept on top). */
 html.theme-switching * { view-transition-name: none !important; }
 html.theme-switching::view-transition-old(root), html.theme-switching::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-html.theme-switching::view-transition-old(root) { z-index: 2; }
+html.theme-closing::view-transition-old(root) { z-index: 2; }
+html.theme-switching:not(.theme-closing)::view-transition-new(root) { clip-path: circle(0px at var(--tx, 50%) var(--ty, 0)); }
 @media (prefers-reduced-motion: reduce) { .theme-toggle svg { transition: none; } }
 
 /* Link preview card (shown by the script on posts). */

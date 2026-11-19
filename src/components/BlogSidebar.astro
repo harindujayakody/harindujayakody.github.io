@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import avatar from "../assets/avatar.png";
+import Kofi from "./Kofi.astro";
 import { author } from "../data/author";
 import { votesApi } from "../data/votes";
 import { getPosts, categoryUrl } from "../lib/posts";
@@ -72,5 +73,6 @@ const current = Astro.url.pathname;
         })}
       </ul>
     </nav>
+    <Kofi />
   </div>
 </aside>

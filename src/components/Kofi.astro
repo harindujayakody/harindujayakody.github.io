@@ -1,0 +1,8 @@
+---
+// Ko-fi link as a plain button: no third-party image, so the strict-CSP tool pages make no extra request.
+const { class: cls = "" } = Astro.props;
+---
+<a href="https://ko-fi.com/B5Q72AYE6A" target="_blank" rel="noopener" class:list={["inline-flex h-9 items-center gap-2 rounded-md border bg-card/50 px-3.5 text-sm font-medium transition hover:border-primary/40 hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring", cls]}>
+  <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v2"/><path d="M14 2v2"/><path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1"/><path d="M6 2v2"/></svg>
+  Buy me a coffee
+</a>

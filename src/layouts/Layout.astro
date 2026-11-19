@@ -7,6 +7,7 @@ import ThemeToggle from "../components/ThemeToggle.astro";
 import poppins from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
 import inter from "@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url";
 import { version } from "../../package.json";
+import Kofi from "../components/Kofi.astro";
 import { votesApi } from "../data/votes";
 import { getPosts } from "../lib/posts";
 
@@ -134,6 +135,12 @@ const nav = [
       <slot />
     </main>
     <footer class="border-t [view-transition-name:site-footer]">
+      {path.startsWith("/free-tools") && (
+        <div class="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 border-b px-4 py-5">
+          <p class="text-sm text-muted-foreground">Free tools, no ads. If one saved you time, you can say thanks.</p>
+          <Kofi />
+        </div>
+      )}
       <section id="popular-posts" hidden aria-label="Popular posts" class="mx-auto max-w-3xl border-b px-4 py-6">
         <h2 class="mb-3 font-mono text-xs text-muted-foreground">$ ls --popular</h2>
         <ol class="flex flex-col gap-1.5 text-sm"></ol>

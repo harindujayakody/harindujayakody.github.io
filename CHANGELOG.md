@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.24.2] - 2026-11-20
+
+### Added
+- "Buy me a coffee" Ko-fi button in the blog index sidebar, the single-post sidebar and the footer of the free tools pages. It is a plain link with an icon (no Ko-fi image is loaded, so the tools' strict CSP and privacy stay as they are).
+
 ## [1.24.1] - 2026-11-20
 
 ### Changed

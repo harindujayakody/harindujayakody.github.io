@@ -42,6 +42,10 @@
     const y = r.top + r.height / 2;
     const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
     const opening = next === "light";
+    // Start the new view fully clipped from the first frame (see global.css); without this, going to light painted
+    // the whole light page for a frame before the circle animation started, so the change looked instant.
+    d.style.setProperty("--tx", `${x}px`);
+    d.style.setProperty("--ty", `${y}px`);
     d.classList.add("theme-switching");
     d.classList.toggle("theme-closing", !opening);
     const vt = document.startViewTransition(() => apply(next));

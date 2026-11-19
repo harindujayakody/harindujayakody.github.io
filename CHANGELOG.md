@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.25.2] - 2026-11-20
+
+### Fixed
+- Dark to light theme switch now animates like light to dark: the light page opens out of the toggle as a growing circle. Before, the whole light page painted for a frame before the circle started, so it looked instant (#77).
+
 ## [1.25.1] - 2026-11-20
 
 ### Fixed

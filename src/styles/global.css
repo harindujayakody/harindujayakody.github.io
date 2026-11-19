@@ -271,12 +271,19 @@ html[data-theme="light"] .astro-code, html[data-theme="light"] .astro-code span 
 .theme-toggle svg { @apply absolute size-4; transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.3s ease; }
 .theme-toggle .moon, html[data-theme="light"] .theme-toggle .sun { opacity: 0; transform: rotate(-90deg) scale(0.5); }
 html[data-theme="light"] .theme-toggle .moon { opacity: 1; transform: none; }
-/* During the switch the whole page is one snapshot: no named parts (the header normally holds still across page
-   transitions), no default cross-fade. The script clips the new view open (to light), or the old view closed (to dark, kept on top). */
-html.theme-switching * { view-transition-name: none !important; }
+/* Theme switch. The page you leave is a still snapshot (cheap to animate) kept on top; the new theme sits underneath
+   and is not animated at all. Animating the live new page made dark to light freeze, because it re-rendered the whole
+   page, blur and all, on every frame. A soft-edged mask on the snapshot does the effect:
+   to dark  the old light page shrinks into the toggle (visible inside the circle);
+   to light a hole opens in the old dark page out of the toggle (visible outside the circle). */
+@property --r { syntax: "<length>"; inherits: false; initial-value: 0px; }
+/* Only the header and footer have names (they hold still across page loads); unname them so everything is one snapshot. */
+html.theme-switching :is(header, footer) { view-transition-name: none !important; }
 html.theme-switching::view-transition-old(root), html.theme-switching::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
-html.theme-closing::view-transition-old(root) { z-index: 2; }
-html.theme-switching:not(.theme-closing)::view-transition-new(root) { clip-path: circle(0px at var(--tx, 50%) var(--ty, 0)); }
+html.theme-switching::view-transition-old(root) { z-index: 2; animation: theme-wipe var(--theme-ms, 900ms) cubic-bezier(0.65, 0, 0.35, 1) both; }
+html.theme-to-dark::view-transition-old(root) { --from: var(--rmax); --to: 0px; mask-image: radial-gradient(circle at var(--tx) var(--ty), #000 calc(var(--r) - 90px), transparent var(--r)); }
+html.theme-to-light::view-transition-old(root) { --from: 0px; --to: var(--rmax); mask-image: radial-gradient(circle at var(--tx) var(--ty), transparent calc(var(--r) - 90px), #000 var(--r)); }
+@keyframes theme-wipe { from { --r: var(--from); } to { --r: var(--to); } }
 @media (prefers-reduced-motion: reduce) { .theme-toggle svg { transition: none; } }
 
 /* Link preview card (shown by the script on posts). */

@@ -10,13 +10,14 @@ interface Props {
   heading: string;
   prompt: string;
   intro: string;
+  description?: string; // meta description; defaults to intro
   posts: Post[];
   noindex?: boolean;
   crumb?: { name: string; url: string };
   image?: string;
 }
 
-const { title, heading, prompt, intro, posts, noindex = false, crumb, image } = Astro.props;
+const { title, heading, prompt, intro, description = intro, posts, noindex = false, crumb, image } = Astro.props;
 
 const categories = Object.entries(Object.groupBy(await getPosts(), (p) => p.data.category))
   .map(([name, list]) => ({ name, count: list!.length }))
@@ -33,7 +34,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: title,
-    description: intro,
+    description,
     url: new URL(current, Astro.site).href,
     mainEntity: {
       "@type": "ItemList",
@@ -47,7 +48,7 @@ const jsonLd = [
   },
 ];
 ---
-<Layout title={title} description={intro} noindex={noindex} jsonLd={jsonLd} image={image}>
+<Layout title={title} description={description} noindex={noindex} jsonLd={jsonLd} image={image}>
   <div class="flex flex-col gap-8">
     <header class="flex flex-col gap-3">
       <p class="rise font-mono text-sm text-primary">{prompt}</p>

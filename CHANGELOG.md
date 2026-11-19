@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.21.1] - 2026-11-19
+
+### Changed
+- Blog page meta: title "Tech Blog: Guides, Fixes & Free Tools | Harindu Jayakody" and a new description. `BlogIndex` takes an optional `description` (defaults to the on-page intro).
+
 ## [1.21.0] - 2026-11-19
 
 ### Added

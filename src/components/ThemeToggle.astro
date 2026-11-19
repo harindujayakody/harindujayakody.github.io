@@ -9,7 +9,6 @@
 <script>
   const d = document.documentElement;
   const btn = document.getElementById("theme-toggle") as HTMLButtonElement;
-  const light = matchMedia("(prefers-color-scheme: light)");
 
   const label = () => {
     const text = d.dataset.theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
@@ -27,9 +26,9 @@
 
   btn.addEventListener("click", () => {
     const next = d.dataset.theme === "dark" ? "light" : "dark";
-    // Remember only a choice that differs from the system, so picking the system's theme goes back to following it.
+    // Light is the default, so only dark needs remembering; picking light clears the saved choice.
     try {
-      if (next === (light.matches ? "light" : "dark")) localStorage.removeItem("theme");
+      if (next === "light") localStorage.removeItem("theme");
       else localStorage.setItem("theme", next);
     } catch {
       /* storage blocked: the switch still works for this page */

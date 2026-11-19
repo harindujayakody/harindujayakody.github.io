@@ -2,6 +2,12 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.22.0] - 2026-11-19
+
+### Changed
+- Light is now the default theme (#58). Visitors get light unless they chose dark with the switch, which is remembered on that device. The device setting is no longer followed.
+- NIC decoder results appear after you submit (#57) instead of while you type. Each value rolls through random characters and locks in from left to right, lottery style, and the result cards fade in one after another. Editing the number clears the old results. With reduced motion the results appear at once; screen readers hear a one-sentence summary.
+
 ## [1.21.1] - 2026-11-19
 
 ### Changed

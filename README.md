@@ -59,7 +59,7 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 | **SEO** | Canonical URLs, Open Graph, JSON-LD structured data, sitemap, robots.txt |
 | **Social cards** | A 1200×630 share image generated for every post (title, category, date, avatar) so links get large previews |
 | **AI agents** | `llms.txt`, `llms-full.txt` and a plain-markdown copy of every post |
-| **Design** | Dark terminal-flavoured theme on shadcn/ui tokens, CSS-only motion that respects reduced-motion |
+| **Design** | Light by default with a dark switch, terminal-flavoured, on shadcn/ui tokens, CSS-only motion that respects reduced-motion |
 
 ## Tech stack
 

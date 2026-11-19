@@ -25,7 +25,7 @@ Defined on `:root` in `src/styles/global.css` with shadcn/ui names, so component
 | `--border` | `oklch(1 0 0 / 9%)` | All borders |
 | `--ring` | mint at 45% | Focus rings |
 
-Two themes. Dark (above) is the default palette; light lives under `html[data-theme="light"]` with the same token names (background `oklch(0.985 0.003 265)`, text `oklch(0.2 0.012 265)`, primary `oklch(0.52 0.11 165)`). An inline script in the `<head>` sets `data-theme` before first paint: the saved choice from `ThemeToggle`, otherwise `prefers-color-scheme`, followed live while nothing is saved. Every text pair passes WCAG AA in both themes. Extra tokens cover what used to be hex values: `--dot`, `--glow`, `--code-bg`, `--code-border`, `--code-inline`, `--danger`, `--warning`, `--star`, `--st-1` to `--st-5`. Background: a faint mint radial at the top plus a 24px dot grid.
+Two themes. Dark (above) is the default palette; light lives under `html[data-theme="light"]` with the same token names (background `oklch(0.985 0.003 265)`, text `oklch(0.2 0.012 265)`, primary `oklch(0.52 0.11 165)`). Light is the default: `<html>` is rendered with `data-theme="light"`, and an inline script in the `<head>` switches it to dark before first paint only when the visitor chose dark with `ThemeToggle` (saved in `localStorage`). The device setting is not followed. Every text pair passes WCAG AA in both themes. Extra tokens cover what used to be hex values: `--dot`, `--glow`, `--code-bg`, `--code-border`, `--code-inline`, `--danger`, `--warning`, `--star`, `--st-1` to `--st-5`. Background: a faint mint radial at the top plus a 24px dot grid.
 X brand pink `#f91880` appears only on the X card like icon, on hover.
 Code borrows GitHub dark mode: Shiki `github-dark-default` syntax colours, `#151b23` blocks with a `#3d444d` border and 6px corners, and a `#656c7633` chip for inline code. These are the only non-token colours besides the X pink.
 
@@ -78,7 +78,7 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 | `StarCard` | "Star on GitHub" for a repo: `compact` split button (top of tool pages) or a card with the repo description (end of posts and tools). Star count from the build-time GitHub repo list, hidden while 0; the star fills gold on hover |
 | `SearchDialog` | Native `<dialog>`: opened by the header icon, `Ctrl/⌘+K` or `/`; combobox + grouped listbox, `↑`/`↓`/`↵`/`esc`; full-screen below `sm` |
 | `Shortcuts` | Global keys (`Ctrl/⌘+K`, `/`, `g`+`h`/`b`/`p`/`t`, `?`) and the help dialog; key hints (`kbd`) shown only to fine-pointer devices. `[data-mod-key]` renders `⌘` or `Ctrl` from CSS, based on `html[data-mac]` set by an inline script in the head before first paint |
-| `ThemeToggle` | Sun/moon button in the header; icons rotate and swap. Saves a choice only when it differs from the system, so picking the system theme returns to following it. Fires `theme:change` (giscus listens and switches its theme) |
+| `ThemeToggle` | Sun/moon button in the header; icons rotate and swap. Saves only a dark choice; picking light clears it, since light is the default. Fires `theme:change` (giscus listens and switches its theme) |
 
 ## Layout
 

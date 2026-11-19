@@ -50,29 +50,20 @@ const nav = [
 ];
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     {csp && <meta http-equiv="Content-Security-Policy" content={csp} />}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0d0e12" />
+    <meta name="theme-color" content="#f8f9fb" />
     <script is:inline>
-      // Theme before first paint (no flash): the saved choice, otherwise the system setting, which keeps being followed live.
-      // ThemeToggle saves a choice only when it differs from the system; choosing the system's theme clears it.
+      // Theme before first paint (no flash): light by default (issue #58), dark only if the visitor chose it with ThemeToggle.
       (() => {
-        const d = document.documentElement;
-        const m = matchMedia("(prefers-color-scheme: light)");
-        const saved = () => { try { const t = localStorage.getItem("theme"); return t === "light" || t === "dark" ? t : null; } catch { return null; } };
-        const set = (t) => {
-          d.dataset.theme = t;
-          document.querySelector('meta[name="theme-color"]')?.setAttribute("content", t === "light" ? "#f8f9fb" : "#0d0e12");
-        };
-        set(saved() || (m.matches ? "light" : "dark"));
-        m.addEventListener("change", (e) => {
-          if (saved()) return;
-          set(e.matches ? "light" : "dark");
-          document.dispatchEvent(new Event("theme:change"));
-        });
+        let t = null;
+        try { t = localStorage.getItem("theme"); } catch { /* storage blocked: stay light */ }
+        if (t !== "dark") return;
+        document.documentElement.dataset.theme = "dark";
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#0d0e12");
       })();
     </script>
     <title>{title}</title>

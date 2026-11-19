@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.25.3] - 2026-11-20
+
+### Changed
+- Post lists (blog, category and tag pages, related posts): titles 20px (was 18px) and descriptions 18px (was 14px) (#78).
+
 ## [1.25.2] - 2026-11-20
 
 ### Fixed

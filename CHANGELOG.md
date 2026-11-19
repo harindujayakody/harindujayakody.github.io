@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.24.3] - 2026-11-20
+
+### Added
+- `.github/FUNDING.yml`: the repo now shows a Sponsor button for GitHub Sponsors and Ko-fi. No change to the site.
+
 ## [1.24.2] - 2026-11-20
 
 ### Added

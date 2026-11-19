@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.27.1] - 2026-11-20
+
+### Changed
+- Theme switch uses the same effect in both directions (#77): the page you leave shrinks into the toggle as a closing circle and reveals the new theme. Dark to light used to grow a light circle instead. Replaces the 1.25.2 fix.
+
 ## [1.27.0] - 2026-11-20
 
 ### Added

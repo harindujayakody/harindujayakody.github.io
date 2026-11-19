@@ -10,6 +10,7 @@ import SeriesBox from "../../components/SeriesBox.astro";
 import Comments from "../../components/Comments.astro";
 import Subscribe from "../../components/Subscribe.astro";
 import StarCard from "../../components/StarCard.astro";
+import NicDecoder from "../../components/NicDecoder.astro";
 import { authorJsonLd } from "../../data/author";
 import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, seriesOf, seriesUrl, type Post } from "../../lib/posts";
 
@@ -111,6 +112,9 @@ const jsonLd = [
       <PostList posts={related} />
     </section>
   )}
+
+  {/* Tools embedded in Markdown with <div data-nic-decoder></div> get their script. */}
+  {post.body?.includes("data-nic-decoder") && <NicDecoder mount={false} />}
 
   {post.body?.includes("```") && (
     <script is:inline>

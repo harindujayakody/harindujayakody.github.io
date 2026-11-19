@@ -90,7 +90,7 @@ Use fenced blocks with a language: ```` ```powershell ````. Highlighting uses th
 
 ## Free tools
 
-Tool pages live in `src/pages/free-tools/<name>.astro` (or a folder for multi-page tools) and are listed from `src/data/free-tools.ts` (slug, name, href, description, tags, `updated` date, optional source repo and blog post). The `slug` also names the share card (`/og/free-tools/<slug>.png`); bump `updated` when the tool changes, since the sitemap uses it as `lastmod`. HTTP status code texts are in `src/data/http-status-codes.ts`. Pages that handle anything sensitive should pass a strict `csp` to `Layout` (see `2fa-online.astro`) and keep user input in memory only.
+Tool pages live in `src/pages/free-tools/<name>.astro` (or a folder for multi-page tools) and are listed from `src/data/free-tools.ts` (slug, name, href, description, tags, `updated` date, optional source repo and blog post). The `slug` also names the share card (`/og/free-tools/<slug>.png`); bump `updated` when the tool changes, since the sitemap uses it as `lastmod`. HTTP status code texts are in `src/data/http-status-codes.ts`. To embed the NIC decoder in a post, put `<div data-nic-decoder></div>` on its own line in the Markdown; the post page loads the widget script only when it finds that. Pages that handle anything sensitive should pass a strict `csp` to `Layout` (see `2fa-online.astro`) and keep user input in memory only.
 
 ## Projects & Tools
 

@@ -23,6 +23,16 @@ export const freeTools: FreeTool[] = [
     post: "/blog/http-status-codes-reference/",
   },
   {
+    slug: "sri-lanka-nic-decoder",
+    name: "Sri Lanka NIC decoder",
+    href: "/free-tools/sri-lanka-nic-decoder/",
+    desc: "Get the date of birth, age and gender from a Sri Lankan NIC number (old V/X or new 12 digit) and convert old numbers to new. Runs in your browser.",
+    tags: ["Sri Lanka", "NIC", "Private"],
+    updated: new Date("2026-11-19"),
+    source: "https://github.com/harindujayakody/nic-information-finder",
+    post: "/blog/sri-lanka-nic-number-explained/",
+  },
+  {
     slug: "2fa-online",
     name: "2FA code generator",
     href: "/free-tools/2fa-online/",

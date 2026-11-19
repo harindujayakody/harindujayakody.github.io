@@ -1,0 +1,16 @@
+---
+// The NIC decoder widget. `mount` adds the element it fills; posts that embed the tool in Markdown
+// (<div data-nic-decoder></div>) include this with mount={false} so only the script loads.
+interface Props {
+  mount?: boolean;
+}
+const { mount = true } = Astro.props;
+---
+{mount && (
+  <div data-nic-decoder>
+    <noscript><p class="rounded-xl border bg-card/70 p-5 text-sm text-muted-foreground">The decoder needs JavaScript. It runs in your browser and sends nothing.</p></noscript>
+  </div>
+)}
+<script>
+  import "../scripts/nic-widget";
+</script>

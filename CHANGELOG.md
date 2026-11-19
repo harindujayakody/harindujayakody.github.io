@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.28.1] - 2026-11-20
+
+### Changed
+- Theme switch goes opposite ways (#88): to dark, the light page closes into the toggle; to light, a light circle opens out of the toggle. Both take 800 ms (was 520 ms). Brings back the opening circle from 1.25.2 and replaces the 1.27.1 same-effect change.
+
 ## [1.28.0] - 2026-11-20
 
 ### Changed

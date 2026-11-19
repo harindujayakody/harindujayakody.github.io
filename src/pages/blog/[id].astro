@@ -13,6 +13,7 @@ import HelpfulVote from "../../components/HelpfulVote.astro";
 import Subscribe from "../../components/Subscribe.astro";
 import StarCard from "../../components/StarCard.astro";
 import NicDecoder from "../../components/NicDecoder.astro";
+import { freeTools } from "../../data/free-tools";
 import { authorJsonLd } from "../../data/author";
 import { getPosts, fmtDate, readingTime, categoryUrl, tagUrl, relatedPosts, seriesOf, seriesUrl, type Post } from "../../lib/posts";
 
@@ -29,6 +30,15 @@ const { post, related, newer, older, series }: {
   post: Post; related: Post[]; newer?: Post; older?: Post; series?: ReturnType<typeof seriesOf>;
 } = Astro.props;
 const { Content, headings } = await render(post);
+// Link previews: pages on this site that the post links to, so the script can show a card on hover.
+const allPosts = await getPosts();
+const previews: Record<string, { title: string; desc: string; img: string }> = {};
+for (const [, path] of (post.body ?? "").matchAll(/\]\((\/(?:blog|free-tools)\/[a-z0-9-]+\/)\)/g)) {
+  const p = allPosts.find((x) => path === `/blog/${x.id}/`);
+  const t = freeTools.find((x) => x.href === path);
+  if (p) previews[path] = { title: p.data.title, desc: p.data.description, img: `/og/${p.id}.png` };
+  else if (t) previews[path] = { title: t.name, desc: t.desc, img: `/og/free-tools/${t.slug}.png` };
+}
 const d = post.data;
 const url = new URL(`/blog/${post.id}/`, Astro.site).href;
 // Social networks reject SVG, and Astro won't rasterize it: SVG covers fall back to the default card.
@@ -123,6 +133,41 @@ const jsonLd = [
 
   {/* Tools embedded in Markdown with <div data-nic-decoder></div> get their script. */}
   {post.body?.includes("data-nic-decoder") && <NicDecoder mount={false} />}
+
+  {Object.keys(previews).length > 0 && (
+    <script is:inline define:vars={{ previews }}>
+      // Hover or focus a link to another page of this site inside the article: a small card shows its title, description and image.
+      (() => {
+        let card, timer;
+        const hide = () => { clearTimeout(timer); card?.remove(); card = null; };
+        const show = (a, p) => {
+          hide();
+          card = document.createElement("div");
+          card.className = "link-preview";
+          card.setAttribute("role", "tooltip");
+          const img = document.createElement("img");
+          img.src = p.img; img.alt = ""; img.width = 1200; img.height = 630;
+          const t = document.createElement("strong"); t.textContent = p.title;
+          const d = document.createElement("span"); d.textContent = p.desc;
+          card.append(img, t, d);
+          document.body.append(card);
+          const r = a.getBoundingClientRect();
+          const w = card.offsetWidth;
+          card.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.left + scrollX)) + "px";
+          const below = r.bottom + card.offsetHeight + 12 < innerHeight;
+          card.style.top = (below ? r.bottom + scrollY + 8 : r.top + scrollY - card.offsetHeight - 8) + "px";
+        };
+        document.querySelectorAll(".prose a[href^='/']").forEach((a) => {
+          const p = previews[a.getAttribute("href").split("#")[0]];
+          if (!p) return;
+          a.addEventListener("mouseenter", () => { clearTimeout(timer); timer = setTimeout(() => show(a, p), 250); });
+          a.addEventListener("focus", () => show(a, p));
+          for (const e of ["mouseleave", "blur"]) a.addEventListener(e, hide);
+        });
+        addEventListener("keydown", (e) => e.key === "Escape" && hide());
+      })();
+    </script>
+  )}
 
   {post.body?.includes("```") && (
     <script is:inline>

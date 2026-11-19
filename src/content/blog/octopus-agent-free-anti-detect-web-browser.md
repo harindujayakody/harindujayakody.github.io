@@ -68,7 +68,7 @@ Octopus Agent also works without the screen. It has a local HTTP API on your own
 
 ## Install it
 
-Use the buttons above. The installers are not code signed yet, so your system may warn you the first time.
+Use the buttons above, or the [anti detect browser page](/free-tools/anti-detect-browser/) with the same downloads. The installers are not code signed yet, so your system may warn you the first time.
 
 On Windows, SmartScreen may say "Windows protected your PC". Choose More info, then Run anyway. On a Mac, open System Settings, go to Privacy and Security, and choose Open Anyway next to the Octopus Agent message.
 

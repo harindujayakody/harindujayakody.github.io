@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import Kofi from "./Kofi.astro";
 
 interface Props {
   headings: MarkdownHeading[];
@@ -17,6 +18,7 @@ const items = Astro.props.headings.filter((h) => h.depth === 2);
           <li><a href={`#${h.slug}`} data-id={h.slug} class="-ml-px block border-l border-transparent py-1 pl-3 leading-snug text-muted-foreground transition hover:text-foreground aria-[current=true]:border-primary aria-[current=true]:text-primary">{h.text}</a></li>
         ))}
       </ol>
+      <Kofi class="mt-4" />
     </nav>
     <script is:inline>
       // Current = last heading that has scrolled above 30% of the viewport.

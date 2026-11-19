@@ -1,0 +1,33 @@
+---
+import type { MarkdownHeading } from "astro";
+
+// Sticky "on this page" in the right margin (xl+), highlighting the section being read. Same rule as Toc: 3+ top-level sections.
+const items = Astro.props.headings.filter((h: MarkdownHeading) => h.depth === 2);
+---
+{items.length >= 3 && (
+  <aside aria-label="On this page" class="hidden xl:block absolute left-full top-0 ml-8 h-full w-56">
+    <nav class="sticky top-20 flex flex-col gap-2 text-sm" id="toc-side">
+      <h2 class="font-mono text-xs text-muted-foreground">on this page</h2>
+      <ol class="flex flex-col border-l">
+        {items.map((h) => (
+          <li><a href={`#${h.slug}`} data-id={h.slug} class="-ml-px block border-l border-transparent py-1 pl-3 leading-snug text-muted-foreground transition hover:text-foreground aria-[current=true]:border-primary aria-[current=true]:text-primary">{h.text}</a></li>
+        ))}
+      </ol>
+    </nav>
+    <script is:inline>
+      // Current = last heading that has scrolled above 30% of the viewport.
+      (() => {
+        const links = [...document.querySelectorAll("#toc-side a")];
+        const mark = () => {
+          // Looked up on each call: this script sits before the article in the DOM, so headings don't exist yet at parse time.
+          const heads = links.map((a) => document.getElementById(a.dataset.id)).filter(Boolean);
+          let cur = heads[0];
+          for (const h of heads) if (h.getBoundingClientRect().top < innerHeight * 0.3) cur = h;
+          links.forEach((a) => a.setAttribute("aria-current", String(a.dataset.id === cur?.id)));
+        };
+        addEventListener("scroll", mark, { passive: true });
+        addEventListener("DOMContentLoaded", mark);
+      })();
+    </script>
+  </aside>
+)}

@@ -2,6 +2,13 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.23.0] - 2026-11-20
+
+### Added
+- Blog index sidebar (xl screens and up, sticky, narrow): about card, latest posts, popular posts, categories with counts. The category pills stay on smaller screens.
+- Post sidebar (xl and up): sticky "on this page" list that highlights the section being read. The inline contents box shows on smaller screens.
+- `popular: true` frontmatter field for the sidebar's popular list.
+
 ## [1.22.2] - 2026-11-20
 
 ### Changed

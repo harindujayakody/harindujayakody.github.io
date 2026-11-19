@@ -12,7 +12,7 @@ const show = items.length >= 3;
 const open = items.length <= 6;
 ---
 {show && (
-  <details open={open} class="toc rise group rounded-xl border bg-card/50" style="--d:220ms">
+  <details open={open} class="toc rise group xl:hidden rounded-xl border bg-card/50" style="--d:220ms">
     <summary class="flex list-none cursor-pointer items-center justify-between gap-3 px-4 py-3 font-mono text-xs text-muted-foreground select-none hover:text-foreground sm:px-5 [&::-webkit-details-marker]:hidden">
       <span>on this page <span class="opacity-60">· {items.length} sections</span></span>
       <span aria-hidden="true" class="transition group-open:rotate-180">▾</span>

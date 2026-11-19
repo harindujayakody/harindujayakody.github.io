@@ -40,6 +40,7 @@ Posts with three or more `##` sections automatically get an "On this page" table
 | `imageAlt` | with image | Describe the image for screen readers. |
 | `draft` | no | `true` keeps the post off the live site, sitemap and RSS. Drafts still show in `npm run dev` for previewing. |
 | `comments` | no | `false` hides the comments section on that post. Default `true`. |
+| `popular` | no | `true` lists the post under "popular" in the blog index sidebar. No analytics here, so you pick them. Default `false`; the list is hidden when none are set. |
 | `series` | no | Name of a multi-part series. See below. |
 | `repo` | no | GitHub repo the post is about, as `owner/name` (e.g. `harindujayakody/2fa-tools`). Shows a "Star on GitHub" card after the article. |
 | `seriesOrder` | no | Part number (1, 2, 3…). Set it on every part or on none. |

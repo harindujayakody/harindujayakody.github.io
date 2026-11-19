@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.27.0] - 2026-11-20
+
+### Added
+- Link previews in posts (#80): hover or focus a link to another blog post or a free tool inside an article and a small card shows its image, title and description. Mouse and keyboard only; Esc closes it. The Octopus Agent post now links to the anti detect browser page as an example.
+
 ## [1.26.0] - 2026-11-20
 
 ### Added

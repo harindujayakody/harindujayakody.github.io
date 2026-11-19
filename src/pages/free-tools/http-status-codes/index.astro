@@ -1,0 +1,176 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import StarCard from "../../../components/StarCard.astro";
+import { statusCodes } from "../../../data/http-status-codes";
+import { CLASSES, BASE, codeUrl, httpTool } from "../../../lib/http-status";
+
+const title = "HTTP Status Codes: Full List Explained (1xx to 5xx) · Harindu Jayakody";
+const description =
+  "Every HTTP status code from 100 to 511 in one list: what each one means, common causes, and how to fix errors like 404, 500, 502 and 503.";
+const popular = [200, 301, 302, 304, 400, 401, 403, 404, 429, 500, 502, 503, 504];
+const byClass = CLASSES.map((c) => ({ ...c, codes: statusCodes.filter((s) => Math.floor(s.code / 100) === c.digit) }));
+
+const faqs: [string, string][] = [
+  ["What are HTTP status codes?", "Every time a browser or app asks a server for something, the server answers with a three-digit status code. The first digit gives the class: 1xx means the request is still in progress, 2xx means it worked, 3xx means go somewhere else, 4xx means the request has a problem, and 5xx means the server failed."],
+  ["What is the difference between 401 and 403?", "401 Unauthorized means the server doesn't know who you are yet: log in or send valid credentials and try again. 403 Forbidden means the server knows who you are (or doesn't need to) and still refuses, so logging in again won't help."],
+  ["What is the difference between 404 and 410?", "404 Not Found says nothing about whether the page will come back. 410 Gone says it was removed on purpose and won't return, which tells search engines to drop it from their index sooner."],
+  ["What is the difference between 502 and 504?", "Both come from a gateway or proxy, such as nginx or Cloudflare, sitting in front of the real server. 502 Bad Gateway means it got an invalid response (or none) from that server. 504 Gateway Timeout means the server took too long to answer."],
+  ["Which redirect should I use: 301, 302, 307 or 308?", "Use 301 or 308 when a page has moved for good; search engines move ranking to the new URL. Use 302 or 307 for a temporary move. 307 and 308 also guarantee the request method stays the same, so a POST is resent as a POST."],
+];
+
+const url = new URL(BASE, Astro.site).href;
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "HTTP status codes",
+    url,
+    description,
+    dateModified: httpTool.updated.toISOString(),
+    author: { "@id": `${Astro.site!.href}#person` },
+    mainEntity: {
+      "@type": "DefinedTermSet",
+      name: "HTTP status codes",
+      hasDefinedTerm: statusCodes.map((s) => ({
+        "@type": "DefinedTerm",
+        name: `${s.code} ${s.name}`,
+        termCode: String(s.code),
+        description: s.summary,
+        url: new URL(codeUrl(s.code), Astro.site).href,
+      })),
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Free tools", item: "/free-tools/" },
+      { name: "HTTP status codes", item: BASE },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
+---
+<Layout title={title} description={description} jsonLd={jsonLd} image={`/og/free-tools/${httpTool.slug}.png`}>
+  <div class="flex flex-col gap-10">
+    <header class="flex flex-col gap-3">
+      <nav aria-label="Breadcrumb" class="rise flex items-center gap-1.5 font-mono text-sm text-muted-foreground">
+        <a href="/free-tools/" class="hover:text-primary">free-tools</a><span>/</span><span class="text-primary">http-status-codes</span>
+      </nav>
+      <h1 class="rise text-4xl font-semibold leading-tight sm:text-5xl" style="--d:80ms">HTTP status codes</h1>
+      <p class="rise max-w-2xl leading-relaxed text-muted-foreground" style="--d:160ms">
+        All {statusCodes.length} status codes a server can send, from 100 Continue to 511 Network Authentication Required. Open any code for what it means, why you might be seeing it, how to fix it, and an example response.
+      </p>
+      <ul aria-label="Most searched codes" class="rise flex flex-wrap gap-1.5 pt-1" style="--d:220ms">
+        {popular.map((c) => (
+          <li><a href={codeUrl(c)} class:list={["st-chip", `st-${Math.floor(c / 100)}`]}>{c}</a></li>
+        ))}
+      </ul>
+      <StarCard repo="harindujayakody/http-status-codes" compact class="rise" />
+    </header>
+
+    <div class="rise sticky top-14 z-10 -mx-4 flex flex-col gap-3 border-b bg-background/85 px-4 py-3 backdrop-blur-md sm:mx-0 sm:rounded-xl sm:border" style="--d:260ms" data-filter hidden>
+      <label for="code-filter" class="sr-only">Filter status codes</label>
+      <input id="code-filter" type="search" autocomplete="off" spellcheck="false" placeholder="Filter by number or word, e.g. 404, redirect, timeout"
+        class="h-10 w-full rounded-lg border bg-card/70 px-3 font-mono text-sm outline-none placeholder:text-muted-foreground focus:border-primary/50 focus:ring-[3px] focus:ring-ring/40" />
+      <div class="flex flex-wrap items-center gap-1.5 font-mono text-xs" role="group" aria-label="Show class">
+        <button type="button" data-class="all" aria-pressed="true" class="filter-chip">all</button>
+        {CLASSES.map((c) => <button type="button" data-class={c.digit} aria-pressed="false" class="filter-chip">{c.id}</button>)}
+        <span id="filter-count" class="ml-auto text-muted-foreground" aria-live="polite"></span>
+      </div>
+    </div>
+
+    {byClass.map((c) => (
+      <section id={c.id} class="flex scroll-mt-40 flex-col gap-4" data-group={c.digit}>
+        <div class="flex flex-col gap-1">
+          <h2 class="text-xl font-semibold"><span class:list={["font-mono", `st-text-${c.digit}`]}>{c.id}</span> {c.name.toLowerCase()}</h2>
+          <p class="text-sm text-muted-foreground">{c.blurb}</p>
+        </div>
+        <ul class="grid gap-2 sm:grid-cols-2">
+          {c.codes.map((s) => (
+            <li data-code={s.code} data-text={`${s.code} ${s.name} ${s.summary}`.toLowerCase()}
+              class="group relative flex min-w-0 gap-3 rounded-xl border bg-card/60 p-4 transition hover:border-foreground/20">
+              <span class:list={["font-mono text-lg font-semibold tabular-nums", `st-text-${c.digit}`]}>{s.code}</span>
+              <div class="min-w-0">
+                <h3 class="text-sm font-medium group-hover:text-primary">
+                  <a href={codeUrl(s.code)} class="after:absolute after:inset-0">{s.name}</a>
+                  {s.status && <span class="ml-1.5 rounded border px-1 font-mono text-[10px] text-muted-foreground">{s.status}</span>}
+                </h3>
+                <p class="mt-0.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{s.summary}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <p id="filter-empty" class="text-sm text-muted-foreground" hidden>No codes match that. Try a number like 404 or a word like "timeout".</p>
+
+    <section aria-labelledby="faq-title" class="flex flex-col gap-4">
+      <h2 id="faq-title" class="text-xl font-semibold">Questions</h2>
+      <div class="flex flex-col divide-y rounded-xl border bg-card/50">
+        {faqs.map(([q, a]) => (
+          <details class="group px-5 py-4">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 font-medium marker:content-none hover:text-primary">
+              {q}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <StarCard repo="harindujayakody/http-status-codes" />
+
+    <p class="font-mono text-xs text-muted-foreground">
+      Based on RFC 9110 and the RFCs linked on each code's page. Source: <a href={httpTool.source} target="_blank" rel="noopener" class="text-primary hover:underline">github.com/harindujayakody/http-status-codes</a>
+      · <a href={httpTool.post} class="text-primary hover:underline">about this reference</a>
+    </p>
+  </div>
+
+  <script>
+    // Progressive filter: every code is already in the HTML; this only hides what doesn't match.
+    const bar = document.querySelector<HTMLElement>("[data-filter]")!;
+    const input = document.getElementById("code-filter") as HTMLInputElement;
+    const count = document.getElementById("filter-count")!;
+    const empty = document.getElementById("filter-empty")!;
+    const items = [...document.querySelectorAll<HTMLElement>("[data-code]")];
+    const groups = [...document.querySelectorAll<HTMLElement>("[data-group]")];
+    const chips = [...bar.querySelectorAll<HTMLButtonElement>("[data-class]")];
+    let cls = "all";
+    bar.hidden = false;
+
+    function apply() {
+      const words = input.value.toLowerCase().split(/\s+/).filter(Boolean);
+      let shown = 0;
+      for (const li of items) {
+        const ok = (cls === "all" || li.dataset.code![0] === cls) && words.every((w) => li.dataset.text!.includes(w));
+        li.hidden = !ok;
+        if (ok) shown++;
+      }
+      for (const g of groups) g.hidden = !g.querySelector("[data-code]:not([hidden])");
+      count.textContent = `${shown} of ${items.length}`;
+      empty.hidden = shown > 0;
+    }
+
+    input.addEventListener("input", apply);
+    for (const chip of chips)
+      chip.addEventListener("click", () => {
+        cls = chip.dataset.class!;
+        chips.forEach((c) => c.setAttribute("aria-pressed", String(c === chip)));
+        apply();
+      });
+    // Enter opens the code's page when the filter leaves exactly one match (e.g. typing "404").
+    input.addEventListener("keydown", (e) => {
+      const visible = items.filter((li) => !li.hidden);
+      if (e.key === "Enter" && visible.length === 1) location.href = visible[0].querySelector("a")!.href;
+    });
+    apply();
+  </script>
+</Layout>

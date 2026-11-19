@@ -1,6 +1,8 @@
 import type { APIContext } from "astro";
 import { getPosts, categoryUrl, allSeries, seriesUrl } from "../lib/posts";
-import { freeTools } from "../data/free-tools";
+import { freeTools, toolsUpdated } from "../data/free-tools";
+import { statusCodes } from "../data/http-status-codes";
+import { codeUrl, httpTool } from "../lib/http-status";
 
 // Indexable pages only: tag pages and search are noindex, so they stay out.
 export async function GET({ site }: APIContext) {
@@ -11,8 +13,10 @@ export async function GET({ site }: APIContext) {
     ["/blog/", latest],
     ["/projects/", new Date()],
     ["/timeline/", new Date()],
-    ["/free-tools/", new Date()],
-    ...freeTools.map((t): [string, Date] => [t.href, new Date()]),
+    // Tool pages use their real "updated" date, so lastmod only moves when a tool changes.
+    ["/free-tools/", toolsUpdated],
+    ...freeTools.map((t): [string, Date] => [t.href, t.updated]),
+    ...statusCodes.map((s): [string, Date] => [codeUrl(s.code), httpTool.updated]),
     ...[...new Set(posts.map((p) => p.data.category))].map((c): [string, Date] => [categoryUrl(c), latest]),
     ...allSeries(posts)
       .filter((s) => s.parts.length > 1)

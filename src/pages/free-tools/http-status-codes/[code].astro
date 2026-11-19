@@ -1,0 +1,145 @@
+---
+import { Code } from "astro:components";
+import Layout from "../../../layouts/Layout.astro";
+import StarCard from "../../../components/StarCard.astro";
+import { statusCodes, type StatusCode } from "../../../data/http-status-codes";
+import { BASE, codeUrl, classOf, pageTitle, exampleResponse, snippets, httpTool } from "../../../lib/http-status";
+
+export function getStaticPaths() {
+  return statusCodes.map((s, i) => ({
+    params: { code: String(s.code) },
+    props: { s, prev: statusCodes[i - 1], next: statusCodes[i + 1] },
+  }));
+}
+
+const { s, prev, next }: { s: StatusCode; prev?: StatusCode; next?: StatusCode } = Astro.props;
+const cls = classOf(s.code);
+const related = s.related.map((c) => statusCodes.find((x) => x.code === c)!).filter(Boolean);
+const url = new URL(codeUrl(s.code), Astro.site).href;
+const flag = { deprecated: "Deprecated", unused: "Reserved, not used", joke: "Joke code (not for real use)" } as const;
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: pageTitle(s),
+    url,
+    description: s.summary,
+    dateModified: httpTool.updated.toISOString(),
+    author: { "@id": `${Astro.site!.href}#person` },
+    mainEntity: {
+      "@type": "DefinedTerm",
+      name: `${s.code} ${s.name}`,
+      termCode: String(s.code),
+      description: s.summary,
+      inDefinedTermSet: new URL(BASE, Astro.site).href,
+      sameAs: s.spec.url,
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Free tools", item: "/free-tools/" },
+      { name: "HTTP status codes", item: BASE },
+      { name: `${s.code} ${s.name}`, item: codeUrl(s.code) },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
+---
+<Layout title={`${pageTitle(s)} · Harindu Jayakody`} description={s.summary} jsonLd={jsonLd} image={`/og/free-tools/${httpTool.slug}.png`}>
+  <article class="flex flex-col gap-8">
+    <header class="flex flex-col gap-4">
+      <nav aria-label="Breadcrumb" class="rise flex flex-wrap items-center gap-1.5 font-mono text-sm text-muted-foreground">
+        <a href="/free-tools/" class="hover:text-primary">free-tools</a><span>/</span>
+        <a href={BASE} class="hover:text-primary">http-status-codes</a><span>/</span>
+        <span class="text-primary">{s.code}</span>
+      </nav>
+      <div class="rise flex flex-wrap items-center gap-2" style="--d:60ms">
+        <a href={`${BASE}#${cls.id}`} class:list={["st-chip", `st-${cls.digit}`]}>{cls.id} {cls.name.toLowerCase()}</a>
+        {s.status && <span class="rounded-md border px-2 py-0.5 font-mono text-xs text-muted-foreground">{flag[s.status]}</span>}
+      </div>
+      <h1 class="rise text-4xl font-semibold leading-tight sm:text-5xl" style="--d:100ms">
+        <span class:list={["font-mono", `st-text-${cls.digit}`]}>{s.code}</span> {s.name}
+      </h1>
+      <p class="rise max-w-2xl text-lg leading-relaxed text-muted-foreground" style="--d:160ms">{s.summary}</p>
+    </header>
+
+    <div class="prose rise" style="--d:220ms">
+      <h2 id="meaning">What {s.code} {s.name} means</h2>
+      {s.meaning.map((p) => <p>{p}</p>)}
+
+      {!!s.causes?.length && (
+        <>
+          <h2 id="causes">Common causes</h2>
+          <ul>{s.causes.map((c) => <li>{c}</li>)}</ul>
+        </>
+      )}
+
+      {!!s.fixes?.length && (
+        <>
+          <h2 id="fix">How to fix {s.code} {s.name}</h2>
+          <ol>{s.fixes.map((f) => <li>{f}</li>)}</ol>
+        </>
+      )}
+
+      {!!s.headers?.length && (
+        <>
+          <h2 id="headers">Headers that go with it</h2>
+          <ul>{s.headers.map((h) => <li><code>{h}</code></li>)}</ul>
+        </>
+      )}
+
+      <h2 id="example">Example response</h2>
+      <Code code={exampleResponse(s)} lang="http" theme="github-dark-default" />
+
+      <h2 id="check">How to check for a {s.code} response</h2>
+      {snippets(s.code).map((x) => (
+        <>
+          <h3>{x.label}</h3>
+          <Code code={x.code} lang={x.lang as "bash"} theme="github-dark-default" />
+        </>
+      ))}
+
+      <h2 id="spec">Specification</h2>
+      <p>{s.code} {s.name} is defined in <a href={s.spec.url} target="_blank" rel="noopener">{s.spec.label}</a>.</p>
+    </div>
+
+    {related.length > 0 && (
+      <section aria-labelledby="related-title" class="flex flex-col gap-3">
+        <h2 id="related-title" class="text-lg font-semibold">Related status codes</h2>
+        <ul class="grid gap-2 sm:grid-cols-2">
+          {related.map((r) => (
+            <li class="group relative flex min-w-0 gap-3 rounded-xl border bg-card/60 p-4 transition hover:border-foreground/20">
+              <span class:list={["font-mono text-lg font-semibold tabular-nums", `st-text-${classOf(r.code).digit}`]}>{r.code}</span>
+              <div class="min-w-0">
+                <p class="text-sm font-medium group-hover:text-primary"><a href={codeUrl(r.code)} class="after:absolute after:inset-0">{r.name}</a></p>
+                <p class="mt-0.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">{r.summary}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <StarCard repo="harindujayakody/http-status-codes" />
+
+    <nav aria-label="Previous and next status code" class="grid gap-2 sm:grid-cols-2">
+      {prev ? (
+        <a href={codeUrl(prev.code)} class="flex flex-col gap-0.5 rounded-xl border bg-card/50 p-4 transition hover:border-foreground/20">
+          <span class="font-mono text-xs text-muted-foreground">← previous</span>
+          <span class="text-sm font-medium">{prev.code} {prev.name}</span>
+        </a>
+      ) : <span />}
+      {next && (
+        <a href={codeUrl(next.code)} class="flex flex-col gap-0.5 rounded-xl border bg-card/50 p-4 text-right transition hover:border-foreground/20">
+          <span class="font-mono text-xs text-muted-foreground">next →</span>
+          <span class="text-sm font-medium">{next.code} {next.name}</span>
+        </a>
+      )}
+    </nav>
+
+    <p class="font-mono text-xs text-muted-foreground"><a href={BASE} class="text-primary hover:underline">← all {statusCodes.length} HTTP status codes</a></p>
+  </article>
+</Layout>

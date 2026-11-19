@@ -165,6 +165,26 @@ mark { @apply rounded-sm bg-primary/25 text-inherit; }
   .kbd-hint { display: inline-flex; gap: 0.5ch; }
   .kbd-hint-inline { display: inline; }
 }
+/* The header hint doesn't fit a narrow desktop window next to four menu items. */
+@media (max-width: 639px) {
+  header nav .kbd-hint { display: none; }
+}
 /* Modifier key label: ⌘ on Apple devices (html[data-mac], set in Layout's head), Ctrl elsewhere. */
 [data-mod-key]::before { content: "Ctrl"; }
 html[data-mac] [data-mod-key]::before { content: "⌘"; }
+
+/* HTTP status classes (free-tools/http-status-codes): GitHub's palette, one hue per first digit. */
+.st-1 { --st: #58a6ff; } .st-2 { --st: #3fb950; } .st-3 { --st: #bc8cff; } .st-4 { --st: #d29922; } .st-5 { --st: #f85149; }
+.st-text-1 { color: #58a6ff; } .st-text-2 { color: #3fb950; } .st-text-3 { color: #bc8cff; } .st-text-4 { color: #d29922; } .st-text-5 { color: #f85149; }
+.st-chip { @apply inline-flex items-center rounded-md border px-2 py-0.5 font-mono text-xs tabular-nums transition; color: var(--st); border-color: color-mix(in oklab, var(--st) 40%, transparent); background: color-mix(in oklab, var(--st) 10%, transparent); }
+.st-chip:hover { background: color-mix(in oklab, var(--st) 20%, transparent); }
+.filter-chip { @apply rounded-md border px-2.5 py-1 text-muted-foreground transition hover:text-primary; }
+.filter-chip[aria-pressed="true"] { @apply border-primary/40 bg-primary/10 text-primary; }
+
+/* "Star on GitHub" buttons (StarCard): GitHub-style split button; the star fills gold on hover. */
+.star-btn { @apply inline-flex h-9 shrink-0 items-center gap-2 rounded-md border bg-card/80 pl-3 text-sm font-medium transition hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring; padding-right: .75rem; }
+.star-btn:has(.star-count) { padding-right: 0; }
+.star-count { @apply flex h-full items-center rounded-r-md border-l px-2.5 font-mono text-xs tabular-nums text-muted-foreground; }
+.star-icon { transition: transform .25s ease, fill .25s ease, color .25s ease; }
+.star-btn:hover .star-icon, .star-btn:focus-visible .star-icon { fill: #e3b341; color: #e3b341; transform: rotate(-12deg) scale(1.15); }
+@media (prefers-reduced-motion: reduce) { .star-btn:hover .star-icon { transform: none; } }

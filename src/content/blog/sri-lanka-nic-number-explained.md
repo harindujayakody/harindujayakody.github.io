@@ -2,6 +2,7 @@
 title: "Sri Lanka NIC Number Explained: Find Your Birthday, Age and Gender"
 description: "How to read a Sri Lankan NIC number, old V/X and new 12 digit. Find the date of birth and gender, convert old to new, and see why some decoders get the birthday wrong."
 date: 2026-11-19
+popular: true
 category: "Guides"
 tags: ["sri lanka", "nic", "free tools", "date of birth", "javascript"]
 repo: "harindujayakody/nic-information-finder"

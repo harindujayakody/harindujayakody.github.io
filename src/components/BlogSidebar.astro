@@ -2,47 +2,74 @@
 import { Image } from "astro:assets";
 import avatar from "../assets/avatar.png";
 import { author } from "../data/author";
-import { getPosts, categoryUrl, slugify } from "../lib/posts";
+import { votesApi } from "../data/votes";
+import { getPosts, categoryUrl } from "../lib/posts";
 
-// Blog index sidebar. Only shown from xl up: it sits in the right margin next to the 3xl column, so small screens lose nothing.
+// Blog index sidebar. Shown from 1400px up: it sits in the right margin next to the 3xl column, so smaller screens lose nothing.
 const posts = await getPosts();
-const latest = posts.slice(0, 4);
-const popular = posts.filter((p) => p.data.popular).slice(0, 4);
+// Popular = hand-picked (`popular: true`) first, newest first; the script below re-ranks by helpful votes once there are any.
+const ranked = [...posts.filter((p) => p.data.popular), ...posts.filter((p) => !p.data.popular)];
+const SHOWN = 4;
 const categories = Object.entries(Object.groupBy(posts, (p) => p.data.category))
   .map(([name, list]) => ({ name, count: list!.length }))
   .sort((a, b) => b.count - a.count);
 const current = Astro.url.pathname;
-const lists = [
-  { label: "latest", items: latest },
-  { label: "popular", items: popular },
-].filter((l) => l.items.length > 0);
 ---
-<aside aria-label="Blog sidebar" class="hidden xl:block absolute left-full top-0 ml-8 h-full w-56">
-  <div class="sticky top-20 flex flex-col gap-6 text-sm">
-    <section aria-label="About" class="flex flex-col gap-2 rounded-xl border bg-card/50 p-4">
-      <Image src={avatar} alt="" width={40} height={40} densities={[1, 2]} quality={90} class="size-10 rounded-full ring-1 ring-border" />
-      <p class="font-heading font-semibold leading-tight"><a href="/" class="hover:text-primary">{author.name}</a></p>
-      <p class="text-xs leading-relaxed text-muted-foreground">{author.bio}</p>
+<aside aria-label="Blog sidebar" class="hidden min-[1400px]:block absolute left-full top-0 ml-8 h-full w-72">
+  <div class="sticky top-20 flex flex-col gap-7">
+    <section aria-label="About" class="flex flex-col gap-3 rounded-xl border bg-card/50 p-5">
+      <div class="flex items-center gap-3">
+        <Image src={avatar} alt="" width={48} height={48} densities={[1, 2]} quality={90} class="size-12 rounded-full ring-1 ring-border" />
+        <div class="min-w-0">
+          <p class="font-heading font-semibold leading-tight"><a href="/" class="hover:text-primary">{author.name}</a></p>
+          <p class="text-xs text-muted-foreground">Founder of Infiax</p>
+        </div>
+      </div>
+      <p class="text-sm leading-relaxed text-muted-foreground">{author.bio}</p>
     </section>
-    {lists.map((l) => (
-      <nav aria-label={`${l.label} posts`} class="flex flex-col gap-2">
-        <h2 class="font-mono text-xs text-muted-foreground">$ ls --{l.label}</h2>
-        <ul class="flex flex-col gap-1.5">
-          {l.items.map((p) => <li><a href={`/blog/${p.id}/`} class="line-clamp-2 leading-snug text-foreground/90 hover:text-primary">{p.data.title}</a></li>)}
-        </ul>
-      </nav>
-    ))}
-    <nav aria-label="Categories" class="flex flex-col gap-2">
-      <h2 class="font-mono text-xs text-muted-foreground">$ ls categories</h2>
-      <ul class="flex flex-col gap-1">
-        {categories.map((c) => (
-          <li>
-            <a href={categoryUrl(c.name)} aria-current={current === categoryUrl(c.name) ? "page" : undefined}
-              class:list={["flex justify-between gap-2 hover:text-primary", current === categoryUrl(c.name) ? "text-primary" : "text-foreground/90"]}>
-              <span>{slugify(c.name)}</span><span class="font-mono text-xs text-muted-foreground tabular-nums">{c.count}</span>
+
+    <nav aria-label="Popular posts" class="flex flex-col gap-3" id="side-popular">
+      <h2 class="font-mono text-xs text-muted-foreground">$ ls --popular</h2>
+      <ol class="flex flex-col gap-3.5">
+        {ranked.map((p, i) => (
+          <li data-id={p.id} data-i={i} hidden={i >= SHOWN}>
+            <a href={`/blog/${p.id}/`} class="group flex items-center gap-3">
+              {p.data.image && p.data.image.format !== "svg"
+                ? <Image src={p.data.image} alt="" width={160} height={90} class="aspect-video w-20 shrink-0 rounded-md border object-cover" />
+                : <img src={`/og/${p.id}.png`} alt="" width="160" height="84" loading="lazy" class="aspect-video w-20 shrink-0 rounded-md border object-cover" />}
+              <span class="line-clamp-3 text-sm leading-snug text-foreground/90 group-hover:text-primary">{p.data.title}</span>
             </a>
           </li>
         ))}
+      </ol>
+    </nav>
+    <script is:inline define:vars={{ api: votesApi, shown: SHOWN }}>
+      // Re-rank by helpful votes when the counter has any; otherwise the hand-picked order above stays.
+      (() => {
+        const ol = document.querySelector("#side-popular ol");
+        fetch(api + "/votes").then((r) => r.json()).then((c) => {
+          if (!Object.values(c).some((n) => n > 0)) return;
+          const items = [...ol.children].sort((a, b) => (c[b.dataset.id] || 0) - (c[a.dataset.id] || 0) || a.dataset.i - b.dataset.i);
+          items.forEach((li, i) => { li.hidden = i >= shown; ol.append(li); });
+        }).catch(() => {});
+      })();
+    </script>
+
+    <nav aria-label="Categories" class="flex flex-col gap-3">
+      <h2 class="font-mono text-xs text-muted-foreground">$ ls categories</h2>
+      <ul class="flex flex-col gap-1.5">
+        {categories.map((c) => {
+          const on = current === categoryUrl(c.name);
+          return (
+            <li>
+              <a href={categoryUrl(c.name)} aria-current={on ? "page" : undefined}
+                class:list={["flex items-center justify-between gap-3 rounded-lg border px-3.5 py-2 text-sm transition hover:border-primary/40 hover:text-primary", on ? "border-primary/40 bg-primary/5 text-primary" : "bg-card/50 text-foreground/90"]}>
+                <span class="font-medium">{c.name}</span>
+                <span class="rounded-md bg-secondary px-2 py-0.5 font-mono text-xs tabular-nums text-muted-foreground">{c.count}</span>
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </nav>
   </div>

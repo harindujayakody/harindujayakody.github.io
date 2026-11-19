@@ -1,8 +1,12 @@
 ---
 import type { MarkdownHeading } from "astro";
 
+interface Props {
+  headings: MarkdownHeading[];
+}
+
 // Sticky "on this page" in the right margin (xl+), highlighting the section being read. Same rule as Toc: 3+ top-level sections.
-const items = Astro.props.headings.filter((h: MarkdownHeading) => h.depth === 2);
+const items = Astro.props.headings.filter((h) => h.depth === 2);
 ---
 {items.length >= 3 && (
   <aside aria-label="On this page" class="hidden xl:block absolute left-full top-0 ml-8 h-full w-56">

@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.23.1] - 2026-11-20
+
+### Fixed
+- Type error in `TocSidebar.astro` that failed `npm run check` and blocked the 1.23.0 deploy. `TocSidebar` now declares its props like `Toc`.
+
 ## [1.23.0] - 2026-11-20
 
 ### Added

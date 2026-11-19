@@ -1,0 +1,26 @@
+/* giscus theme for the site's comments in light mode: giscus's light base, recoloured with the light tokens in
+   src/styles/global.css and a transparent page background. Loaded by giscus inside its iframe, so it stays in public/. */
+@import url("https://giscus.app/themes/light.css");
+
+main {
+  --color-canvas-default: transparent;
+  --color-canvas-subtle: oklch(0.945 0.006 265 / 60%);
+  --color-fg-default: oklch(0.2 0.012 265 / 90%);
+  --color-fg-muted: oklch(0.47 0.016 265);
+  --color-fg-subtle: oklch(0.58 0.014 265);
+  --color-border-default: oklch(0 0 0 / 10%);
+  --color-border-muted: oklch(0 0 0 / 7%);
+  --color-canvas-overlay: oklch(1 0 0 / 95%);
+  --color-neutral-muted: oklch(0.945 0.006 265 / 80%);
+  --color-neutral-subtle: oklch(0.945 0.006 265 / 50%);
+  --color-accent-fg: oklch(0.52 0.11 165);
+  --color-accent-emphasis: oklch(0.52 0.11 165);
+  --color-accent-muted: oklch(0.52 0.11 165 / 40%);
+  --color-accent-subtle: oklch(0.52 0.11 165 / 10%);
+  --color-btn-primary-text: oklch(0.99 0.005 165);
+  --color-btn-primary-bg: oklch(0.52 0.11 165);
+  --color-btn-primary-hover-bg: oklch(0.52 0.11 165 / 88%);
+  --color-btn-primary-disabled-text: oklch(0.99 0.005 165 / 70%);
+  --color-btn-primary-disabled-bg: oklch(0.52 0.11 165 / 40%);
+  --color-scale-blue-8: oklch(0.52 0.11 165 / 15%);
+}

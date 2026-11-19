@@ -2,6 +2,19 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.20.0] - 2026-11-19
+
+### Added
+- Light theme and a light/dark switch (#45). The site follows the device's setting by default, set before first paint so there's no flash, and keeps following it live. The sun/moon button in the header changes it; the choice is remembered on that device, and picking the device's own theme goes back to following it.
+- Switch animation: light opens out of the button as a growing circle, and switching back to dark closes it into the button (View Transitions API). No animation with reduced motion.
+- Light versions of everything: colour tokens (WCAG AA for all text), code blocks (GitHub light syntax colours via Shiki dual themes), HTTP status colours, 2FA ring, 404 message, star buttons, the dot grid, the reading-progress bar, timeline dots and comments (a light giscus theme, switched live).
+
+### Fixed
+- Search and shortcuts dialogs (#46) no longer shift the page sideways when they open or close (`scrollbar-gutter: stable`). Both open and close with a fade and scale (a slide on phones), and the backdrop dim and blur fade with them.
+
+### Changed
+- FAQ answers, the table of contents and series boxes (#47) animate open and closed instead of jumping.
+
 ## [1.19.0] - 2026-11-19
 
 ### Added

@@ -1,0 +1,61 @@
+---
+// Light/dark switch (issue #45). The initial theme is set in Layout's <head>; this only toggles it.
+---
+<button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch theme" title="Switch theme">
+  <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
+  <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg>
+</button>
+
+<script>
+  const d = document.documentElement;
+  const btn = document.getElementById("theme-toggle") as HTMLButtonElement;
+  const light = matchMedia("(prefers-color-scheme: light)");
+
+  const label = () => {
+    const text = d.dataset.theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+    btn.setAttribute("aria-label", text);
+    btn.title = text;
+  };
+  label();
+  document.addEventListener("theme:change", label);
+
+  function apply(theme: "light" | "dark") {
+    d.dataset.theme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme === "light" ? "#f8f9fb" : "#0d0e12");
+    document.dispatchEvent(new Event("theme:change"));
+  }
+
+  btn.addEventListener("click", () => {
+    const next = d.dataset.theme === "dark" ? "light" : "dark";
+    // Remember only a choice that differs from the system, so picking the system's theme goes back to following it.
+    try {
+      if (next === (light.matches ? "light" : "dark")) localStorage.removeItem("theme");
+      else localStorage.setItem("theme", next);
+    } catch {
+      /* storage blocked: the switch still works for this page */
+    }
+
+    if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) return apply(next);
+
+    // Light opens out of the button as a growing circle; dark closes the light back into it.
+    const r = btn.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    const opening = next === "light";
+    d.classList.add("theme-switching");
+    d.classList.toggle("theme-closing", !opening);
+    const vt = document.startViewTransition(() => apply(next));
+    vt.ready
+      .then(() => {
+        const circle = [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`];
+        d.animate(
+          { clipPath: opening ? circle : [...circle].reverse() },
+          { duration: 520, easing: "cubic-bezier(0.4, 0, 0.2, 1)", pseudoElement: opening ? "::view-transition-new(root)" : "::view-transition-old(root)" },
+        );
+      })
+      // A second click before this one finishes skips it; the theme still applies, so the rejection is expected.
+      .catch(() => {});
+    vt.finished.finally(() => d.classList.remove("theme-switching", "theme-closing"));
+  });
+</script>

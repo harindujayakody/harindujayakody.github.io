@@ -12,14 +12,14 @@ const config = {
   "data-emit-metadata": "0",
   "data-input-position": "bottom",
   "data-lang": "en",
-  // Absolute URL: giscus loads it inside its own iframe.
-  "data-theme": new URL("/giscus-theme.css", Astro.site).href,
 };
+// Absolute URLs: giscus loads them inside its own iframe. The script picks one per site theme.
+const themes = { dark: new URL("/giscus-theme.css", Astro.site).href, light: new URL("/giscus-theme-light.css", Astro.site).href };
 const discussions = `https://github.com/${repo}/discussions/categories/announcements`;
 ---
 <section id="comments" aria-labelledby="comments-title" class="mt-16 flex flex-col gap-4">
   <h2 id="comments-title" class="reveal font-mono text-sm text-muted-foreground">$ cat comments.log</h2>
-  <div class="giscus min-h-24" data-giscus={JSON.stringify(config)}>
+  <div class="giscus min-h-24" data-giscus={JSON.stringify(config)} data-giscus-themes={JSON.stringify(themes)}>
     <button type="button" data-giscus-load
       class="rounded-md border bg-card/60 px-4 py-2 font-mono text-sm text-muted-foreground transition hover:border-foreground/25 hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">
       load comments
@@ -34,6 +34,12 @@ const discussions = `https://github.com/${repo}/discussions/categories/announcem
     const box = document.querySelector("[data-giscus]");
     if (!box) return;
     let loaded = false;
+    const themes = JSON.parse(box.dataset.giscusThemes);
+    // Follow the site theme switch: giscus accepts a theme change by postMessage to its iframe.
+    document.addEventListener("theme:change", () => {
+      const frame = document.querySelector("iframe.giscus-frame");
+      frame?.contentWindow?.postMessage({ giscus: { setConfig: { theme: themes[document.documentElement.dataset.theme] } } }, "https://giscus.app");
+    });
     const load = () => {
       if (loaded) return;
       loaded = true;
@@ -44,6 +50,7 @@ const discussions = `https://github.com/${repo}/discussions/categories/announcem
       s.async = true;
       s.crossOrigin = "anonymous";
       for (const [k, v] of Object.entries(JSON.parse(box.dataset.giscus))) s.setAttribute(k, v);
+      s.setAttribute("data-theme", themes[document.documentElement.dataset.theme] || themes.dark);
       box.append(s);
     };
     const io = new IntersectionObserver((e) => e.some((x) => x.isIntersecting) && load(), { rootMargin: "600px 0px" });

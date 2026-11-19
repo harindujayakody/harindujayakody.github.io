@@ -25,7 +25,7 @@ const stars = repoName ? (await getRepos()).find((r) => r.name.toLowerCase() ===
     {p.repo && (
       <a href={p.repo} target="_blank" rel="noopener" class="relative z-10 ml-auto flex items-center gap-1 font-mono text-xs text-muted-foreground hover:text-primary"
         aria-label={`${p.name} on GitHub${stars ? `, ${stars} stars` : ""}`}>
-        {stars ? <><svg viewBox="0 0 24 24" fill="currentColor" class="size-3.5 text-[#e3b341]" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.53L12 17.5l-5.87 3.07 1.12-6.53L2.5 9.41l6.56-.95z" /></svg>{stars} · star ↗</> : "source ↗"}
+        {stars ? <><svg viewBox="0 0 24 24" fill="currentColor" class="size-3.5 text-(--star)" aria-hidden="true"><path d="M12 2.5l2.94 5.96 6.56.95-4.75 4.63 1.12 6.53L12 17.5l-5.87 3.07 1.12-6.53L2.5 9.41l6.56-.95z" /></svg>{stars} · star ↗</> : "source ↗"}
       </a>
     )}
   </div>

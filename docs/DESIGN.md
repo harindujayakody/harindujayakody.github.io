@@ -25,7 +25,7 @@ Defined on `:root` in `src/styles/global.css` with shadcn/ui names, so component
 | `--border` | `oklch(1 0 0 / 9%)` | All borders |
 | `--ring` | mint at 45% | Focus rings |
 
-The site is dark only (`color-scheme: dark`). Background: a 4% mint radial at the top plus a 24px dot grid at 4% white.
+Two themes. Dark (above) is the default palette; light lives under `html[data-theme="light"]` with the same token names (background `oklch(0.985 0.003 265)`, text `oklch(0.2 0.012 265)`, primary `oklch(0.52 0.11 165)`). An inline script in the `<head>` sets `data-theme` before first paint: the saved choice from `ThemeToggle`, otherwise `prefers-color-scheme`, followed live while nothing is saved. Every text pair passes WCAG AA in both themes. Extra tokens cover what used to be hex values: `--dot`, `--glow`, `--code-bg`, `--code-border`, `--code-inline`, `--danger`, `--warning`, `--star`, `--st-1` to `--st-5`. Background: a faint mint radial at the top plus a 24px dot grid.
 X brand pink `#f91880` appears only on the X card like icon, on hover.
 Code borrows GitHub dark mode: Shiki `github-dark-default` syntax colours, `#151b23` blocks with a `#3d444d` border and 6px corners, and a `#656c7633` chip for inline code. These are the only non-token colours besides the X pink.
 
@@ -47,6 +47,9 @@ All CSS, no JavaScript. Everything is disabled under `prefers-reduced-motion: re
 | `.reveal` | Same rise, driven by scroll position (`animation-timeline: view()`), in browsers that support it; elsewhere the content just shows |
 | `.read-progress` | 2px mint bar under the header on posts, filled by `animation-timeline: scroll(root)`; hidden where unsupported and in print |
 | Page transitions | `@view-transition { navigation: auto; }`: the page cross-fades in 200ms while the header and footer (`view-transition-name`) hold still |
+| Theme switch | View Transitions: switching to light clips the new view open as a circle from the toggle; switching to dark clips the old (light) view closed into it. `html.theme-switching` removes named transition parts so the page moves as one; plain switch without View Transitions or with reduced motion |
+| Dialogs | Search and shortcuts dialogs fade and scale in from 96% (slide up on phones) and reverse on close; the backdrop dim and blur fade with them (`@starting-style`, `transition-behavior: allow-discrete`). `scrollbar-gutter: stable` keeps the page still while a dialog locks scrolling |
+| `<details>` | FAQ answers, the table of contents and series boxes open and close by animating height (`interpolate-size: allow-keywords`, `::details-content`) with a fade |
 
 Scroll-linked animations must use longhand properties (`animation-name`, `animation-timeline`, …). The CSS minifier folds `animation` plus `animation-timeline` into one shorthand, and browsers reject a shorthand with a timeline, so the animation silently disappears.
 | `.caret` | Blinking cursor in the hero |
@@ -75,6 +78,7 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 | `StarCard` | "Star on GitHub" for a repo: `compact` split button (top of tool pages) or a card with the repo description (end of posts and tools). Star count from the build-time GitHub repo list, hidden while 0; the star fills gold on hover |
 | `SearchDialog` | Native `<dialog>`: opened by the header icon, `Ctrl/⌘+K` or `/`; combobox + grouped listbox, `↑`/`↓`/`↵`/`esc`; full-screen below `sm` |
 | `Shortcuts` | Global keys (`Ctrl/⌘+K`, `/`, `g`+`h`/`b`/`p`/`t`, `?`) and the help dialog; key hints (`kbd`) shown only to fine-pointer devices. `[data-mod-key]` renders `⌘` or `Ctrl` from CSS, based on `html[data-mac]` set by an inline script in the head before first paint |
+| `ThemeToggle` | Sun/moon button in the header; icons rotate and swap. Saves a choice only when it differs from the system, so picking the system theme returns to following it. Fires `theme:change` (giscus listens and switches its theme) |
 
 ## Layout
 

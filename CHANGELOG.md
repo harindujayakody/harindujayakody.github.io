@@ -2,6 +2,12 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.30.2] - 2026-11-20
+
+### Changed
+- Header (and the status code filter bar under it) is a solid page colour, no blur or see-through: white in light, near black in dark.
+- README brought up to date: sidebars, link previews, helpful votes Worker, GitHub-style cards, anti detect browser page, Noto Sans Sinhala, theme switch, support links, structure, scripts and how to add content. Removed a duplicated Newsletter row.
+
 ## [1.30.1] - 2026-11-20
 
 ### Added

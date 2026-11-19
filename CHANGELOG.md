@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.30.1] - 2026-11-20
+
+### Added
+- Windows and Apple logos on the download buttons of the anti detect browser page and the Octopus Agent post.
+
 ## [1.30.0] - 2026-11-20
 
 ### Changed

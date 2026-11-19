@@ -16,6 +16,9 @@ const repo = "https://github.com/harindujayakody/octopus-agent";
 const win = `${repo}/releases/download/v2.6.1/Octopus-Agent_2.6.1_x64-setup.exe`;
 const mac = `${repo}/releases/download/v2.6.1/Octopus-Agent_2.6.1_aarch64.dmg`;
 
+const WIN = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M3 3h8.5v8.5H3zM12.5 3H21v8.5h-8.5zM3 12.5h8.5V21H3zM12.5 12.5H21V21h-8.5z"/></svg>';
+const APL = '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>';
+
 const features: [string, string][] = [
   ["Unlimited profiles", "No profile cap and no paid plan. Make as many isolated profiles as your computer can hold. You only pay for the proxies you bring."],
   ["Engine level fingerprints", "A patched Chromium applies the values inside the browser, not with injected JavaScript, so frames, workers and DevTools all agree."],
@@ -76,8 +79,8 @@ const jsonLd = [
       <h1 class="rise text-4xl font-semibold leading-tight sm:text-6xl" style="--d:80ms">Free anti detect browser with unlimited profiles</h1>
       <p class="rise max-w-xl text-lg text-muted-foreground" style="--d:160ms">Octopus Agent gives every profile its own fingerprint, cookies and proxy. Open source, no account, no profile limit.</p>
       <div class="rise flex flex-wrap items-center gap-3" style="--d:240ms">
-        <a href={win} id="ad-win" class="inline-flex h-12 items-center rounded-md bg-primary px-6 text-base font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Download for Windows</a>
-        <a href={mac} id="ad-mac" class="inline-flex h-12 items-center rounded-md border bg-card/60 px-6 text-base font-medium transition hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Download for Mac (Apple Silicon)</a>
+        <a href={win} id="ad-win" class="inline-flex h-12 items-center gap-2.5 rounded-md bg-primary px-6 text-base font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring"><Fragment set:html={WIN} />Download for Windows</a>
+        <a href={mac} id="ad-mac" class="inline-flex h-12 items-center gap-2.5 rounded-md border bg-card/60 px-6 text-base font-medium transition hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring"><Fragment set:html={APL} />Download for Mac (Apple Silicon)</a>
       </div>
       <p class="rise flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground" style="--d:300ms">
         <span id="ad-tag">v2.6.1</span><span>·</span><span>MIT licence</span><span>·</span>

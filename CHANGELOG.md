@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.20.2] - 2026-11-19
+
+### Changed
+- Rewrote the HTTP status codes post as a detailed guide to all 63 codes ("HTTP Status Codes: All 63 Codes Explained, From 100 to 511"): how status codes work, how to see them, a class overview, every code with its meaning and (for errors) its two most common causes, the codes people mix up, and which codes to use in your own API. Each code links to its page in the reference. Same URL.
+
 ## [1.20.1] - 2026-11-19
 
 ### Fixed

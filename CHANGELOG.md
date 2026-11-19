@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.29.0] - 2026-11-20
+
+### Added
+- Link previews now also work for links to GitHub, kathaarana.com and absolute harindujayakody.com URLs (#90). The title, description and image are read from each page at build time (`lib/link-meta.ts`), only for those hosts; if a page cannot be read, that link just has no preview. Internal links still use the post and tool data.
+
 ## [1.28.2] - 2026-11-20
 
 ### Changed

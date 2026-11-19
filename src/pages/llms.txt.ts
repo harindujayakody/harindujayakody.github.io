@@ -23,7 +23,7 @@ ${posts.map((p) => `- [${p.data.title}](${u(`/blog/${p.id}.md`)}): ${p.data.desc
 
 ${items.map((i) => `- [${i.name}](${u(i.href)}): ${i.desc}`).join("\n")}
 
-## Free tools (run in the browser; nothing is sent or saved)
+## Free tools (most run in the browser and send or save nothing; the anti detect browser is a desktop app to download)
 
 ${freeTools.map((t) => `- [${t.name}](${u(t.href)}): ${t.desc}`).join("\n")}
 

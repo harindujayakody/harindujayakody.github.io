@@ -1,0 +1,152 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+import Badge from "../../components/ui/Badge.astro";
+import StarCard from "../../components/StarCard.astro";
+import logo from "../../assets/octopus/logo.png";
+import profiles from "../../assets/octopus/octopus-profiles.png";
+import fingerprints from "../../assets/octopus/octopus-fingerprints.png";
+import browsers from "../../assets/octopus/octopus-browsers.png";
+
+const title = "Free Anti Detect Browser: Unlimited Profiles, Open Source · Harindu Jayakody";
+const description =
+  "Octopus Agent is a free, open source anti detect browser for Windows and Mac. Unlimited profiles, one proxy per profile, 220 device fingerprints, a local API and MCP server.";
+const url = new URL("/free-tools/anti-detect-browser/", Astro.site).href;
+const repo = "https://github.com/harindujayakody/octopus-agent";
+const win = `${repo}/releases/download/v2.6.1/Octopus-Agent_2.6.1_x64-setup.exe`;
+const mac = `${repo}/releases/download/v2.6.1/Octopus-Agent_2.6.1_aarch64.dmg`;
+
+const features: [string, string][] = [
+  ["Unlimited profiles", "No profile cap and no paid plan. Make as many isolated profiles as your computer can hold. You only pay for the proxies you bring."],
+  ["Engine level fingerprints", "A patched Chromium applies the values inside the browser, not with injected JavaScript, so frames, workers and DevTools all agree."],
+  ["220 device profiles", "Ready-made Macs, Windows PCs, Linux machines and Android phones. Screen, graphics, cores and memory stay consistent with each other."],
+  ["One proxy per profile", "SOCKS5 and HTTP proxies. Time zone, language and location follow the proxy's country, and WebRTC cannot leak your real IP."],
+  ["Chrome, Firefox and more", "Install Google Chrome, Chromium, Firefox, Brave, Thorium or Helium inside the app. Each profile keeps the browser you chose."],
+  ["API, MCP and SDKs", "A local HTTP API, an MCP server for Claude Desktop and Cursor, and Python, Node and Rust SDKs. Plus visual automation and synced windows."],
+];
+
+const faqs: [string, string][] = [
+  ["What is an anti detect browser?", "A browser that gives every profile its own device fingerprint, cookies and (optionally) proxy, so each profile looks like a different person on a different computer. People use it to manage several accounts, test sites and run research."],
+  ["Is Octopus Agent really free?", "Yes. It is open source under the MIT licence. There is no profile limit, no paid tier, no store and no usage tracking. The only cost is whatever you pay for proxies."],
+  ["Does it work on Windows and Mac?", "Yes. Windows 64-bit has an installer, an MSI and a portable exe. Mac has a build for Apple Silicon (M1 and newer). There is no Intel Mac build yet. Linux builds (AppImage, deb, rpm) are on the releases page."],
+  ["Why does Windows or macOS warn me when I open it?", "The installers are not code signed yet. On Windows choose More info, then Run anyway. On a Mac open System Settings, go to Privacy and Security, and choose Open Anyway."],
+  ["Who made it?", "I did, building on the open source ShardBrowser launcher. The patched Chromium engine comes from the ShardBrowser team, and Octopus Agent downloads it on first launch (about 150 MB)."],
+  ["Is it legal to use?", "A fingerprint browser is a privacy and testing tool. Use it for your own accounts and for work the sites you visit allow, and follow each site's rules and your local law."],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Octopus Agent",
+    url,
+    description,
+    applicationCategory: "BrowserApplication",
+    operatingSystem: "Windows, macOS, Linux",
+    isAccessibleForFree: true,
+    license: "https://opensource.org/licenses/MIT",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    downloadUrl: `${repo}/releases/latest`,
+    codeRepository: repo,
+    author: { "@id": `${Astro.site!.href}#person` },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Free tools", item: "/free-tools/" },
+      { name: "Anti detect browser", item: "/free-tools/anti-detect-browser/" },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
+---
+<Layout title={title} description={description} jsonLd={jsonLd} image="/og/free-tools/anti-detect-browser.png">
+  <div class="flex flex-col gap-16">
+    <header class="flex flex-col gap-6">
+      <div class="rise flex items-center gap-4">
+        <Image src={logo} alt="Octopus Agent logo" width={72} height={72} densities={[1, 2]} class="size-[72px]" />
+        <p class="font-mono text-sm text-primary">$ ./octopus-agent --free</p>
+      </div>
+      <h1 class="rise text-4xl font-semibold leading-tight sm:text-6xl" style="--d:80ms">Free anti detect browser with unlimited profiles</h1>
+      <p class="rise max-w-xl text-lg text-muted-foreground" style="--d:160ms">Octopus Agent gives every profile its own fingerprint, cookies and proxy. Open source, no account, no profile limit.</p>
+      <div class="rise flex flex-wrap items-center gap-3" style="--d:240ms">
+        <a href={win} id="ad-win" class="inline-flex h-12 items-center rounded-md bg-primary px-6 text-base font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Download for Windows</a>
+        <a href={mac} id="ad-mac" class="inline-flex h-12 items-center rounded-md border bg-card/60 px-6 text-base font-medium transition hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Download for Mac (Apple Silicon)</a>
+      </div>
+      <p class="rise flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground" style="--d:300ms">
+        <span id="ad-tag">v2.6.1</span><span>·</span><span>MIT licence</span><span>·</span>
+        <a href={`${repo}/releases/latest`} target="_blank" rel="noopener" class="hover:text-primary">Linux and other downloads</a><span>·</span>
+        <a href={repo} target="_blank" rel="noopener" class="hover:text-primary">source on GitHub</a>
+      </p>
+    </header>
+
+    <section aria-label="Screenshot" class="reveal">
+      <Image src={profiles} alt="Octopus Agent's All profiles screen with folders, tags, proxy, browser and a Start button on each profile" widths={[480, 768, 1280]} sizes="(min-width: 768px) 736px, 100vw" loading="eager" class="w-full rounded-xl border" />
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ ls features</h2>
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {features.map(([name, text]) => (
+          <li class="reveal flex flex-col gap-1.5 rounded-xl border bg-card/70 p-5">
+            <h3 class="font-semibold">{name}</h3>
+            <p class="text-sm leading-relaxed text-muted-foreground">{text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ ls screens</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <Image src={fingerprints} alt="The Fingerprints page listing 220 device profiles grouped by macOS, Windows, Linux and Android" widths={[400, 768]} sizes="(min-width: 640px) 360px, 100vw" class="reveal w-full rounded-xl border" />
+        <Image src={browsers} alt="Settings, Browsers page with Chrome, Chromium, Firefox, Brave, Thorium and Helium" widths={[400, 768]} sizes="(min-width: 640px) 360px, 100vw" class="reveal w-full rounded-xl border" />
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ cat install.md</h2>
+      <ol class="reveal flex list-decimal flex-col gap-2 pl-6 text-muted-foreground">
+        <li>Download the installer for your system with the buttons above.</li>
+        <li>Open it. If Windows or macOS warns you, follow the FAQ below. The app is not code signed yet.</li>
+        <li>On first launch the app fetches its browser engine (about 150 MB). Then create a profile, pick a device, add a proxy if you have one, and press Start.</li>
+      </ol>
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ cat faq.md</h2>
+      <div class="flex flex-col divide-y rounded-xl border bg-card/50">
+        {faqs.map(([q, a]) => (
+          <details class="reveal group px-5 py-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 font-medium [&::-webkit-details-marker]:hidden">
+              {q}<span aria-hidden="true" class="transition group-open:rotate-180">▾</span>
+            </summary>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="flex flex-col items-start gap-3">
+      <p class="reveal text-sm text-muted-foreground">Built on the open source <a href="https://github.com/ProxyShard/ShardBrowser" target="_blank" rel="noopener" class="text-primary hover:underline">ShardBrowser</a> launcher. Read the full write-up in <a href="/blog/octopus-agent-free-anti-detect-web-browser/" class="text-primary hover:underline">the blog post</a>.</p>
+      <StarCard repo="harindujayakody/octopus-agent" />
+    </section>
+  </div>
+
+  <script is:inline>
+    // Point the buttons at the newest GitHub release; the links in the HTML (v2.6.1) are the fallback.
+    fetch("https://api.github.com/repos/harindujayakody/octopus-agent/releases/latest").then((r) => r.json()).then((rel) => {
+      const pick = (re) => rel.assets.find((a) => re.test(a.name))?.browser_download_url;
+      const w = pick(/x64-setup\.exe$/), m = pick(/aarch64\.dmg$/);
+      if (w) document.getElementById("ad-win").href = w;
+      if (m) document.getElementById("ad-mac").href = m;
+      if (rel.tag_name) document.getElementById("ad-tag").textContent = rel.tag_name;
+    }).catch(() => {});
+  </script>
+</Layout>

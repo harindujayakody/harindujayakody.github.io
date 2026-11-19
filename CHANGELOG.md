@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.25.0] - 2026-11-20
+
+### Added
+- Landing page `/free-tools/anti-detect-browser/` for Octopus Agent: hero with Windows and Mac download buttons that follow the newest GitHub release, screenshots, six feature cards, install steps, FAQ (with `FAQPage` and `SoftwareApplication` JSON-LD), credits and a star card. Listed on the free tools page, in the sitemap and with its own share card.
+
 ## [1.24.5] - 2026-11-20
 
 ### Added

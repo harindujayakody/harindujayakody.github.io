@@ -46,6 +46,7 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 | **Blog** | Markdown posts with categories (indexable) and tags, 16:9 cover and inline images, related posts, multi-part series, older/newer links, reading progress bar, reading time and RSS |
 | **Fast navigation** | Pages prerender on hover (Speculation Rules) and cross-fade with View Transitions; both need no JavaScript and fall back to normal links |
 | **Projects & Tools** | Hand-picked tools and projects plus every public GitHub repo, sorted by stars |
+| **Free tools** | Private browser tools under `/free-tools/`, starting with a 2FA (TOTP) code generator: runs locally, nothing sent or saved, strict CSP |
 | **Repo timeline** | Every public repository grouped by year, refreshed daily from the GitHub API |
 | **Contribution graph** | The last year of GitHub activity on the home page, built at build time in the site's mint, no JavaScript |
 | **Comments** | giscus (GitHub Discussions) on every post, in the site's colours; loads only when you scroll to it. `comments: false` turns it off per post |
@@ -143,7 +144,7 @@ npm run dev        # http://localhost:4321
 | `npm run preview` | Serve the production build locally |
 | `npm run check` | Type-check `.astro` and `.ts` files (`astro check`) |
 | `npm run lint` | Lint with ESLint |
-| `npm test` | Unit tests for the search logic (`src/lib/search.test.mjs`) |
+| `npm test` | Unit tests: search logic and TOTP (RFC 6238 test vectors) |
 
 Set `GITHUB_TOKEN` in your shell if you hit GitHub's anonymous API limit (60 requests an hour). It's also needed for the contribution graph, because GitHub's GraphQL API doesn't allow anonymous requests; without it the graph is simply left out. CI provides it automatically. Locally, with the GitHub CLI:
 

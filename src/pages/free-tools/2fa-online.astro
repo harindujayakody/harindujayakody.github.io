@@ -1,0 +1,247 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const title = "Free 2FA Code Generator Online (TOTP) · Harindu Jayakody";
+const description =
+  "Get your 2FA code from a secret key, right in your browser. Works with Google, Facebook, GitHub and any TOTP service. Nothing is sent to or saved on a server.";
+const url = new URL("/free-tools/2fa-online/", Astro.site).href;
+
+const faqs: [string, string][] = [
+  ["How do I get a 2FA code online?", "Paste the Base32 secret key you got when you set up 2FA (the text version of the QR code) and press Get 2FA codes. Your 6-digit code appears straight away and refreshes every 30 seconds."],
+  ["Is my secret key sent anywhere or saved?", "No. The code is calculated in your browser with the Web Crypto API. Nothing is sent to a server, and your keys aren't saved in the browser either: they live only in this tab's memory and are wiped when you press Clear all, after 5 minutes without activity, when the tab is hidden for more than 2 minutes, or when you leave the page."],
+  ["Does it work with Google, Facebook, GitHub and others?", "Yes. It uses the standard TOTP algorithm (RFC 6238), the same one Google Authenticator and Authy use. Any service that gives you a TOTP secret key works."],
+  ["Can I generate codes for several accounts at once?", "Yes. Paste one secret key per line. Each key gets its own live code and countdown."],
+  ["Does it work offline?", "Once the page has loaded, generating codes needs no internet connection: there is nothing to download or upload."],
+  ["Should I use this instead of an authenticator app?", "For everyday logins, an authenticator app on your phone is safer, because your secret keys stay on one device. This tool is handy when you're setting up 2FA, moving accounts to a new phone, or need a code on a computer you trust. Your secret key is as sensitive as a password: only paste it on a device you trust."],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "2FA code generator (TOTP)",
+    url,
+    description,
+    applicationCategory: "SecurityApplication",
+    operatingSystem: "Any (web browser)",
+    browserRequirements: "Requires JavaScript and the Web Crypto API",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    author: { "@id": `${Astro.site!.href}#person` },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Free tools", item: "/free-tools/" },
+      { name: "2FA code generator", item: "/free-tools/2fa-online/" },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
+
+// This page handles secret keys, so it gets a strict policy: no third-party scripts, and no connections to any
+// other site (connect-src 'self' only lets the search dialog fetch /search.json from this site).
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self' data:", // the build inlines some small font subsets as data: URLs
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
+---
+<Layout title={title} description={description} jsonLd={jsonLd} csp={csp}>
+  <div class="flex flex-col gap-8">
+    <header class="flex flex-col gap-3">
+      <nav aria-label="Breadcrumb" class="rise flex items-center gap-1.5 font-mono text-sm text-muted-foreground">
+        <a href="/free-tools/" class="hover:text-primary">free-tools</a><span>/</span><span class="text-primary">2fa-online</span>
+      </nav>
+      <h1 class="rise text-3xl font-semibold leading-tight sm:text-5xl" style="--d:80ms">Free 2FA code generator</h1>
+      <p class="rise max-w-xl text-muted-foreground" style="--d:160ms">
+        Paste your 2FA secret key and get the live 6-digit code, the same one an authenticator app would show. No app or sign-up needed.
+      </p>
+    </header>
+
+    <aside class="rise flex gap-3 rounded-xl border border-primary/30 bg-primary/5 p-4 text-sm leading-relaxed" style="--d:200ms">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></svg>
+      <p>
+        <strong class="text-foreground">No data is saved on any server.</strong>{" "}
+        <span class="text-muted-foreground">Codes are generated locally in your browser with the Web Crypto API. Your keys are never uploaded and never stored, not even in your browser: they stay in this tab's memory and are wiped when you clear them, after 5 minutes idle, or when you leave.</span>
+      </p>
+    </aside>
+
+    <section aria-labelledby="gen-title" class="rise flex flex-col gap-4 rounded-xl border bg-card/70 p-5" style="--d:240ms">
+      <h2 id="gen-title" class="sr-only">Generator</h2>
+      <label for="keys" class="font-mono text-xs text-muted-foreground">2FA secret keys · one per line</label>
+      <textarea id="keys" rows="4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore data-lpignore="true"
+        placeholder={"JBSWY3DPEHPK3PXP\nNATJ HQ2E MKEL 6ZSH WXKQ GOSM 6B7Y SFQ"}
+        class="w-full resize-y rounded-lg border bg-background/60 p-3 font-mono text-sm leading-6 outline-none placeholder:text-muted-foreground/60 focus:border-primary/50 focus:ring-[3px] focus:ring-ring/40"></textarea>
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="generate" type="button" class="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">
+          Get 2FA codes
+        </button>
+        <button id="clear" type="button" class="inline-flex h-10 items-center gap-2 rounded-md border bg-card/60 px-4 text-sm font-medium transition hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">
+          Clear all
+        </button>
+        <span class="kbd-hint ml-auto items-center gap-1 font-mono text-[11px] text-muted-foreground"><kbd><span data-mod-key /></kbd> + <kbd>Enter</kbd></span>
+      </div>
+      <p id="status" class="min-h-5 font-mono text-xs text-muted-foreground" role="status" aria-live="polite"></p>
+      <ul id="results" class="flex flex-col divide-y rounded-lg border empty:hidden" aria-label="2FA codes"></ul>
+    </section>
+
+    <section aria-labelledby="faq-title" class="flex flex-col gap-4">
+      <h2 id="faq-title" class="reveal text-xl font-semibold">Questions</h2>
+      <div class="flex flex-col divide-y rounded-xl border bg-card/50">
+        {faqs.map(([q, a]) => (
+          <details class="reveal group px-5 py-4">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 font-medium marker:content-none hover:text-primary">
+              {q}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <p class="font-mono text-xs text-muted-foreground">
+      Open source (MIT): <a href="https://github.com/harindujayakody/2fa-tools" target="_blank" rel="noopener" class="text-primary hover:underline">github.com/harindujayakody/2fa-tools</a>
+      · <a href="/blog/free-online-2fa-code-generator/" class="text-primary hover:underline">how it works</a>
+    </p>
+  </div>
+
+  <script>
+    import { totp, maskKey } from "../../lib/totp";
+
+    const input = document.getElementById("keys") as HTMLTextAreaElement;
+    const list = document.getElementById("results")!;
+    const status = document.getElementById("status")!;
+    const RING = 2 * Math.PI * 12; // circumference of the r=12 countdown ring
+
+    // Keys live only in this closure and the textarea: never in storage, never in the URL, never sent anywhere.
+    let keys: string[] = [];
+    let ticker: number | undefined;
+
+    const say = (msg: string) => (status.textContent = msg);
+
+    function row(i: number, key: string) {
+      const li = document.createElement("li");
+      li.className = "flex items-center gap-3 px-4 py-3";
+      li.innerHTML = `
+        <div class="min-w-0 flex-1">
+          <p class="font-mono text-xs text-muted-foreground" data-label></p>
+          <p class="font-mono text-2xl font-semibold tracking-wider tabular-nums sm:text-3xl" data-code>··· ···</p>
+          <p class="text-xs text-[#f85149]" data-error hidden></p>
+        </div>
+        <button type="button" data-copy class="flex size-9 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-primary focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+        </button>
+        <div class="relative size-8 shrink-0" data-timer>
+          <svg viewBox="0 0 32 32" class="size-8 -rotate-90" aria-hidden="true">
+            <circle cx="16" cy="16" r="12" fill="none" stroke="currentColor" stroke-width="2.5" class="text-border" />
+            <circle cx="16" cy="16" r="12" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="${RING} ${RING}" data-ring style="transition: stroke-dashoffset .9s linear" />
+          </svg>
+          <span class="absolute inset-0 flex items-center justify-center font-mono text-[10px] tabular-nums" data-secs></span>
+        </div>`;
+      // User text goes in as text, never HTML.
+      li.querySelector("[data-label]")!.textContent = `Key ${i + 1} · ${maskKey(key)}`;
+      li.querySelector<HTMLButtonElement>("[data-copy]")!.setAttribute("aria-label", `Copy code for key ${i + 1}`);
+      return li;
+    }
+
+    async function tick() {
+      const now = Math.floor(Date.now() / 1000);
+      const rows = list.children;
+      await Promise.all(
+        keys.map(async (key, i) => {
+          const li = rows[i] as HTMLElement | undefined;
+          if (!li) return;
+          const codeEl = li.querySelector<HTMLElement>("[data-code]")!;
+          const err = li.querySelector<HTMLElement>("[data-error]")!;
+          try {
+            const { code, remaining } = await totp(key, now);
+            codeEl.textContent = `${code.slice(0, 3)} ${code.slice(3)}`;
+            codeEl.dataset.value = code;
+            li.querySelector("[data-secs]")!.textContent = String(remaining);
+            const ring = li.querySelector<SVGCircleElement>("[data-ring]")!;
+            ring.style.strokeDashoffset = String(RING * (1 - remaining / 30));
+            ring.style.stroke = remaining <= 5 ? "#f85149" : remaining <= 10 ? "#d29922" : "var(--primary)";
+          } catch (e) {
+            codeEl.textContent = "--- ---";
+            delete codeEl.dataset.value;
+            err.hidden = false;
+            err.textContent = `${(e as Error).message}. Keys use letters A–Z and digits 2–7.`;
+            li.querySelector<HTMLElement>("[data-timer]")!.hidden = true;
+            li.querySelector<HTMLButtonElement>("[data-copy]")!.hidden = true;
+          }
+        }),
+      );
+    }
+
+    function generate() {
+      keys = input.value.split("\n").map((k) => k.trim()).filter(Boolean);
+      clearInterval(ticker);
+      list.replaceChildren(...keys.map((k, i) => row(i, k)));
+      if (!keys.length) return say("Paste at least one secret key.");
+      say(`${keys.length} code${keys.length === 1 ? "" : "s"}. They refresh every 30 seconds.`);
+      tick();
+      ticker = window.setInterval(tick, 1000);
+    }
+
+    function clear(reason = "Cleared.") {
+      clearInterval(ticker);
+      ticker = undefined;
+      keys = [];
+      input.value = "";
+      list.replaceChildren();
+      say(reason);
+    }
+
+    document.getElementById("generate")!.addEventListener("click", generate);
+    document.getElementById("clear")!.addEventListener("click", () => clear());
+    input.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        generate();
+      }
+    });
+
+    list.addEventListener("click", async (e) => {
+      const btn = (e.target as Element).closest<HTMLButtonElement>("[data-copy]");
+      const code = btn?.closest("li")?.querySelector<HTMLElement>("[data-code]")?.dataset.value;
+      if (!code) return;
+      try {
+        await navigator.clipboard.writeText(code);
+        say("Code copied.");
+      } catch {
+        say("Couldn't copy. Select the code and copy it manually.");
+      }
+    });
+
+    // Automatic wipes, same rules as the original app: 5 minutes idle, tab hidden 2+ minutes, leaving the page.
+    let idle: number | undefined;
+    const resetIdle = () => {
+      clearTimeout(idle);
+      idle = window.setTimeout(() => (keys.length || input.value) && clear("Cleared after 5 minutes without activity."), 5 * 60 * 1000);
+    };
+    ["pointerdown", "pointermove", "keydown", "touchstart", "scroll"].forEach((ev) => addEventListener(ev, resetIdle, { passive: true }));
+    resetIdle();
+
+    let hiddenAt = 0;
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) hiddenAt = Date.now();
+      else if (hiddenAt && Date.now() - hiddenAt > 2 * 60 * 1000 && (keys.length || input.value)) clear("Cleared because the tab was in the background for over 2 minutes.");
+      if (!document.hidden) hiddenAt = 0;
+    });
+    addEventListener("pagehide", () => clear());
+  </script>
+</Layout>

@@ -39,6 +39,7 @@ src/
     x-embed-plugin.ts    Markdown (Sätteri) plugin: pasted X embed code becomes an xCardHtml card at build time
     heading-anchors-plugin.ts  Markdown plugin: ids + "#" self-links on h2/h3 (GitHub-style slugs)
     search.ts            browser search: lazy index load, matching, grouping, safe highlighting (+ search.test.mjs)
+    totp.ts              Base32 + RFC 6238 TOTP on Web Crypto, key masking (+ totp.test.mjs with RFC vectors)
   layouts/Layout.astro   <head> SEO (canonical, OG, Twitter, robots, JSON-LD), header nav, footer
   components/            PostList, BlogIndex, Timeline, ProjectCard, XFeed, Socials, ui/*
   pages/                 routes (below)
@@ -57,6 +58,8 @@ src/
 | `/blog/<slug>/` | `pages/blog/[id].astro` | `BlogPosting` (author from `data/author.ts`) + breadcrumbs, cover image, table of contents (3+ sections), heading links, series box and part links (`SeriesBox`, `isPartOf`), author box, older/newer links (`PostNav`), comments (`Comments`, giscus), newsletter sign-up (`Subscribe`), related posts, reading progress bar, X embeds as static cards |
 | `/blog/<slug>.md` | `pages/blog/[id].md.ts` | Raw markdown for AI agents |
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
+| `/free-tools/` | `pages/free-tools/index.astro` | Hub listing `src/data/free-tools.ts` |
+| `/free-tools/2fa-online/` | `pages/free-tools/2fa-online.astro` | 2FA (TOTP) generator; keys only in tab memory, auto-wipes; page-only CSP (no third-party scripts, `connect-src 'self'`); `WebApplication` + `FAQPage` JSON-LD |
 | `/timeline/` | `pages/timeline.astro` | Every repo grouped by year |
 | `/search/` | `pages/search.astro` + `search.json.ts` | Full-page search for `?q=` links (and `SearchAction`); same logic as the pop-up via `lib/search.ts`; `noindex` |
 | `/404.html` | `pages/404.astro` | Custom not-found page: requested path, search and nav buttons, latest posts; `noindex` |

@@ -1,6 +1,7 @@
 import type { APIContext } from "astro";
 import { getPosts } from "../lib/posts";
 import { items } from "../data/projects";
+import { freeTools } from "../data/free-tools";
 
 // https://llmstxt.org — a markdown map of the site for AI agents.
 export async function GET({ site }: APIContext) {
@@ -20,7 +21,11 @@ ${posts.map((p) => `- [${p.data.title}](${u(`/blog/${p.id}.md`)}): ${p.data.desc
 
 ## Tools & projects
 
-${items.map((i) => `- [${i.name}](${i.href}): ${i.desc}`).join("\n")}
+${items.map((i) => `- [${i.name}](${u(i.href)}): ${i.desc}`).join("\n")}
+
+## Free tools (run in the browser; nothing is sent or saved)
+
+${freeTools.map((t) => `- [${t.name}](${u(t.href)}): ${t.desc}`).join("\n")}
 
 ## Optional
 

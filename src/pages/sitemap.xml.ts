@@ -1,5 +1,6 @@
 import type { APIContext } from "astro";
 import { getPosts, categoryUrl, allSeries, seriesUrl } from "../lib/posts";
+import { freeTools } from "../data/free-tools";
 
 // Indexable pages only: tag pages and search are noindex, so they stay out.
 export async function GET({ site }: APIContext) {
@@ -10,6 +11,8 @@ export async function GET({ site }: APIContext) {
     ["/blog/", latest],
     ["/projects/", new Date()],
     ["/timeline/", new Date()],
+    ["/free-tools/", new Date()],
+    ...freeTools.map((t): [string, Date] => [t.href, new Date()]),
     ...[...new Set(posts.map((p) => p.data.category))].map((c): [string, Date] => [categoryUrl(c), latest]),
     ...allSeries(posts)
       .filter((s) => s.parts.length > 1)

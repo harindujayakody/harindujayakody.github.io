@@ -1,0 +1,46 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Badge from "../../components/ui/Badge.astro";
+import { freeTools } from "../../data/free-tools";
+
+const description = "Free, private browser tools by Harindu Jayakody. Everything runs on your device: no sign-up, no tracking, nothing saved on a server.";
+const jsonLd = [{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Free tools",
+  description,
+  url: new URL("/free-tools/", Astro.site).href,
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: freeTools.map((t, i) => ({ "@type": "ListItem", position: i + 1, name: t.name, url: new URL(t.href, Astro.site).href })),
+  },
+}];
+---
+<Layout title="Free tools · Harindu Jayakody" description={description} jsonLd={jsonLd}>
+  <div class="flex flex-col gap-10">
+    <header class="flex flex-col gap-3">
+      <p class="rise font-mono text-sm text-primary">$ ls ~/free-tools</p>
+      <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">Free tools</h1>
+      <p class="rise max-w-xl text-muted-foreground" style="--d:160ms">{description}</p>
+    </header>
+
+    <ul class="grid gap-3 sm:grid-cols-2">
+      {freeTools.map((t) => (
+        <li class="reveal group relative flex min-w-0 flex-col gap-2 rounded-xl border bg-card/70 p-5 transition duration-300 hover:-translate-y-0.5 hover:border-foreground/20">
+          <h2 class="font-mono text-sm font-medium group-hover:text-primary">
+            <a href={t.href} class="after:absolute after:inset-0">{t.name}</a>
+          </h2>
+          <p class="text-sm leading-relaxed text-muted-foreground">{t.desc}</p>
+          <div class="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
+            {t.tags.map((tag) => <Badge variant="outline">{tag}</Badge>)}
+            {t.source && (
+              <a href={t.source} target="_blank" rel="noopener" class="relative z-10 ml-auto font-mono text-xs text-muted-foreground hover:text-primary">source ↗</a>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+
+    <p class="font-mono text-xs text-muted-foreground">More tools are on the <a href="/projects/" class="text-primary hover:underline">projects page</a>.</p>
+  </div>
+</Layout>

@@ -79,7 +79,7 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 
 - Single column, `max-w-3xl`, 16px side gutters on phones.
 - Grids collapse to one column below `sm` (640px). Grid columns use `minmax(0,1fr)` so long repo names truncate instead of widening the page.
-- The sticky header holds `blog · projects · timeline` plus a search icon; the `~/harindu` logo links home. It fits at 360px.
+- The sticky header holds `blog · tools · projects · timeline` plus a search icon; the `~/harindu` logo links home. Below 640px `timeline` is hidden (`desktopOnly` in the nav list) so the header fits at 360px; it stays reachable from the home page and via `g t`.
 
 ## Accessibility
 

@@ -1,7 +1,7 @@
 {
   "name": "harindu-site",
   "type": "module",
-  "version": "1.17.0",
+  "version": "1.18.0",
   "private": true,
   "engines": {
     "node": ">=22"
@@ -12,7 +12,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
-    "test": "node src/lib/search.test.mjs"
+    "test": "node src/lib/search.test.mjs && node src/lib/totp.test.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.6",

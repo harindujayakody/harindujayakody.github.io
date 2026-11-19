@@ -57,7 +57,7 @@ const jsonLd = [
       <h1 class="rise text-4xl font-semibold sm:text-5xl" style="--d:80ms">{heading}</h1>
       <p class="rise text-muted-foreground" style="--d:160ms">{intro}</p>
     </header>
-    <nav aria-label="Categories" class="rise flex xl:hidden flex-wrap gap-2 font-mono text-xs" style="--d:240ms">
+    <nav aria-label="Categories" class="rise flex min-[1400px]:hidden flex-wrap gap-2 font-mono text-xs" style="--d:240ms">
       <a href="/blog/" class:list={["rounded-md border px-2.5 py-1 transition hover:text-primary", current === "/blog/" ? "border-primary/40 text-primary" : "text-muted-foreground"]}>all</a>
       {categories.map((c) => (
         <a href={categoryUrl(c.name)} class:list={["rounded-md border px-2.5 py-1 transition hover:text-primary", current === categoryUrl(c.name) ? "border-primary/40 text-primary" : "text-muted-foreground"]}>

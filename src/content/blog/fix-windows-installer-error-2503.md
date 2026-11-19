@@ -3,6 +3,7 @@ title: "Fix Windows Installer Error 2502 and 2503 in PowerShell"
 description: "Windows Installer errors 2502 and 2503 stop a setup halfway. Fix both from an administrator PowerShell window by running the MSI elevated and resetting the Temp folder permissions."
 date: 2026-11-03
 updated: 2026-11-20
+popular: true
 category: "Windows"
 tags: ["Windows", "troubleshooting", "powershell", "windows installer"]
 image: "./images/installer-error-2503.png"

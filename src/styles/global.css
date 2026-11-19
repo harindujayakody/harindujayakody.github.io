@@ -140,7 +140,7 @@ html[data-theme="light"] {
 }
 
 /* Markdown post body */
-.prose { @apply text-[1.02rem] leading-7 text-foreground/90; }
+.prose { @apply text-[17px] leading-7 text-foreground/90; }
 .prose > * + * { @apply mt-5; }
 .prose h2 { @apply mt-10 text-xl font-semibold text-foreground; }
 .prose h3 { @apply mt-8 text-lg font-semibold text-foreground; }

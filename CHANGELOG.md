@@ -2,6 +2,13 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.24.1] - 2026-11-20
+
+### Changed
+- Blog index sidebar is wider (288px) and shows from 1400px up (the category pills show below that). "Latest" is replaced by "popular": hand-picked posts (`popular: true`, now set on four posts) with a thumbnail each, re-ranked by helpful votes once any exist.
+- Sidebar categories restyled as bordered rows with a count badge.
+- Blog list post titles are 18px; post body text is 17px (was 16.3px).
+
 ## [1.24.0] - 2026-11-20
 
 ### Added

@@ -3,6 +3,7 @@ title: "HTTP Status Codes: All 63 Codes Explained, From 100 to 511"
 description: "A detailed guide to every HTTP status code from 100 Continue to 511: what each one means, the usual causes of 4xx and 5xx errors, and where to fix them."
 date: 2026-11-19
 updated: 2026-11-19
+popular: true
 category: "Web"
 tags: ["http", "status codes", "web development", "free tools", "debugging"]
 repo: "harindujayakody/http-status-codes"

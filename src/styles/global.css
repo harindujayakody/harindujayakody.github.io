@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@fontsource-variable/inter";
+@import "@fontsource-variable/noto-sans-sinhala";
 @import "@fontsource/poppins/latin-600.css";
 @import "@fontsource-variable/jetbrains-mono";
 
@@ -70,8 +71,8 @@ html[data-theme="light"] {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Noto Sans Sinhala Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Poppins", "Noto Sans Sinhala Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
 }
 

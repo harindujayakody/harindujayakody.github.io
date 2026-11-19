@@ -1,0 +1,121 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import NicDecoder from "../../components/NicDecoder.astro";
+import StarCard from "../../components/StarCard.astro";
+
+const title = "Sri Lanka NIC Decoder: Birthday, Age and Gender From NIC · Harindu Jayakody";
+const description =
+  "Enter a Sri Lankan NIC number (old V/X or new 12 digit) to get the date of birth, age and gender, and convert old to new. Runs in your browser; nothing is saved.";
+const url = new URL("/free-tools/sri-lanka-nic-decoder/", Astro.site).href;
+
+const faqs: [string, string][] = [
+  ["How do I find my birthday from my NIC number?", "Type your NIC number into the decoder above. The birth year is at the start of the number, and the next three digits are the day of the year you were born on (with 500 added for women). The decoder turns that day number into a date and shows your age and weekday too."],
+  ["Why do some NIC decoders show the wrong birthday?", "NIC numbers count the day of the year as if February always had 29 days, so 1 March is always day 61. Decoders that use the normal calendar put every birthday after February one day late for anyone born in a non-leap year. This one uses the NIC table."],
+  ["What's the difference between the old and new NIC formats?", "Old NICs have 9 digits and a letter (V or X): a two-digit year, the day number, a three-digit serial and a check digit. New NICs, issued since 1 January 2016, have 12 digits: a four-digit year, the day number, a four-digit serial and a check digit."],
+  ["How do I convert an old NIC number to the new format?", "Put 19 in front of the year, add a 0 before the three-digit serial, keep the check digit, and drop the letter. 951230000V becomes 199512300000. The decoder shows the converted number for you."],
+  ["Is my NIC number sent anywhere?", "No. The decoding happens in your browser with a few lines of JavaScript. The number isn't sent to a server, isn't saved, and the page is blocked from connecting to other websites."],
+  ["What else can the NIC number tell me?", "Only the birth date and gender. The serial number and check digit don't reveal anything about the holder, and the number alone can't confirm that a card is genuine."],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "Sri Lanka NIC decoder",
+    url,
+    description,
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Any (web browser)",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    author: { "@id": `${Astro.site!.href}#person` },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Free tools", item: "/free-tools/" },
+      { name: "Sri Lanka NIC decoder", item: "/free-tools/sri-lanka-nic-decoder/" },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
+
+// Personal ID numbers are typed here: no third-party scripts and no connections to other sites (same policy as the 2FA tool).
+const csp = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data:",
+  "font-src 'self' data:",
+  "connect-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+].join("; ");
+
+// Made-up sample number for the "how to read it" diagram.
+const parts = [
+  { digits: "1995", label: "birth year" },
+  { digits: "123", label: "day of the year (+500 for women)" },
+  { digits: "0000", label: "serial" },
+  { digits: "0", label: "check digit" },
+];
+---
+<Layout title={title} description={description} jsonLd={jsonLd} csp={csp} image="/og/free-tools/sri-lanka-nic-decoder.png">
+  <div class="flex flex-col gap-8">
+    <header class="flex flex-col gap-3">
+      <nav aria-label="Breadcrumb" class="rise flex items-center gap-1.5 font-mono text-sm text-muted-foreground">
+        <a href="/free-tools/" class="hover:text-primary">free-tools</a><span>/</span><span class="text-primary">sri-lanka-nic-decoder</span>
+      </nav>
+      <h1 class="rise text-3xl font-semibold leading-tight sm:text-5xl" style="--d:80ms">Sri Lanka NIC decoder</h1>
+      <p class="rise max-w-xl text-muted-foreground" style="--d:160ms">
+        Find the date of birth, age and gender from a Sri Lankan National Identity Card number, and convert old numbers to the new format. Works with both the old 9-digit V/X numbers and the new 12-digit ones.
+      </p>
+      <StarCard repo="harindujayakody/nic-information-finder" compact class="rise" />
+    </header>
+
+    <section aria-label="Decoder" class="rise" style="--d:220ms">
+      <NicDecoder />
+    </section>
+
+    <section aria-labelledby="read-title" class="flex flex-col gap-4">
+      <h2 id="read-title" class="text-xl font-semibold">How to read a NIC number</h2>
+      <p class="text-muted-foreground">A new 12-digit number splits into four parts. This one is made up:</p>
+      <ol class="grid gap-2 sm:grid-cols-4" aria-label="Parts of a sample NIC number">
+        {parts.map((p) => (
+          <li class="flex flex-col gap-1 rounded-xl border bg-card/60 p-3">
+            <span class="font-mono text-xl font-semibold tracking-wider text-primary">{p.digits}</span>
+            <span class="text-xs text-muted-foreground">{p.label}</span>
+          </li>
+        ))}
+      </ol>
+      <p class="text-sm leading-relaxed text-muted-foreground">
+        Day 123 is 2 May, because NIC numbers count February as 29 days in every year. The old version of the same number is <span class="font-mono text-foreground">951230000V</span>: a two-digit year, the same day number, a three-digit serial, the check digit and a letter.
+        The <a href="/blog/sri-lanka-nic-number-explained/" class="text-primary underline underline-offset-4 hover:no-underline">full guide</a> explains each part and the leap-year rule.
+      </p>
+    </section>
+
+    <section aria-labelledby="faq-title" class="flex flex-col gap-4">
+      <h2 id="faq-title" class="text-xl font-semibold">Questions</h2>
+      <div class="flex flex-col divide-y rounded-xl border bg-card/50">
+        {faqs.map(([q, a]) => (
+          <details class="group px-5 py-4">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 font-medium marker:content-none hover:text-primary">
+              {q}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="size-4 shrink-0 text-muted-foreground transition group-open:rotate-180" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <StarCard repo="harindujayakody/nic-information-finder" />
+  </div>
+</Layout>

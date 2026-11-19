@@ -60,6 +60,7 @@ src/
 | `/projects/` | `pages/projects.astro` | Tools, projects, all repos |
 | `/free-tools/` | `pages/free-tools/index.astro` | Hub listing `src/data/free-tools.ts` |
 | `/free-tools/2fa-online/` | `pages/free-tools/2fa-online.astro` | 2FA (TOTP) generator; keys only in tab memory, auto-wipes; page-only CSP (no third-party scripts, `connect-src 'self'`); `WebApplication` + `FAQPage` JSON-LD |
+| `/free-tools/sri-lanka-nic-decoder/` | `pages/free-tools/sri-lanka-nic-decoder.astro` | NIC decoder from `lib/nic.ts` (fixed 366-day table, February always 29) via `scripts/nic-widget.ts`; same strict CSP as 2FA; `WebApplication` + `FAQPage` + breadcrumbs |
 | `/free-tools/http-status-codes/` | `pages/free-tools/http-status-codes/index.astro` | All 63 codes as static HTML grouped 1xx to 5xx, progressive filter and class chips, FAQ; `DefinedTermSet` + `FAQPage` + breadcrumbs |
 | `/free-tools/http-status-codes/<code>/` | `pages/free-tools/http-status-codes/[code].astro` | One page per code from `data/http-status-codes.ts`: meaning, causes, fixes, headers, example response, snippets, related codes, RFC link; `DefinedTerm` + breadcrumbs |
 | `/og/free-tools.png`, `/og/free-tools/<slug>.png` | `pages/og/[...slug].png.ts` | Share cards for the hub and each tool |

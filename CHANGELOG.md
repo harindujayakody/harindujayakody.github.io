@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.21.0] - 2026-11-19
+
+### Added
+- Sri Lanka NIC decoder at `/free-tools/sri-lanka-nic-decoder/` (#54): date of birth with weekday, age, gender and old/new conversion from an old (9 digits + V/X) or new (12 digit) NIC number. Runs in the browser with a strict CSP; nothing is sent or saved. FAQ, `WebApplication` + `FAQPage` JSON-LD, share card, star cards for `nic-information-finder`.
+- Post "Sri Lanka NIC Number Explained: Find Your Birthday, Age and Gender" with screenshots (made-up numbers only) and the live decoder embedded. Posts can embed it with `<div data-nic-decoder></div>`.
+- `src/lib/nic.ts` with tests (`npm test`).
+
+### Fixed
+- Decoding uses the NIC day table where February always has 29 days. Decoders built on the normal calendar, including the old `nic-information-finder`, show birthdays from March onward one day late for anyone born in a non-leap year.
+
 ## [1.20.2] - 2026-11-19
 
 ### Changed

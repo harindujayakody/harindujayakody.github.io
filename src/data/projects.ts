@@ -22,7 +22,7 @@ export const items: Item[] = [
   { name: "steam-deal-finder", kind: "tool", href: pages("steam-deal-finder"), repo: gh("steam-deal-finder"), tags: ["JavaScript", "Gaming"], featured: true, desc: "Converts Steam USD prices to LKR live and tracks historical deals for Sri Lankan gamers." },
   { name: "binance-p2p-lkr-rate-live-update", kind: "tool", href: pages("binance-p2p-lkr-rate-live-update"), repo: gh("binance-p2p-lkr-rate-live-update"), tags: ["JavaScript", "Finance"], featured: true, desc: "Live Binance P2P LKR/USDT rates, advertiser listings, calculator and a toolbar rate badge." },
   { name: "duplicate-tabs-pro", kind: "tool", href: pages("duplicate-tabs-pro"), repo: gh("duplicate-tabs-pro"), tags: ["Extension"], desc: "Lightweight browser extension that clones your active tab with one click or a shortcut." },
-  { name: "nic-information-finder", kind: "tool", href: pages("nic-information-finder"), repo: gh("nic-information-finder"), tags: ["JavaScript", "Sri Lanka"], desc: "Look up the details encoded in a Sri Lankan NIC number." },
+  { name: "nic-information-finder", kind: "tool", href: "/free-tools/sri-lanka-nic-decoder/", repo: gh("nic-information-finder"), tags: ["NIC", "Sri Lanka"], desc: "Date of birth, age and gender from a Sri Lankan NIC number, plus old to new conversion. Runs in your browser." },
   { name: "http-status-codes", kind: "tool", href: pages("http-status-codes"), repo: gh("http-status-codes"), tags: ["Reference"], desc: "Every HTTP status code explained, from informational to server errors." },
   { name: "speed-post-by-sl-post", kind: "tool", href: pages("speed-post-by-sl-post"), repo: gh("speed-post-by-sl-post"), tags: ["Calculator", "Sri Lanka"], desc: "Speed Post fee calculator for Sri Lanka Post." },
 ];

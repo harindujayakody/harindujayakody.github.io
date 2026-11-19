@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.24.4] - 2026-11-20
+
+### Added
+- Post "Read Sinhala Novels and Short Stories Free on Kathaarana.com" with a logo cover and two site screenshots, and a star card for the `kathaarana` repo.
+
 ## [1.24.3] - 2026-11-20
 
 ### Added

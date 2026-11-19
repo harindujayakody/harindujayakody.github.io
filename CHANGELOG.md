@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.24.5] - 2026-11-20
+
+### Added
+- Post "Octopus Agent: Free Anti Detect Web Browser with Unlimited Profiles" with a logo cover, three app screenshots, Windows and Mac download buttons (they follow the newest GitHub release) and a star card for the octopus-agent repo.
+
 ## [1.24.4] - 2026-11-20
 
 ### Added

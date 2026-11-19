@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.20.1] - 2026-11-19
+
+### Fixed
+- Switching from light to dark no longer flashes white at the end of the animation. The closing circle now holds its final state until the transition ends, instead of letting the full light page paint again for one frame.
+
 ## [1.20.0] - 2026-11-19
 
 ### Added

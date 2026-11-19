@@ -36,36 +36,18 @@
 
     if (!document.startViewTransition || matchMedia("(prefers-reduced-motion: reduce)").matches) return apply(next);
 
-    // Light opens out of the button as a growing circle; dark closes the light back into it.
+    // The effect itself lives in global.css (a feathered circle mask on the old page's snapshot). Here we only tell it
+    // where the toggle is, how far the circle must grow to cover the screen, and which way we are going.
     const r = btn.getBoundingClientRect();
     const x = r.left + r.width / 2;
     const y = r.top + r.height / 2;
-    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-    const opening = next === "light";
-    // Start the new view fully clipped from the first frame (see global.css); without this, going to light painted
-    // the whole light page for a frame before the circle animation started, so the change looked instant.
+    const reach = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + 100; // + the 90px soft edge
     d.style.setProperty("--tx", `${x}px`);
     d.style.setProperty("--ty", `${y}px`);
-    d.classList.add("theme-switching");
-    d.classList.toggle("theme-closing", !opening);
+    d.style.setProperty("--rmax", `${reach}px`);
+    d.classList.add("theme-switching", next === "light" ? "theme-to-light" : "theme-to-dark");
     const vt = document.startViewTransition(() => apply(next));
-    vt.ready
-      .then(() => {
-        const circle = [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`];
-        // fill "forwards" holds the final clip until the transition tears down. Without it, switching to dark
-        // painted the full light snapshot again for a frame after the circle closed: a white flash.
-        d.animate(
-          { clipPath: opening ? circle : [...circle].reverse() },
-          {
-            duration: 800,
-            easing: "cubic-bezier(0.4, 0, 0.2, 1)",
-            fill: "forwards",
-            pseudoElement: opening ? "::view-transition-new(root)" : "::view-transition-old(root)",
-          },
-        );
-      })
-      // A second click before this one finishes skips it; the theme still applies, so the rejection is expected.
-      .catch(() => {});
-    vt.finished.finally(() => d.classList.remove("theme-switching", "theme-closing"));
+    // A second click before this one finishes skips it; the theme still applies, so the rejection is expected.
+    vt.finished.catch(() => {}).finally(() => d.classList.remove("theme-switching", "theme-to-light", "theme-to-dark"));
   });
 </script>

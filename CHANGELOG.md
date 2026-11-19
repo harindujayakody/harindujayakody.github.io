@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.30.0] - 2026-11-20
+
+### Changed
+- Theme switch rebuilt to fix dark to light freezing. It used to animate the live new page, which re-rendered the whole page on every frame; now the old page is a still snapshot with a soft-edged circle mask, and the new theme underneath is not animated. To dark the light page shrinks into the toggle; to light a hole opens out of the toggle. 900 ms, same easing both ways. The effect is CSS keyframes, so the script only sets the toggle's position. The rule that removed view-transition names from every element on the page now only touches the header and footer, which are the only named parts.
+
 ## [1.29.0] - 2026-11-20
 
 ### Added

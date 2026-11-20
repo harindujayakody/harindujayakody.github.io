@@ -2,6 +2,16 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.34.0] - 2026-11-20
+
+### Added
+- Motion in the exchange rates tool, so a switch of currency, bank, rate type or range feels connected instead of jumping: the big rate counts to its new value, changed names and figures settle in with a short rise and fade, table rows slide to their new order, the chart line draws in left to right (the old chart stays dimmed while the next currency loads), and buttons change colour smoothly. The "more currencies" panel opens and closes by height. Everything is skipped under reduced motion.
+
+### Changed
+- The install notice is now a slim bar (about 45px) above the site header instead of a card in the page. It has a close button (hidden for 30 days), slides in and out, and is never shown once the app is installed or opened as an app.
+- The tool updates its controls in place instead of rebuilding them, so keyboard focus stays on the control you used and the colour transitions run.
+- `Layout` gets a named `top` slot, rendered above the header.
+
 ## [1.33.0] - 2026-11-20
 
 ### Added

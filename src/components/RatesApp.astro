@@ -1,28 +1,100 @@
 ---
 import { ratesBase } from "../data/rates";
+
+const segBtn =
+  "h-8 rounded px-3 font-mono text-xs text-muted-foreground transition-colors duration-200 hover:text-foreground aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring";
+const sides: [string, string][] = [["selling", "Selling"], ["buying", "Buying"]];
+const ranges = ["1D", "1W", "1M", "6M", "Max"];
+const th = "px-3 py-3 text-left font-mono text-xs font-normal text-muted-foreground sm:px-4";
 ---
 <section id="rates-app" data-base={ratesBase} aria-label="Bank exchange rates" class="flex flex-col gap-5">
-  <div id="ra-install" hidden class="flex flex-col gap-3 rounded-xl border bg-card/70 p-4"></div>
-
   <p id="ra-status" class="font-mono text-xs leading-relaxed text-muted-foreground" aria-live="polite">Loading rates…</p>
+  <p id="ra-live" class="sr-only" aria-live="polite"></p>
 
-  <div class="flex flex-col gap-2">
-    <div id="ra-currencies" role="group" aria-label="Currency" class="flex items-center gap-2"></div>
-    <div id="ra-more-panel" hidden role="group" aria-label="More currencies" class="flex flex-wrap gap-2 rounded-xl border bg-card/50 p-3"></div>
+  <div>
+    <div id="ra-currencies" role="group" aria-label="Currency" class="flex items-center gap-2">
+      <div id="ra-main" class="contents"></div>
+      <div id="ra-extra" class="contents"></div>
+      <button type="button" id="ra-more-btn" data-a="more" hidden aria-expanded="false" aria-controls="ra-more" class="group inline-flex h-10 shrink-0 items-center gap-1.5 rounded-md border bg-card/60 px-3 font-mono text-sm text-muted-foreground transition-[color,border-color,transform] duration-200 hover:border-foreground/25 hover:text-foreground active:scale-[0.97] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">
+        <span id="ra-more-label">More</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition-transform duration-300 group-aria-expanded:rotate-180"><path d="m6 9 6 6 6-6"></path></svg>
+      </button>
+    </div>
+    <div id="ra-more" inert class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out data-[open]:grid-rows-[1fr]">
+      <div class="overflow-hidden">
+        <div id="ra-more-list" role="group" aria-label="More currencies" class="mt-2 flex flex-wrap gap-2 rounded-xl border bg-card/50 p-3"></div>
+      </div>
+    </div>
   </div>
 
   <div class="grid overflow-hidden rounded-xl border bg-card/70 lg:grid-cols-[5fr_7fr]">
-    <div id="ra-summary" class="flex min-w-0 flex-col gap-5 p-4 sm:gap-6 sm:p-6">
-      <div class="h-9 w-64 animate-pulse rounded-md bg-muted"></div>
-      <div class="h-16 w-48 animate-pulse rounded-md bg-muted"></div>
-      <div class="h-24 animate-pulse rounded-md bg-muted"></div>
+    <div class="min-w-0 p-4 sm:p-6">
+      <div id="ra-sum-skel" class="flex flex-col gap-5 sm:gap-6">
+        <div class="h-9 w-64 max-w-full animate-pulse rounded-md bg-muted"></div>
+        <div class="h-16 w-48 animate-pulse rounded-md bg-muted"></div>
+        <div class="h-24 animate-pulse rounded-md bg-muted"></div>
+      </div>
+      <div id="ra-error" hidden role="alert" class="flex flex-col items-start gap-3">
+        <p class="font-medium">The rates did not load.</p>
+        <p class="text-sm text-muted-foreground">Check your connection and try again. The data refreshes every 3 hours.</p>
+        <button type="button" data-a="retry" class="h-9 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Try again</button>
+      </div>
+      <div id="ra-sum-body" hidden class="flex flex-col gap-5 sm:gap-6">
+        <div class="flex items-center gap-2">
+          <div role="group" aria-label="Rate type" class="inline-flex rounded-md border p-0.5">
+            {sides.map(([v, t]) => <button type="button" data-a="side" data-v={v} aria-pressed={v === "selling"} class={segBtn}>{t}</button>)}
+          </div>
+          <label class="sr-only" for="ra-bank">Bank</label>
+          <select id="ra-bank" data-a="bank" class="h-9 min-w-0 flex-1 rounded-md border bg-card/60 px-2.5 text-sm transition-colors hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:flex-none"></select>
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <p class="text-sm text-muted-foreground"><span id="ra-label" class="inline-block">Lowest selling rate</span> · 1 <span id="ra-cur-code">USD</span> <span id="ra-cur-name" class="hidden sm:inline"></span></p>
+          <h2 id="ra-name" class="text-2xl font-semibold leading-tight tracking-tight sm:text-4xl"></h2>
+          <p id="ra-rate" class="font-mono leading-none tabular-nums"><span class="mr-1 text-xl text-muted-foreground">Rs</span><span id="ra-int" class="text-5xl font-semibold tracking-tight sm:text-6xl">0</span><span id="ra-dec" class="text-2xl text-muted-foreground sm:text-3xl">.00</span></p>
+          <p id="ra-change" class="inline-block min-h-5 font-mono text-sm tabular-nums"></p>
+        </div>
+        <dl class="divide-y border-y">
+          <div class="flex items-baseline justify-between gap-3 py-2.5"><dt class="text-sm text-muted-foreground">Lowest selling</dt><dd class="text-right"><span id="ra-s-sell" class="inline-block font-mono text-sm tabular-nums"></span> <span id="ra-s-sell-who" class="inline-block text-sm text-muted-foreground"></span></dd></div>
+          <div class="flex items-baseline justify-between gap-3 py-2.5"><dt class="text-sm text-muted-foreground">Highest buying</dt><dd class="text-right"><span id="ra-s-buy" class="inline-block font-mono text-sm tabular-nums"></span> <span id="ra-s-buy-who" class="inline-block text-sm text-muted-foreground"></span></dd></div>
+          <div class="flex items-baseline justify-between gap-3 py-2.5"><dt class="text-sm text-muted-foreground">Smallest spread</dt><dd class="text-right"><span id="ra-s-spread" class="inline-block font-mono text-sm tabular-nums"></span> <span id="ra-s-spread-who" class="inline-block text-sm text-muted-foreground"></span></dd></div>
+          <div class="flex items-baseline justify-between gap-3 py-2.5"><dt class="text-sm text-muted-foreground">Banks quoting <span id="ra-q-code">USD</span></dt><dd class="text-right"><span id="ra-s-count" class="inline-block font-mono text-sm tabular-nums"></span></dd></div>
+        </dl>
+      </div>
     </div>
-    <div id="ra-chart" class="flex min-w-0 flex-col gap-4 border-t p-4 sm:p-6 lg:border-l lg:border-t-0">
-      <div class="h-56 animate-pulse rounded-md bg-muted"></div>
+
+    <div class="flex min-w-0 flex-col gap-4 border-t p-4 sm:p-6 lg:border-l lg:border-t-0">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <p class="text-sm text-muted-foreground"><span id="ra-chart-title" class="inline-block">Best selling rate over time</span></p>
+        <div role="group" aria-label="Range" class="inline-flex rounded-md border p-0.5">
+          {ranges.map((r) => <button type="button" data-a="range" data-v={r} aria-pressed={r === "1W"} class={segBtn}>{r}</button>)}
+        </div>
+      </div>
+      <div id="ra-chart-body" class="flex flex-1 flex-col gap-4 transition-opacity duration-300">
+        <div class="h-56 animate-pulse rounded-md bg-muted"></div>
+      </div>
     </div>
   </div>
 
-  <div id="ra-table" class="overflow-hidden rounded-xl border bg-card/70"></div>
+  <div id="ra-table" class="overflow-hidden rounded-xl border bg-card/70">
+    <div id="ra-table-skel" class="flex flex-col gap-3 p-4">
+      <div class="h-6 animate-pulse rounded-md bg-muted"></div><div class="h-6 animate-pulse rounded-md bg-muted"></div><div class="h-6 animate-pulse rounded-md bg-muted"></div>
+    </div>
+    <div class="overflow-x-auto" id="ra-table-wrap" hidden>
+      <table class="w-full border-collapse text-sm">
+        <caption id="ra-cap" class="sr-only"></caption>
+        <thead class="border-b">
+          <tr>
+            <th scope="col" class={th}>Bank</th>
+            <th scope="col" class={`${th} text-right`}>Selling</th>
+            <th scope="col" class={`${th} text-right`}>Buying</th>
+            <th scope="col" class={`${th} hidden text-right sm:table-cell`}>Spread</th>
+            <th scope="col" class={`${th} hidden md:table-cell`}>Bank updated</th>
+          </tr>
+        </thead>
+        <tbody id="ra-tbody" class="divide-y"></tbody>
+      </table>
+    </div>
+  </div>
 
   <details id="ra-daily" class="group rounded-xl border bg-card/50">
     <summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 font-medium [&::-webkit-details-marker]:hidden">
@@ -46,24 +118,39 @@ import { ratesBase } from "../data/rates";
   const base = root.dataset.base!;
   const $ = (id: string) => document.getElementById(id)!;
   const MAIN = ["USD", "EUR", "GBP", "AED"];
-  const RANGES: [string, number][] = [["1D", 1], ["1W", 7], ["1M", 30], ["6M", 182], ["Max", 0]];
+  const RANGES: Record<string, number> = { "1D": 1, "1W": 7, "1M": 30, "6M": 182, Max: 0 };
   const STALE_MS = 7 * 3_600_000;
+  const EASE = "cubic-bezier(0.22, 1, 0.36, 1)";
   const names = new Intl.DisplayNames(["en"], { type: "currency" });
+  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const state = {
     status: null as Status | null,
-    history: null as Snap[] | null,
+    history: [] as Snap[],
+    historyFor: "",
     currency: new URLSearchParams(location.search).get("c")?.toUpperCase() || "USD",
     side: "selling" as Side,
     bank: "best",
     range: "1W",
     more: false,
+    ready: false,
   };
 
   const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
   const num = (n: number) => n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 4 });
   const cname = (c: string) => (c === "CNH" ? "Offshore yuan" : names.of(c) || c);
-  const better = (side: Side, a: number, b: number) => (side === "buying" ? a > b : a < b);
+
+  // Changes a text and plays a short settle animation, only when it actually changed.
+  function swap(el: HTMLElement, value: string, html = false) {
+    if (el.dataset.v === value) return;
+    const first = el.dataset.v === undefined;
+    el.dataset.v = value;
+    if (html) el.innerHTML = value; else el.textContent = value;
+    if (first || reduced()) return;
+    el.classList.remove("ra-swap");
+    void el.offsetWidth;
+    el.classList.add("ra-swap");
+  }
 
   function ago(iso: string | null | undefined, now = Date.now()) {
     if (!iso) return "never";
@@ -82,50 +169,73 @@ import { ratesBase } from "../data/rates";
   }
   const stale = (b: Bank) => !!b.error || !b.fetchedAt || Date.now() - new Date(b.fetchedAt).getTime() > STALE_MS;
 
-  // Banks quoting the current currency, with the rate pair.
   const quotes = () =>
     (state.status?.banks ?? []).flatMap((b) => {
       const r = b.rates.find((x) => x.currency === state.currency);
       return r ? [{ bank: b, buying: r.buying, selling: r.selling }] : [];
     });
   const sorted = (side: Side) => [...quotes()].sort((a, b) => (side === "buying" ? b.buying - a.buying : a.selling - b.selling));
+  const short = (b: Bank) => b.short || b.name;
 
-  const seg = (action: string, items: [string, string][], active: string, label: string) =>
-    `<div role="group" aria-label="${label}" class="inline-flex rounded-md border p-0.5">${items
-      .map(([v, t]) => `<button type="button" data-a="${action}" data-v="${v}" aria-pressed="${v === active}" class="h-8 rounded px-3 font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring ${v === active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"}">${t}</button>`)
-      .join("")}</div>`;
+  // ---------- controls ----------
+  const CHIP = "h-10 min-w-0 flex-1 rounded-md border bg-card/60 px-2 font-mono text-sm text-foreground transition-[color,background-color,border-color,transform] duration-200 hover:border-foreground/25 active:scale-[0.97] aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:flex-none sm:px-4";
+  const SMALL = "h-9 rounded-md border bg-card/60 px-3 font-mono text-xs transition-[color,background-color,border-color,transform] duration-200 hover:border-foreground/25 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring";
+  const chip = (c: string, extra = "") =>
+    `<button type="button" data-a="currency" data-v="${c}" aria-pressed="false" title="${esc(cname(c))}" class="${CHIP} ${extra}">${c}</button>`;
 
-  function renderCurrencies() {
-    const all = [...new Set((state.status?.banks ?? []).flatMap((b) => b.rates.map((r) => r.currency)))].sort();
-    if (!all.includes(state.currency)) state.currency = all.includes("USD") ? "USD" : all[0] ?? "USD";
-    const main = MAIN.filter((c) => all.includes(c));
-    const rest = all.filter((c) => !main.includes(c));
-    const chip = (c: string, on: boolean) =>
-      `<button type="button" data-a="currency" data-v="${c}" aria-pressed="${on}" title="${esc(cname(c))}" class="h-10 min-w-0 flex-1 rounded-md border px-2 font-mono text-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:flex-none sm:px-4 ${on ? "border-primary bg-primary text-primary-foreground" : "bg-card/60 text-foreground hover:border-foreground/25"}">${c}</button>`;
-    const inRest = rest.includes(state.currency);
-    $("ra-currencies").innerHTML =
-      main.map((c) => chip(c, c === state.currency)).join("") +
-      (inRest ? chip(state.currency, true) : "") +
-      (rest.length
-        ? `<button type="button" data-a="more" aria-expanded="${state.more}" aria-controls="ra-more-panel" class="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-md border bg-card/60 px-3 font-mono text-sm text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">${state.more ? "Less" : `+${rest.length}`}<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition ${state.more ? "rotate-180" : ""}"><path d="m6 9 6 6 6-6"/></svg></button>`
-        : "");
-    const panel = $("ra-more-panel");
-    panel.hidden = !state.more || !rest.length;
-    panel.innerHTML = rest
-      .filter((c) => c !== state.currency)
-      .map((c) => `<button type="button" data-a="currency" data-v="${c}" aria-pressed="false" title="${esc(cname(c))}" class="h-9 rounded-md border bg-card/60 px-3 font-mono text-xs transition-colors hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">${c}<span class="ml-1.5 hidden font-sans text-muted-foreground sm:inline">${esc(cname(c))}</span></button>`)
-      .join("");
+  function allCurrencies() {
+    return [...new Set((state.status?.banks ?? []).flatMap((b) => b.rates.map((r) => r.currency)))].sort();
   }
 
-  // Points for the chart: the best rate across banks (or one bank) at each saved refresh.
+  function buildCurrencies() {
+    const all = allCurrencies();
+    if (!all.includes(state.currency)) state.currency = all.includes("USD") ? "USD" : all[0] ?? "USD";
+    const rest = all.filter((c) => !MAIN.includes(c));
+    $("ra-main").innerHTML = MAIN.filter((c) => all.includes(c)).map((c) => chip(c)).join("");
+    $("ra-extra").innerHTML = MAIN.includes(state.currency) ? "" : chip(state.currency);
+    $("ra-more-list").innerHTML = rest
+      .map((c) => `<button type="button" data-a="currency" data-v="${c}" aria-pressed="false" title="${esc(cname(c))}" class="${SMALL}">${c}<span class="ml-1.5 hidden font-sans text-muted-foreground sm:inline">${esc(cname(c))}</span></button>`)
+      .join("");
+    $("ra-more-btn").hidden = !rest.length;
+    setMore(false);
+  }
+
+  function setMore(open: boolean) {
+    state.more = open;
+    const rest = allCurrencies().filter((c) => !MAIN.includes(c)).length;
+    $("ra-more").toggleAttribute("data-open", open);
+    ($("ra-more") as HTMLElement & { inert: boolean }).inert = !open;
+    $("ra-more-btn").setAttribute("aria-expanded", String(open));
+    $("ra-more-label").textContent = open ? "Less" : `+${rest}`;
+  }
+
+  function buildBanks() {
+    const sel = $("ra-bank") as HTMLSelectElement;
+    const list = [...quotes()].sort((a, b) => a.bank.name.localeCompare(b.bank.name));
+    if (state.bank !== "best" && !list.some((x) => x.bank.id === state.bank)) state.bank = "best";
+    sel.innerHTML = `<option value="best">Best bank</option>` + list.map((x) => `<option value="${x.bank.id}">${esc(short(x.bank))}</option>`).join("");
+    sel.value = state.bank;
+  }
+
+  function syncControls() {
+    root.querySelectorAll<HTMLElement>('[data-a="currency"]').forEach((b) => {
+      b.setAttribute("aria-pressed", String(b.dataset.v === state.currency));
+      if (b.closest("#ra-more-list")) b.hidden = b.dataset.v === state.currency;
+    });
+    root.querySelectorAll<HTMLElement>('[data-a="side"]').forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === state.side)));
+    root.querySelectorAll<HTMLElement>('[data-a="range"]').forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === state.range)));
+  }
+
+  // ---------- chart data ----------
   function series() {
+    if (state.historyFor !== state.currency) return [];
     const out: { t: number; v: number }[] = [];
-    const days = RANGES.find(([k]) => k === state.range)?.[1] ?? 0;
+    const days = RANGES[state.range] ?? 0;
     const cut = days ? Date.now() - days * 86_400_000 : 0;
-    for (const h of state.history ?? []) {
+    const i = state.side === "buying" ? 0 : 1;
+    for (const h of state.history) {
       const t = new Date(h.at).getTime();
       if (t < cut) continue;
-      const i = state.side === "buying" ? 0 : 1;
       const vals = Object.entries(h.rates).filter(([id]) => state.bank === "best" || id === state.bank).map(([, r]) => r[i]);
       if (!vals.length) continue;
       out.push({ t, v: state.side === "buying" ? Math.max(...vals) : Math.min(...vals) });
@@ -133,56 +243,103 @@ import { ratesBase } from "../data/rates";
     return out;
   }
 
-  function renderSummary() {
+  // ---------- summary ----------
+  let rateShown: number | null = null;
+  let raf = 0;
+  function paintRate(v: number, finalValue: number | null) {
+    const [int, dec] = v.toFixed(2).split(".");
+    const extra = finalValue !== null ? String(finalValue).split(".")[1]?.slice(2) ?? "" : "";
+    $("ra-int").textContent = int;
+    $("ra-dec").textContent = `.${dec}${extra}`;
+  }
+  function setRate(to: number) {
+    const from = rateShown ?? to;
+    rateShown = to;
+    cancelAnimationFrame(raf);
+    if (reduced() || from === to) { paintRate(to, to); return; }
+    const t0 = performance.now(), D = 520;
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / D);
+      const e = 1 - Math.pow(1 - k, 3);
+      if (k < 1) { paintRate(from + (to - from) * e, null); raf = requestAnimationFrame(step); } else paintRate(to, to);
+    };
+    raf = requestAnimationFrame(step);
+  }
+
+  function updateChange() {
+    const el = $("ra-change");
+    const pts = series();
+    if (pts.length < 2) { swap(el, ""); return; }
+    const d = pts[pts.length - 1].v - pts[0].v;
+    const pct = (d / pts[0].v) * 100;
+    const good = d === 0 ? null : state.side === "buying" ? d > 0 : d < 0;
+    el.className = `inline-block min-h-5 font-mono text-sm tabular-nums ${good === null ? "text-muted-foreground" : good ? "text-primary" : "text-[var(--danger)]"}`;
+    swap(el, `${d >= 0 ? "+" : ""}${num(d)} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%) <span class="text-muted-foreground">${state.range}</span>`, true);
+  }
+
+  function updateSummary() {
     const q = quotes();
     const side = state.side;
     const ranked = sorted(side);
     const pick = state.bank === "best" ? ranked[0] : q.find((x) => x.bank.id === state.bank) ?? ranked[0];
-    if (!pick) { $("ra-summary").innerHTML = `<p class="text-muted-foreground">No bank quotes ${state.currency} right now.</p>`; return; }
-    const value = pick[side];
-    const [int, dec] = value.toFixed(2).split(".");
-    const extra = String(value).split(".")[1]?.slice(2) ?? "";
-    const pts = series();
-    let change = "";
-    if (pts.length > 1) {
-      const d = pts[pts.length - 1].v - pts[0].v;
-      const pct = (d / pts[0].v) * 100;
-      const good = d === 0 ? null : side === "buying" ? d > 0 : d < 0;
-      const cls = good === null ? "text-muted-foreground" : good ? "text-primary" : "text-[var(--danger)]";
-      change = `<p class="font-mono text-sm tabular-nums ${cls}">${d >= 0 ? "+" : ""}${num(d)} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%) <span class="text-muted-foreground">${state.range}</span></p>`;
-    }
-    const lowestSell = sorted("selling")[0];
-    const topBuy = sorted("buying")[0];
+    if (!pick) return;
+    swap($("ra-label"), state.bank === "best" ? (side === "buying" ? "Highest buying rate" : "Lowest selling rate") : side === "buying" ? "Buying rate" : "Selling rate");
+    $("ra-cur-code").textContent = state.currency;
+    $("ra-q-code").textContent = state.currency;
+    $("ra-cur-name").textContent = `(${cname(state.currency)})`;
+    swap($("ra-name"), pick.bank.name);
+    setRate(pick[side]);
+    $("ra-rate").setAttribute("aria-label", `${num(pick[side])} rupees`);
+    $("ra-live").textContent = `${pick.bank.name}, ${side} ${num(pick[side])} rupees per ${state.currency}`;
+    const lowestSell = sorted("selling")[0], topBuy = sorted("buying")[0];
     const spread = [...q].sort((a, b) => a.selling - a.buying - (b.selling - b.buying))[0];
-    const row = (k: string, v: string, who: string) => `<div class="flex items-baseline justify-between gap-3 py-2.5"><dt class="text-sm text-muted-foreground">${k}</dt><dd class="text-right"><span class="font-mono text-sm tabular-nums">${v}</span> <span class="text-sm text-muted-foreground">${esc(who)}</span></dd></div>`;
-    const options = ranked.map((x) => `<option value="${x.bank.id}" ${x.bank.id === state.bank ? "selected" : ""}>${esc(x.bank.short || x.bank.name)}</option>`).join("");
-    $("ra-summary").innerHTML = `
-      <div class="flex items-center gap-2">
-        ${seg("side", [["selling", "Selling"], ["buying", "Buying"]], side, "Rate type")}
-        <label class="sr-only" for="ra-bank">Bank</label>
-        <select id="ra-bank" data-a="bank" class="h-9 min-w-0 flex-1 rounded-md border bg-card/60 px-2.5 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:flex-none"><option value="best" ${state.bank === "best" ? "selected" : ""}>Best bank</option>${options}</select>
-      </div>
-      <div class="flex flex-col gap-1.5">
-        <p class="text-sm text-muted-foreground">${state.bank === "best" ? (side === "buying" ? "Highest buying rate" : "Lowest selling rate") : side === "buying" ? "Buying rate" : "Selling rate"} · 1 ${state.currency} <span class="hidden sm:inline">(${esc(cname(state.currency))})</span></p>
-        <h2 class="text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">${esc(pick.bank.name)}</h2>
-        <p class="font-mono tabular-nums leading-none" aria-label="${num(value)} rupees"><span class="mr-1 text-xl text-muted-foreground">Rs</span><span class="text-5xl font-semibold tracking-tight sm:text-6xl">${int}</span><span class="text-2xl text-muted-foreground sm:text-3xl">.${dec}${extra}</span></p>
-        ${change}
-      </div>
-      <dl class="divide-y border-y">
-        ${row("Lowest selling", num(lowestSell.selling), lowestSell.bank.short || lowestSell.bank.name)}
-        ${row("Highest buying", num(topBuy.buying), topBuy.bank.short || topBuy.bank.name)}
-        ${row("Smallest spread", num(spread.selling - spread.buying), spread.bank.short || spread.bank.name)}
-        ${row(`Banks quoting ${state.currency}`, String(q.length), "")}
-      </dl>`;
+    swap($("ra-s-sell"), num(lowestSell.selling)); swap($("ra-s-sell-who"), short(lowestSell.bank));
+    swap($("ra-s-buy"), num(topBuy.buying)); swap($("ra-s-buy-who"), short(topBuy.bank));
+    swap($("ra-s-spread"), num(spread.selling - spread.buying)); swap($("ra-s-spread-who"), short(spread.bank));
+    swap($("ra-s-count"), String(q.length));
+    swap($("ra-chart-title"), `${state.bank === "best" ? "Best" : "Bank"} ${side} rate over time`);
+    updateChange();
   }
 
-  function renderChart() {
+  // ---------- table (rows slide to their new place) ----------
+  function updateTable() {
+    const side = state.side;
+    const rows = sorted(side);
+    const best = rows[0];
+    const tbody = $("ra-tbody");
+    const prev = new Map<string, { top: number; cells: string[] }>();
+    tbody.querySelectorAll<HTMLElement>("tr[data-id]").forEach((tr) =>
+      prev.set(tr.dataset.id!, { top: tr.getBoundingClientRect().top, cells: [...tr.querySelectorAll("td")].map((td) => td.textContent || "") }));
+    $("ra-cap").textContent = `${state.currency} rates by bank, best ${side} rate first`;
+    const cell = (v: number, on: boolean) => `<td class="px-3 py-3 text-right font-mono tabular-nums sm:px-4 ${on ? "font-semibold text-primary" : ""}">${num(v)}</td>`;
+    tbody.innerHTML = rows.map((r) => {
+      const isBest = r === best;
+      return `<tr data-id="${r.bank.id}" class="${isBest ? "bg-primary/5" : ""}"><th scope="row" class="px-3 py-3 text-left font-medium sm:px-4"><span class="flex flex-wrap items-center gap-2">${esc(r.bank.name)}${isBest ? `<span class="rounded border border-primary/40 px-1.5 py-0.5 font-mono text-[11px] font-normal text-primary">Best</span>` : ""}${stale(r.bank) ? `<span class="rounded border px-1.5 py-0.5 font-mono text-[11px] font-normal text-[var(--warning)]" title="This bank's rates are more than 7 hours old or its last update failed">Stale</span>` : ""}</span></th>${cell(r.selling, isBest && side === "selling")}${cell(r.buying, isBest && side === "buying")}<td class="hidden px-4 py-3 text-right font-mono tabular-nums text-muted-foreground sm:table-cell">${num(r.selling - r.buying)}</td><td class="hidden px-4 py-3 text-muted-foreground md:table-cell">${bankClock(r.bank.bankUpdatedAt)}</td></tr>`;
+    }).join("");
+    $("ra-table-skel").hidden = true;
+    $("ra-table-wrap").hidden = false;
+    if (reduced() || !prev.size) return;
+    tbody.querySelectorAll<HTMLElement>("tr[data-id]").forEach((tr) => {
+      const p = prev.get(tr.dataset.id!);
+      if (!p) return;
+      const dy = p.top - tr.getBoundingClientRect().top;
+      if (Math.abs(dy) > 1) tr.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 440, easing: EASE });
+      tr.querySelectorAll("td").forEach((td, i) => {
+        if (p.cells[i] !== td.textContent) td.animate([{ opacity: 0, transform: "translateY(5px)" }, { opacity: 1, transform: "none" }], { duration: 300, easing: EASE });
+      });
+    });
+  }
+
+  // ---------- chart ----------
+  function updateChart() {
+    const body = $("ra-chart-body");
     const pts = series();
     const W = 640, H = 240, L = 8, R = 56, T = 12, B = 26;
-    const head = `<div class="flex flex-wrap items-center justify-between gap-2"><p class="text-sm text-muted-foreground">${state.bank === "best" ? "Best" : "Bank"} ${state.side} rate over time</p>${seg("range", RANGES.map(([k]) => [k, k]), state.range, "Range")}</div>`;
-    if (!state.history) { $("ra-chart").innerHTML = head + `<div class="h-56 animate-pulse rounded-md bg-muted"></div>`; return; }
+    // Another currency is still loading: keep the old chart, dimmed, instead of flashing an empty one.
+    if (state.historyFor !== state.currency) { if (state.ready) body.classList.add("opacity-40"); return; }
+    body.classList.remove("opacity-40");
     if (pts.length < 2) {
-      $("ra-chart").innerHTML = head + `<div class="flex h-56 flex-col items-center justify-center gap-1 rounded-md border border-dashed px-6 text-center"><p class="font-medium">The history line starts here.</p><p class="text-sm text-muted-foreground">A point is added every 3 hours. ${pts.length} so far in this range.</p></div>`;
+      body.innerHTML = `<div class="ra-in flex h-56 flex-col items-center justify-center gap-1 rounded-md border border-dashed px-6 text-center"><p class="font-medium">The history line starts here.</p><p class="text-sm text-muted-foreground">A point is added every 3 hours. ${pts.length} so far in this range.</p></div>`;
       return;
     }
     const ts = pts.map((p) => p.t), vs = pts.map((p) => p.v);
@@ -193,27 +350,39 @@ import { ratesBase } from "../data/rates";
     const x = (t: number) => L + ((t - t0) / (t1 - t0 || 1)) * (W - L - R);
     const y = (v: number) => T + (1 - (v - lo) / (hi - lo)) * (H - T - B);
     const line = pts.map((p, i) => `${i ? "L" : "M"}${x(p.t).toFixed(1)} ${y(p.v).toFixed(1)}`).join("");
+    const area = `${line}L${x(pts[pts.length - 1].t).toFixed(1)} ${H - B}L${x(pts[0].t).toFixed(1)} ${H - B}Z`;
     const grid = [0, 1, 2, 3].map((i) => {
       const v = lo + ((hi - lo) * i) / 3;
       return `<line x1="${L}" x2="${W - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="var(--border)" stroke-width="1" /><text x="${W - R + 8}" y="${(y(v) + 4).toFixed(1)}" fill="var(--muted-foreground)" font-size="11" font-family="var(--font-mono)">${v.toFixed(2)}</text>`;
     }).join("");
     const label = (t: number) => new Date(t).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Asia/Colombo" });
-    $("ra-chart").innerHTML = head + `
+    body.innerHTML = `
       <div class="relative">
         <svg id="ra-svg" viewBox="0 0 ${W} ${H}" class="h-auto w-full touch-pan-y select-none" role="img" aria-label="${state.currency} ${state.side} rate from ${num(vs[0])} to ${num(vs[vs.length - 1])} between ${label(t0)} and ${label(t1)}">
-          ${grid}
-          <path d="${line}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
+          <g class="ra-in">${grid}
           <text x="${L}" y="${H - 6}" fill="var(--muted-foreground)" font-size="11" font-family="var(--font-mono)">${label(t0)}</text>
-          <text x="${W - R}" y="${H - 6}" text-anchor="end" fill="var(--muted-foreground)" font-size="11" font-family="var(--font-mono)">${label(t1)}</text>
+          <text x="${W - R}" y="${H - 6}" text-anchor="end" fill="var(--muted-foreground)" font-size="11" font-family="var(--font-mono)">${label(t1)}</text></g>
+          <path class="ra-in" style="animation-delay:.35s" d="${area}" fill="var(--primary)" fill-opacity="0.07" />
+          <path id="ra-line" d="${line}" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" />
           <line id="ra-cur" y1="${T}" y2="${H - B}" stroke="var(--muted-foreground)" stroke-dasharray="3 3" visibility="hidden" />
           <circle id="ra-dot" r="4" fill="var(--primary)" stroke="var(--card)" stroke-width="2" visibility="hidden" />
           <rect id="ra-hit" x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent" />
         </svg>
         <div id="ra-tip" class="pointer-events-none absolute z-10 hidden rounded-md border bg-background px-2.5 py-1.5 font-mono text-xs shadow-sm"></div>
       </div>
-      <dl class="mt-auto grid grid-cols-3 gap-4 border-t pt-4">
+      <dl class="ra-in mt-auto grid grid-cols-3 gap-4 border-t pt-4">
         ${[["Low", num(Math.min(...vs))], ["High", num(Math.max(...vs))], ["Updates", String(pts.length)]].map(([k, v]) => `<div><dt class="text-xs text-muted-foreground">${k} · ${state.range}</dt><dd class="font-mono text-sm tabular-nums">${v}</dd></div>`).join("")}
       </dl>`;
+    // Draw the line from left to right.
+    const path = $("ra-line") as unknown as SVGPathElement;
+    if (!reduced()) {
+      const len = path.getTotalLength();
+      path.style.strokeDasharray = String(len);
+      path.style.strokeDashoffset = String(len);
+      void path.getBoundingClientRect();
+      path.style.transition = `stroke-dashoffset 0.8s ${EASE}`;
+      path.style.strokeDashoffset = "0";
+    }
     const svg = $("ra-svg") as unknown as SVGSVGElement, tip = $("ra-tip");
     const cur = $("ra-cur"), dot = $("ra-dot");
     const move = (e: PointerEvent) => {
@@ -235,43 +404,25 @@ import { ratesBase } from "../data/rates";
     hit.addEventListener("pointermove", move); hit.addEventListener("pointerleave", hide);
   }
 
-  function renderTable() {
-    const side = state.side;
-    const rows = sorted(side);
-    const best = rows[0];
-    const head = (t: string, cls = "") => `<th scope="col" class="px-3 py-3 text-left font-mono text-xs font-normal text-muted-foreground sm:px-4 ${cls}">${t}</th>`;
-    $("ra-table").innerHTML = `
-      <div class="overflow-x-auto"><table class="w-full border-collapse text-sm">
-        <caption class="sr-only">${state.currency} rates by bank, best ${side} rate first</caption>
-        <thead class="border-b"><tr>${head("Bank")}${head("Selling", "text-right")}${head("Buying", "text-right")}${head("Spread", "hidden text-right sm:table-cell")}${head("Bank updated", "hidden md:table-cell")}</tr></thead>
-        <tbody class="divide-y">${rows.map((r) => {
-          const isBest = r === best;
-          const old = stale(r.bank);
-          const cell = (v: number, on: boolean) => `<td class="px-3 py-3 text-right font-mono tabular-nums sm:px-4 ${on ? "font-semibold text-primary" : ""}">${num(v)}</td>`;
-          return `<tr class="${isBest ? "bg-primary/5" : ""}"><th scope="row" class="px-3 py-3 text-left font-medium sm:px-4"><span class="flex flex-wrap items-center gap-2">${esc(r.bank.name)}${isBest ? `<span class="rounded border border-primary/40 px-1.5 py-0.5 font-mono text-[11px] font-normal text-primary">Best</span>` : ""}${old ? `<span class="rounded border px-1.5 py-0.5 font-mono text-[11px] font-normal text-[var(--warning)]" title="This bank's rates are more than 7 hours old or its last update failed">Stale</span>` : ""}</span></th>${cell(r.selling, isBest && side === "selling")}${cell(r.buying, isBest && side === "buying")}<td class="hidden px-4 py-3 text-right font-mono tabular-nums text-muted-foreground sm:table-cell">${num(r.selling - r.buying)}</td><td class="hidden px-4 py-3 text-muted-foreground md:table-cell">${bankClock(r.bank.bankUpdatedAt)}</td></tr>`;
-        }).join("")}</tbody></table></div>`;
-  }
-
   function renderDaily() {
     const body = $("ra-daily-body");
-    const hist = state.history;
-    if (!hist?.length) { body.innerHTML = `<p class="py-3 text-sm text-muted-foreground">No history yet.</p>`; return; }
-    const names = Object.fromEntries((state.status?.banks ?? []).map((b) => [b.id, b.short || b.name]));
-    const days = new Map<string, { bb: [number, string]; wb: [number, string]; bs: [number, string]; ws: [number, string]; at: string }>();
+    const hist = state.historyFor === state.currency ? state.history : [];
+    if (!hist.length) { body.innerHTML = `<p class="py-3 text-sm text-muted-foreground">No history yet.</p>`; return; }
+    const bankNames = Object.fromEntries((state.status?.banks ?? []).map((b) => [b.id, short(b)]));
+    const days = new Map<string, { bb: [number, string]; wb: [number, string]; bs: [number, string]; ws: [number, string] }>();
     for (const h of hist) {
       const day = new Date(h.at).toLocaleDateString("en-CA", { timeZone: "Asia/Colombo" });
       for (const [id, [buy, sell]] of Object.entries(h.rates)) {
-        const d = days.get(day) ?? { bb: [-Infinity, ""], wb: [Infinity, ""], bs: [Infinity, ""], ws: [-Infinity, ""], at: h.at };
+        const d = days.get(day) ?? { bb: [-Infinity, ""], wb: [Infinity, ""], bs: [Infinity, ""], ws: [-Infinity, ""] };
         if (buy > d.bb[0]) d.bb = [buy, id];
         if (buy < d.wb[0]) d.wb = [buy, id];
         if (sell < d.bs[0]) d.bs = [sell, id];
         if (sell > d.ws[0]) d.ws = [sell, id];
-        d.at = h.at;
         days.set(day, d);
       }
     }
     const th = (t: string, cls = "") => `<th scope="col" class="py-3 pr-4 text-left font-mono text-xs font-normal text-muted-foreground ${cls}">${t}</th>`;
-    const cell = (p: [number, string], strong = false) => `<td class="py-3 pr-4 text-right font-mono tabular-nums ${strong ? "font-semibold" : "text-muted-foreground"}">${num(p[0])}<span class="block text-xs font-sans font-normal text-muted-foreground">${esc(names[p[1]] ?? p[1])}</span></td>`;
+    const cell = (p: [number, string], strong = false) => `<td class="py-3 pr-4 text-right font-mono tabular-nums ${strong ? "font-semibold" : "text-muted-foreground"}">${num(p[0])}<span class="block text-xs font-sans font-normal text-muted-foreground">${esc(bankNames[p[1]] ?? p[1])}</span></td>`;
     body.innerHTML = `<table class="w-full min-w-[34rem] border-collapse text-sm"><caption class="sr-only">${state.currency} best and worst rates per day</caption><thead class="border-b"><tr>${th("Day")}${th("Best selling", "text-right")}${th("Worst selling", "text-right")}${th("Best buying", "text-right")}${th("Worst buying", "text-right")}</tr></thead><tbody class="divide-y">${
       [...days.entries()].reverse().slice(0, 14).map(([day, d]) => `<tr><th scope="row" class="py-3 pr-4 text-left font-medium">${new Date(day + "T00:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}</th>${cell(d.bs, true)}${cell(d.ws)}${cell(d.bb, true)}${cell(d.wb)}</tr>`).join("")
     }</tbody></table>`;
@@ -284,8 +435,7 @@ import { ratesBase } from "../data/rates";
       : "Loading rates…";
   }
 
-  function renderAll() { renderStatus(); renderCurrencies(); renderSummary(); renderChart(); renderTable(); renderDaily(); }
-
+  // ---------- loading ----------
   async function json<T>(path: string): Promise<T> {
     const res = await fetch(`${base}/${path}`, { cache: "no-cache" });
     if (!res.ok) throw new Error(String(res.status));
@@ -294,32 +444,53 @@ import { ratesBase } from "../data/rates";
 
   function fail() {
     $("ra-status").textContent = "Could not load the rates.";
-    $("ra-summary").innerHTML = `<div role="alert" class="flex flex-col items-start gap-3"><p class="font-medium">The rates did not load.</p><p class="text-sm text-muted-foreground">Check your connection and try again. The data refreshes every 3 hours.</p><button type="button" data-a="retry" class="h-9 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Try again</button></div>`;
+    $("ra-sum-skel").hidden = true;
+    $("ra-error").hidden = false;
   }
 
   async function loadHistory() {
-    state.history = null;
-    renderChart();
-    try { state.history = await json<Snap[]>(`history/${state.currency}.json`); } catch { state.history = []; }
-    renderSummary(); renderChart(); renderDaily();
+    const cur = state.currency;
+    let data: Snap[] = [];
+    try { data = await json<Snap[]>(`history/${cur}.json`); } catch { /* an empty history still renders */ }
+    if (cur !== state.currency) return; // switched again while loading
+    state.history = data;
+    state.historyFor = cur;
+    updateChange(); updateChart(); renderDaily();
   }
 
   async function loadStatus() {
     try {
       const prev = state.status?.lastRefresh?.at;
       state.status = await json<Status>("status.json");
-      renderAll();
-      if (!state.history || prev !== state.status.lastRefresh?.at) await loadHistory();
-    } catch { if (!state.status) fail(); }
+      $("ra-error").hidden = true;
+      const first = !state.ready;
+      if (first || !allCurrencies().includes(state.currency)) buildCurrencies();
+      buildBanks();
+      syncControls();
+      renderStatus();
+      const body = $("ra-sum-body");
+      if (first) {
+        $("ra-sum-skel").hidden = true;
+        body.hidden = false;
+        if (!reduced()) body.classList.add("ra-in");
+      }
+      updateSummary();
+      updateTable();
+      state.ready = true;
+      if (first || prev !== state.status.lastRefresh?.at) await loadHistory();
+    } catch { if (!state.ready) fail(); }
   }
 
   function setCurrency(c: string) {
+    if (c === state.currency) return;
     state.currency = c; state.bank = "best";
     const u = new URL(location.href);
     c === "USD" ? u.searchParams.delete("c") : u.searchParams.set("c", c);
     history.replaceState(null, "", u);
-    state.more = false;
-    renderCurrencies(); renderSummary(); renderTable(); loadHistory();
+    $("ra-extra").innerHTML = MAIN.includes(c) ? "" : chip(c, "ra-in");
+    setMore(false);
+    buildBanks(); syncControls(); updateSummary(); updateTable(); updateChart();
+    loadHistory();
   }
 
   root.addEventListener("click", (e) => {
@@ -328,23 +499,20 @@ import { ratesBase } from "../data/rates";
     const v = el.dataset.v ?? "";
     switch (el.dataset.a) {
       case "currency": setCurrency(v); break;
-      case "side": state.side = v as Side; renderSummary(); renderChart(); renderTable(); break;
-      case "range": state.range = v; renderSummary(); renderChart(); break;
+      case "side": state.side = v as Side; syncControls(); updateSummary(); updateTable(); updateChart(); break;
+      case "range": state.range = v; syncControls(); updateChange(); swap($("ra-chart-title"), $("ra-chart-title").textContent || ""); updateChart(); break;
       case "retry": loadStatus(); break;
-      case "more": state.more = !state.more; renderCurrencies(); break;
-      case "install": install(); break;
-      case "later": dismissInstall(); break;
-      case "ios": $("ra-ios").hidden = !$("ra-ios").hidden; break;
+      case "more": setMore(!state.more); break;
     }
   });
   root.addEventListener("change", (e) => {
     const el = e.target as HTMLSelectElement;
-    if (el.dataset.a === "currency-select" && el.value) setCurrency(el.value);
-    if (el.dataset.a === "bank") { state.bank = el.value; renderSummary(); renderChart(); }
+    if (el.dataset.a === "bank") { state.bank = el.value; updateSummary(); updateChart(); }
   });
 
-  // Install as an app: Chrome and Edge offer a prompt, iPhone and iPad need Add to Home Screen.
-  // Never shown once installed (or opened as an app); "Not now" hides it for 30 days.
+  // ---------- install notice: a slim bar above the site header ----------
+  // Shown on phones when the browser can install the app (Chrome, Edge) or on iPhone and iPad (Add to Home Screen).
+  // Never shown once installed or opened as an app. The close button hides it for 30 days.
   type Deferred = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
   const IKEY = "lkr-installed", DKEY = "lkr-install-later";
   const lsGet = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -352,26 +520,35 @@ import { ratesBase } from "../data/rates";
   const isApp = () => matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
   const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const phone = () => matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+  const bar = document.getElementById("ra-install");
   let deferred: Deferred | null = null;
 
+  function hideBar() {
+    if (!bar || bar.hidden) return;
+    bar.removeAttribute("data-open");
+    setTimeout(() => { bar.hidden = true; }, reduced() ? 0 : 320);
+  }
   function renderInstall() {
-    const box = $("ra-install");
+    if (!bar) return;
     const later = Number(lsGet(DKEY) || 0);
     const hide = isApp() || lsGet(IKEY) || Date.now() - later < 30 * 86_400_000 || !phone() || !(deferred || isIos);
-    box.hidden = !!hide;
-    if (hide) return;
-    box.innerHTML = `
-      <div class="flex items-center gap-3">
-        <img src="/lkr/icon-192.png" alt="" width="44" height="44" class="size-11 shrink-0 rounded-xl" />
-        <div class="min-w-0 flex-1"><p class="font-medium leading-tight">Install LKR Rates</p><p class="text-sm text-muted-foreground">Open today's rates from your home screen. Works offline.</p></div>
-      </div>
-      <div class="flex items-center gap-2">
-        <button type="button" data-a="${deferred ? "install" : "ios"}" class="h-9 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">${deferred ? "Install" : "How to install"}</button>
-        <button type="button" data-a="later" class="h-9 rounded-md px-3 text-sm text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Not now</button>
-      </div>
-      ${deferred ? "" : `<p id="ra-ios" hidden class="text-sm leading-relaxed text-muted-foreground">Tap the Share button in Safari, then choose <span class="text-foreground">Add to Home Screen</span>.</p>`}`;
+    if (hide) { hideBar(); return; }
+    bar.innerHTML = `
+      <div class="overflow-hidden">
+        <div class="mx-auto flex max-w-3xl flex-wrap items-center gap-x-3 gap-y-1 px-4 py-2">
+          <img src="/lkr/icon-192.png" alt="" width="24" height="24" class="size-6 shrink-0" />
+          <p class="min-w-0 flex-1 truncate text-sm"><span class="font-medium">Install LKR Rates</span><span class="hidden text-muted-foreground sm:inline"> · today's rates from your home screen</span></p>
+          <button type="button" data-a="${deferred ? "install" : "ios"}" class="h-7 shrink-0 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground transition hover:bg-primary/85 active:scale-[0.97] focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">${deferred ? "Install" : "How to"}</button>
+          <button type="button" data-a="later" aria-label="Close install notice" class="inline-flex size-7 shrink-0 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          ${deferred ? "" : `<p id="ra-ios" hidden class="basis-full pb-1 text-xs leading-relaxed text-muted-foreground">Tap the Share button in Safari, then choose <span class="text-foreground">Add to Home Screen</span>.</p>`}
+        </div>
+      </div>`;
+    if (bar.hidden) {
+      bar.hidden = false;
+      void bar.offsetHeight; // start from the collapsed state so the height animates
+      setTimeout(() => bar.setAttribute("data-open", ""), 30);
+    }
   }
-  function dismissInstall() { lsSet(DKEY, String(Date.now())); $("ra-install").hidden = true; }
   async function install() {
     if (!deferred) return;
     await deferred.prompt();
@@ -380,6 +557,13 @@ import { ratesBase } from "../data/rates";
     if (outcome === "accepted") lsSet(IKEY, "1");
     renderInstall();
   }
+  bar?.addEventListener("click", (e) => {
+    const el = (e.target as HTMLElement).closest<HTMLElement>("[data-a]");
+    if (!el) return;
+    if (el.dataset.a === "install") install();
+    if (el.dataset.a === "later") { lsSet(DKEY, String(Date.now())); hideBar(); }
+    if (el.dataset.a === "ios") { const p = document.getElementById("ra-ios"); if (p) p.hidden = !p.hidden; }
+  });
   window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e as Deferred; renderInstall(); });
   window.addEventListener("appinstalled", () => { lsSet(IKEY, "1"); deferred = null; renderInstall(); });
   matchMedia("(display-mode: standalone)").addEventListener("change", renderInstall);

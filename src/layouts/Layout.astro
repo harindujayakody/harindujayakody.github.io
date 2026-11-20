@@ -21,11 +21,15 @@ const {
   noindex = false,
   jsonLd = [],
   csp,
+  icon = "/favicon.jpg",
+  appleIcon = "/favicon.jpg",
 }: {
   title?: string; description?: string; image?: string; type?: "website" | "article";
   published?: Date; modified?: Date; noindex?: boolean; jsonLd?: object[];
   /** Content-Security-Policy for this page only (meta tag, so first in <head>). */
   csp?: string;
+  /** Tab icon and iOS home-screen icon, for pages with their own identity (a tool). */
+  icon?: string; appleIcon?: string;
 } = Astro.props;
 const titles = Object.fromEntries((await getPosts()).map((p) => [p.id, p.data.title]));
 const path = Astro.url.pathname;
@@ -93,8 +97,9 @@ const nav = [
     <meta name="twitter:card" content={large ? "summary_large_image" : "summary"} />
     <meta name="twitter:site" content="@harindu522" />
     <meta name="twitter:creator" content="@harindu522" />
-    <link rel="icon" href="/favicon.jpg" type="image/jpeg" />
-    <link rel="apple-touch-icon" href="/favicon.jpg" />
+    <link rel="icon" href={icon} type={icon.endsWith(".png") ? "image/png" : "image/jpeg"} />
+    <link rel="apple-touch-icon" href={appleIcon} />
+    <slot name="head" />
     {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
     <script is:inline type="speculationrules" set:html={JSON.stringify(speculation)} />
     <script is:inline>

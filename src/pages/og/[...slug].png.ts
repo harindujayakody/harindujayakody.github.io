@@ -20,7 +20,7 @@ export async function getStaticPaths() {
     })),
     { params: { slug: "index" }, props: { title: author.name, kicker: "Founder of Infiax", meta: "Web apps · browser extensions · tools", cmd: "whoami" } },
     { params: { slug: "blog" }, props: { title: "Notes on AI tools, Windows fixes and building for the web", kicker: "Blog", meta: `${posts.length} posts`, cmd: "ls ./posts" } },
-    { params: { slug: "free-tools" }, props: { title: "Free online tools", kicker: "Free tools", meta: "No sign-up · nothing saved on a server", cmd: "ls ~/free-tools", desc: "Small tools I built and made public: HTTP status codes, a Sri Lanka NIC decoder, a 2FA code generator and an anti detect browser.", tags: ["HTTP", "NIC", "TOTP", "Open source"] } },
+    { params: { slug: "free-tools" }, props: { title: "Free online tools", kicker: "Free tools", meta: "No sign-up · nothing saved on a server", cmd: "ls ~/free-tools", desc: "Small tools I built and made public: HTTP status codes, a Sri Lanka NIC decoder, a 2FA code generator, an anti detect browser and Sri Lankan bank exchange rates.", tags: ["HTTP", "NIC", "TOTP", "Open source"] } },
     ...freeTools.map((t) => ({
       params: { slug: `free-tools/${t.slug}` },
       props: { title: t.name, kicker: t.tags.includes("Download") ? "Free download" : "Free tool", meta: t.tags.includes("Download") ? "Windows and Mac · open source" : "Runs in your browser · no sign-up", cmd: `./${t.slug}`, desc: t.desc, tags: t.tags.slice(0, 4) },

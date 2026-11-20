@@ -52,6 +52,16 @@ export const freeTools: FreeTool[] = [
     source: "https://github.com/harindujayakody/octopus-agent",
     post: "/blog/octopus-agent-free-anti-detect-web-browser/",
   },
+  {
+    slug: "exchange-rates",
+    name: "Sri Lankan bank exchange rates",
+    href: "/free-tools/exchange-rates/",
+    desc: "Buying and selling rates from 9 Sri Lankan banks side by side, updated every 3 hours.",
+    tags: ["Sri Lanka", "Finance", "Open source"],
+    updated: new Date("2026-11-20"),
+    source: "https://github.com/harindujayakody/exchange-rates-srilanka",
+    post: "/blog/sri-lanka-bank-exchange-rates-compare-free/",
+  },
 ];
 
 export const toolsUpdated = new Date(Math.max(...freeTools.map((t) => +t.updated)));

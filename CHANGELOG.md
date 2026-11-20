@@ -2,6 +2,12 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.31.0] - 2026-11-20
+
+### Added
+- Free tool: Sri Lankan bank exchange rates at `/free-tools/exchange-rates/`. A landing page with screenshots, the 9 banks, features and an FAQ (WebApplication, FAQPage and breadcrumb data), linking to the live app, which is a separate static site on Cloudflare Pages. It has its own card and share image on `/free-tools/`.
+- Blog post "Compare Sri Lankan Bank Exchange Rates for Free, Updated Every 3 Hours", with cover and screenshots.
+
 ## [1.30.2] - 2026-11-20
 
 ### Changed

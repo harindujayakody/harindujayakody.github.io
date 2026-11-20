@@ -1,0 +1,133 @@
+---
+import { Image } from "astro:assets";
+import Layout from "../../layouts/Layout.astro";
+import StarCard from "../../components/StarCard.astro";
+import logo from "../../assets/lkr/lkr-logo.png";
+import home from "../../assets/lkr/rates-home.png";
+import history from "../../assets/lkr/rates-history.png";
+
+const title = "Sri Lankan Bank Exchange Rates Today: Compare 9 Banks · Harindu Jayakody";
+const description =
+  "Compare USD, EUR, GBP and 20+ other currencies from 9 Sri Lankan banks side by side. Buying and selling TT rates, updated every 3 hours, with rate history. Free and open source.";
+const url = new URL("/free-tools/exchange-rates/", Astro.site).href;
+const app = "https://exchange-rates-657.pages.dev/";
+const repo = "https://github.com/harindujayakody/exchange-rates-srilanka";
+
+const banks = ["Commercial Bank", "Bank of Ceylon", "People's Bank", "Sampath Bank", "NDB Bank", "Seylan Bank", "Nations Trust Bank", "DFCC Bank", "National Savings Bank"];
+
+const features: [string, string][] = [
+  ["The best bank first", "Pick a currency and the page names the bank that pays the most rupees for it today, with the rate in large type and how it moved this week."],
+  ["Buying and selling", "Switch between what banks pay you and what they charge you. See the lowest selling rate and the smallest spread at a glance."],
+  ["Rate history", "Every refresh is saved. See the best and worst rate of each day, with the bank behind it, over a week, a month, six months or longer."],
+  ["Share a rate card", "One tap makes a rate image you can send on WhatsApp, Telegram or Instagram."],
+  ["Install it as an app", "Add it to your phone's home screen or your desktop. The last rates stay readable offline."],
+  ["Open source", "MIT licence. Read the code, report a wrong number, or run your own copy."],
+];
+
+const faqs: [string, string][] = [
+  ["Which Sri Lankan bank pays the most for dollars?", "It changes through the day, which is why the page exists. Open it, pick USD, and the top panel names the bank with the highest buying rate right now."],
+  ["What is the difference between buying and selling?", "Buying is what the bank pays you in rupees when you give it foreign currency. Selling is what you pay the bank when you buy foreign currency from it."],
+  ["How often are the rates updated?", "Every 3 hours. The page shows when it was last updated and when the next update is due."],
+  ["Where do the rates come from?", "Each bank's own public rates page. A free AI model copies the numbers from each row and code checks them, so a row that looks wrong is dropped. Sampath publishes data directly, so it skips the model."],
+  ["Which rates does it show?", "Telegraphic transfer (TT) rates in LKR for one unit of foreign currency. It does not show notes or cheque rates."],
+  ["Are these the rates I will get at the bank?", "They are indicative. Banks change rates during the day and the offer can depend on the amount, so confirm with your bank before you transact."],
+  ["Which banks are missing?", "Pan Asia Banking and HNB. Their pages need a real browser to show the rates, so they are not included yet."],
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: "LKR Rates",
+    url: app,
+    description,
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Any",
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    codeRepository: repo,
+    author: { "@id": `${Astro.site!.href}#person` },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { name: "Home", item: "/" },
+      { name: "Free tools", item: "/free-tools/" },
+      { name: "Bank exchange rates", item: "/free-tools/exchange-rates/" },
+    ].map((b, i) => ({ "@type": "ListItem", position: i + 1, name: b.name, item: new URL(b.item, Astro.site).href })),
+  },
+];
+---
+<Layout title={title} description={description} jsonLd={jsonLd} image="/og/free-tools/exchange-rates.png">
+  <div class="flex flex-col gap-16">
+    <header class="flex flex-col gap-6">
+      <div class="rise flex items-center gap-4">
+        <Image src={logo} alt="LKR Rates logo" width={72} height={72} densities={[1, 2]} class="size-[72px] rounded-2xl" />
+        <p class="font-mono text-sm text-primary">$ ./lkr-rates --banks 9</p>
+      </div>
+      <h1 class="rise text-4xl font-semibold leading-tight sm:text-6xl" style="--d:80ms">Compare Sri Lankan bank exchange rates</h1>
+      <p class="rise max-w-xl text-lg text-muted-foreground" style="--d:160ms">See which of 9 banks pays the most for your dollars, euros and pounds today. Buying and selling rates, updated every 3 hours, with history.</p>
+      <div class="rise flex flex-wrap items-center gap-3" style="--d:240ms">
+        <a href={app} target="_blank" rel="noopener" class="inline-flex h-12 items-center gap-2.5 rounded-md bg-primary px-6 text-base font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Open the rates</a>
+        <a href="/blog/sri-lanka-bank-exchange-rates-compare-free/" class="inline-flex h-12 items-center rounded-md border bg-card/60 px-6 text-base font-medium transition hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Read how it works</a>
+      </div>
+      <p class="rise flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs text-muted-foreground" style="--d:300ms">
+        <span>Free</span><span>·</span><span>No sign-up</span><span>·</span><span>MIT licence</span><span>·</span>
+        <a href={repo} target="_blank" rel="noopener" class="hover:text-primary">source on GitHub</a>
+      </p>
+    </header>
+
+    <section aria-label="Screenshot" class="reveal">
+      <Image src={home} alt="LKR Rates home screen: the bank paying the most for USD, a currency list and a rate chart" widths={[480, 768, 1280]} sizes="(min-width: 768px) 736px, 100vw" loading="eager" class="w-full rounded-xl border" />
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ ls banks</h2>
+      <ul class="reveal flex flex-wrap gap-2">
+        {banks.map((b) => <li class="rounded-full border bg-card/60 px-3.5 py-1.5 text-sm">{b}</li>)}
+      </ul>
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ ls features</h2>
+      <ul class="grid gap-3 sm:grid-cols-2">
+        {features.map(([name, text]) => (
+          <li class="reveal flex flex-col gap-1.5 rounded-xl border bg-card/70 p-5">
+            <h3 class="font-semibold">{name}</h3>
+            <p class="text-sm leading-relaxed text-muted-foreground">{text}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="flex flex-col gap-5">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ cat history.md</h2>
+      <Image src={history} alt="The Rate history page with the best and worst USD buying and selling rates for each day" widths={[480, 768, 1280]} sizes="(min-width: 768px) 736px, 100vw" class="reveal w-full rounded-xl border" />
+    </section>
+
+    <section class="flex flex-col gap-4">
+      <h2 class="reveal font-mono text-sm text-muted-foreground">$ cat faq.md</h2>
+      <div class="flex flex-col divide-y rounded-xl border bg-card/50">
+        {faqs.map(([q, a]) => (
+          <details class="reveal group px-5 py-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-3 font-medium [&::-webkit-details-marker]:hidden">
+              {q}<span aria-hidden="true" class="transition group-open:rotate-180">▾</span>
+            </summary>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{a}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <section class="flex flex-col items-start gap-3">
+      <p class="reveal text-sm text-muted-foreground">Rates are indicative. Confirm with your bank before you transact. Read the full write-up in <a href="/blog/sri-lanka-bank-exchange-rates-compare-free/" class="text-primary hover:underline">the blog post</a>.</p>
+      <StarCard repo="harindujayakody/exchange-rates-srilanka" />
+    </section>
+  </div>
+</Layout>

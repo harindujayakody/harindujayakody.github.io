@@ -10,15 +10,13 @@ imageAlt: "The LKR Rates logo next to the headline Sri Lankan bank exchange rate
 draft: false
 ---
 
-If you send money home or sell dollars in Sri Lanka, the rate you get depends a lot on the bank. Finding the best one means opening nine bank websites, and each lays out its table differently. So I built a page that does it for you: **[LKR Rates](https://exchange-rates-657.pages.dev/)**. It is free, it needs no account, and the code is open source.
-
-You can also open it from the [tool page](/free-tools/exchange-rates/) on this site.
+If you send money home or sell dollars in Sri Lanka, the rate you get depends a lot on the bank. Finding the best one means opening nine bank websites, and each lays out its table differently. So I built a page that does it for you: **[LKR Rates](/free-tools/exchange-rates/)**, and it runs right on this site. It is free, it needs no account, and the code is open source.
 
 ## What you see
 
-Pick a currency and the page shows which bank pays the most for it today, in large type, with how the rate has moved over the last week. Under that you get the lowest selling rate, the smallest gap between buying and selling, and how many banks quote that currency.
+Pick a currency and the page shows which bank pays the most for it today, in large type, with how the rate has moved over the last week. Under that you get the lowest selling rate, the smallest gap between buying and selling, and how many banks quote that currency. A table below ranks every bank for the rate type you picked.
 
-![The LKR Rates home screen showing the best USD buying rate, a currency list and a chart](./images/exchange-rates-home.png)
+![The exchange rates tool on harindujayakody.com showing the best USD buying rate, a chart and a table of banks](./images/exchange-rates-home.png)
 
 A few things to know when you read it:
 
@@ -34,15 +32,13 @@ Commercial Bank, Bank of Ceylon, People's Bank, Sampath Bank, NDB Bank, Seylan B
 
 ## Rate history
 
-Every refresh is saved, so the History page can show the best and worst buying and selling rate for each day, with the bank behind it. Pick a currency and a range from one week to all time. The history starts on 2 November 2026, so the longer ranges fill up as the weeks pass.
-
-![The Rate history page with the best and worst USD rates for each day](./images/exchange-rates-history.png)
+Every refresh is saved. The chart shows the best rate over time, and you can switch the range from one day to all time. The "Daily best and worst rates" section lists, for each day, the best and worst buying and selling rate with the bank behind it. The history starts on 2 November 2026, so the longer ranges fill up as the weeks pass.
 
 ## How it works
 
 Every 3 hours a script reads each bank's public rates page. A free AI model copies the numbers from each row, and my code picks the right TT columns and rejects anything that looks wrong, such as a selling rate lower than the buying rate. The model only copies. The code decides. Sampath publishes its rates as data, so that one skips the model.
 
-There is no server behind the page. The script runs on my own PC, writes the rates into small files and publishes the site on Cloudflare Pages. Because it runs on a home connection, it can read banks that block data center servers. The flip side is that if my PC is off for a long time, the numbers get older. A bank whose rates are more than 7 hours old shows a "Stale" label.
+There is no server behind the page. The script runs on my own PC, writes the rates into small data files and publishes them on Cloudflare Pages. This site reads those files when you open the tool. Because it runs on a home connection, it can read banks that block data center servers. The flip side is that if my PC is off for a long time, the numbers get older. A bank whose rates are more than 7 hours old shows a "Stale" label.
 
 ## Things to keep in mind
 

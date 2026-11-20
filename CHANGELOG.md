@@ -2,6 +2,13 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.32.0] - 2026-11-20
+
+### Changed
+- The exchange rates tool now runs on `/free-tools/exchange-rates/` itself instead of linking to a separate site. New `RatesApp` component in the site's own theme: currency chips and a full currency list, buying/selling switch, bank picker, big best-rate readout with change over the range, an SVG history chart with hover values and 1D/1W/1M/6M/Max ranges, a ranked bank table with Best and Stale labels, a daily best and worst table, loading, error and no-history states, light and dark, and a layout that fits 375px phones.
+- Rates are read from small JSON files on an unlisted data-only address (`src/data/rates.ts`), refreshed every 3 hours by a script on my PC. The standalone page for the app is gone.
+- Blog post and cover updated to match; the history screenshot was removed.
+
 ## [1.31.0] - 2026-11-20
 
 ### Added

@@ -2,6 +2,18 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.33.0] - 2026-11-20
+
+### Added
+- The exchange rates tool is an installable app (PWA): its own manifest, icons and a service worker limited to `/free-tools/exchange-rates/`. Phones get an install box (Install on Android and Chrome, "How to install" for iPhone). It is never shown once the app is installed or opened as an app, and "Not now" hides it for 30 days. The last loaded rates stay readable offline.
+- The tool uses the new money stack logo for the page, the favicon, the home screen icon and the install box. `Layout` takes `icon` and `appleIcon` props and a `head` slot for page specific tags.
+
+### Changed
+- Mobile layout: a compact header (logo beside the title, intro hidden on phones), a one line status, and the rate readout reachable without scrolling past the intro.
+- Currency switch shows USD, EUR, GBP and AED. The other currencies sit behind a `+N` button; a chosen one stays visible as a button.
+- Selling comes first: the Selling/Buying switch, the table columns and the daily table list selling before buying, and the page opens on the selling rate. The summary lists the highest buying rate too.
+- Blog post rewritten with a new title and description, current desktop and phone screenshots and a new cover.
+
 ## [1.32.0] - 2026-11-20
 
 ### Changed

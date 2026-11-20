@@ -2,19 +2,22 @@
 import { ratesBase } from "../data/rates";
 ---
 <section id="rates-app" data-base={ratesBase} aria-label="Bank exchange rates" class="flex flex-col gap-5">
-  <div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-    <p id="ra-status" class="font-mono text-xs text-muted-foreground" aria-live="polite">Loading rates…</p>
+  <div id="ra-install" hidden class="flex flex-col gap-3 rounded-xl border bg-card/70 p-4"></div>
+
+  <p id="ra-status" class="font-mono text-xs leading-relaxed text-muted-foreground" aria-live="polite">Loading rates…</p>
+
+  <div class="flex flex-col gap-2">
+    <div id="ra-currencies" role="group" aria-label="Currency" class="flex items-center gap-2"></div>
+    <div id="ra-more-panel" hidden role="group" aria-label="More currencies" class="flex flex-wrap gap-2 rounded-xl border bg-card/50 p-3"></div>
   </div>
 
-  <div id="ra-currencies" role="group" aria-label="Currency" class="flex flex-wrap gap-2"></div>
-
   <div class="grid overflow-hidden rounded-xl border bg-card/70 lg:grid-cols-[5fr_7fr]">
-    <div id="ra-summary" class="flex min-w-0 flex-col gap-6 p-5 sm:p-6">
+    <div id="ra-summary" class="flex min-w-0 flex-col gap-5 p-4 sm:gap-6 sm:p-6">
       <div class="h-9 w-64 animate-pulse rounded-md bg-muted"></div>
       <div class="h-16 w-48 animate-pulse rounded-md bg-muted"></div>
       <div class="h-24 animate-pulse rounded-md bg-muted"></div>
     </div>
-    <div id="ra-chart" class="flex min-w-0 flex-col gap-4 border-t p-5 sm:p-6 lg:border-l lg:border-t-0">
+    <div id="ra-chart" class="flex min-w-0 flex-col gap-4 border-t p-4 sm:p-6 lg:border-l lg:border-t-0">
       <div class="h-56 animate-pulse rounded-md bg-muted"></div>
     </div>
   </div>
@@ -42,7 +45,7 @@ import { ratesBase } from "../data/rates";
   const root = document.getElementById("rates-app")!;
   const base = root.dataset.base!;
   const $ = (id: string) => document.getElementById(id)!;
-  const TOP = ["USD", "EUR", "GBP", "AUD", "CAD", "JPY", "SGD", "CHF", "AED", "SAR"];
+  const MAIN = ["USD", "EUR", "GBP", "AED"];
   const RANGES: [string, number][] = [["1D", 1], ["1W", 7], ["1M", 30], ["6M", 182], ["Max", 0]];
   const STALE_MS = 7 * 3_600_000;
   const names = new Intl.DisplayNames(["en"], { type: "currency" });
@@ -51,9 +54,10 @@ import { ratesBase } from "../data/rates";
     status: null as Status | null,
     history: null as Snap[] | null,
     currency: new URLSearchParams(location.search).get("c")?.toUpperCase() || "USD",
-    side: "buying" as Side,
+    side: "selling" as Side,
     bank: "best",
     range: "1W",
+    more: false,
   };
 
   const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
@@ -94,15 +98,23 @@ import { ratesBase } from "../data/rates";
   function renderCurrencies() {
     const all = [...new Set((state.status?.banks ?? []).flatMap((b) => b.rates.map((r) => r.currency)))].sort();
     if (!all.includes(state.currency)) state.currency = all.includes("USD") ? "USD" : all[0] ?? "USD";
-    const top = TOP.filter((c) => all.includes(c));
-    const rest = all.filter((c) => !top.includes(c));
+    const main = MAIN.filter((c) => all.includes(c));
+    const rest = all.filter((c) => !main.includes(c));
     const chip = (c: string, on: boolean) =>
-      `<button type="button" data-a="currency" data-v="${c}" aria-pressed="${on}" title="${esc(cname(c))}" class="h-9 rounded-md border px-3 font-mono text-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring ${on ? "border-primary bg-primary text-primary-foreground" : "bg-card/60 text-foreground hover:border-foreground/25"}">${c}</button>`;
+      `<button type="button" data-a="currency" data-v="${c}" aria-pressed="${on}" title="${esc(cname(c))}" class="h-10 min-w-0 flex-1 rounded-md border px-2 font-mono text-sm transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:flex-none sm:px-4 ${on ? "border-primary bg-primary text-primary-foreground" : "bg-card/60 text-foreground hover:border-foreground/25"}">${c}</button>`;
+    const inRest = rest.includes(state.currency);
     $("ra-currencies").innerHTML =
-      top.map((c) => chip(c, c === state.currency)).join("") +
+      main.map((c) => chip(c, c === state.currency)).join("") +
+      (inRest ? chip(state.currency, true) : "") +
       (rest.length
-        ? `<label class="sr-only" for="ra-more">More currencies</label><select id="ra-more" data-a="currency-select" class="h-9 rounded-md border bg-card/60 px-2.5 font-mono text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring ${rest.includes(state.currency) ? "border-primary" : ""}"><option value="">More</option>${rest.map((c) => `<option value="${c}" ${c === state.currency ? "selected" : ""}>${c} · ${esc(cname(c))}</option>`).join("")}</select>`
+        ? `<button type="button" data-a="more" aria-expanded="${state.more}" aria-controls="ra-more-panel" class="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-md border bg-card/60 px-3 font-mono text-sm text-muted-foreground transition-colors hover:border-foreground/25 hover:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">${state.more ? "Less" : `+${rest.length}`}<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition ${state.more ? "rotate-180" : ""}"><path d="m6 9 6 6 6-6"/></svg></button>`
         : "");
+    const panel = $("ra-more-panel");
+    panel.hidden = !state.more || !rest.length;
+    panel.innerHTML = rest
+      .filter((c) => c !== state.currency)
+      .map((c) => `<button type="button" data-a="currency" data-v="${c}" aria-pressed="false" title="${esc(cname(c))}" class="h-9 rounded-md border bg-card/60 px-3 font-mono text-xs transition-colors hover:border-foreground/25 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">${c}<span class="ml-1.5 hidden font-sans text-muted-foreground sm:inline">${esc(cname(c))}</span></button>`)
+      .join("");
   }
 
   // Points for the chart: the best rate across banks (or one bank) at each saved refresh.
@@ -140,23 +152,25 @@ import { ratesBase } from "../data/rates";
       change = `<p class="font-mono text-sm tabular-nums ${cls}">${d >= 0 ? "+" : ""}${num(d)} (${pct >= 0 ? "+" : ""}${pct.toFixed(2)}%) <span class="text-muted-foreground">${state.range}</span></p>`;
     }
     const lowestSell = sorted("selling")[0];
+    const topBuy = sorted("buying")[0];
     const spread = [...q].sort((a, b) => a.selling - a.buying - (b.selling - b.buying))[0];
     const row = (k: string, v: string, who: string) => `<div class="flex items-baseline justify-between gap-3 py-2.5"><dt class="text-sm text-muted-foreground">${k}</dt><dd class="text-right"><span class="font-mono text-sm tabular-nums">${v}</span> <span class="text-sm text-muted-foreground">${esc(who)}</span></dd></div>`;
     const options = ranked.map((x) => `<option value="${x.bank.id}" ${x.bank.id === state.bank ? "selected" : ""}>${esc(x.bank.short || x.bank.name)}</option>`).join("");
     $("ra-summary").innerHTML = `
-      <div class="flex flex-wrap items-center gap-2">
-        ${seg("side", [["buying", "Buying"], ["selling", "Selling"]], side, "Rate type")}
+      <div class="flex items-center gap-2">
+        ${seg("side", [["selling", "Selling"], ["buying", "Buying"]], side, "Rate type")}
         <label class="sr-only" for="ra-bank">Bank</label>
-        <select id="ra-bank" data-a="bank" class="h-9 rounded-md border bg-card/60 px-2.5 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring"><option value="best" ${state.bank === "best" ? "selected" : ""}>Best across banks</option>${options}</select>
+        <select id="ra-bank" data-a="bank" class="h-9 min-w-0 flex-1 rounded-md border bg-card/60 px-2.5 text-sm focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring sm:flex-none"><option value="best" ${state.bank === "best" ? "selected" : ""}>Best bank</option>${options}</select>
       </div>
       <div class="flex flex-col gap-1.5">
         <p class="text-sm text-muted-foreground">${state.bank === "best" ? (side === "buying" ? "Highest buying rate" : "Lowest selling rate") : side === "buying" ? "Buying rate" : "Selling rate"} · 1 ${state.currency} <span class="hidden sm:inline">(${esc(cname(state.currency))})</span></p>
-        <h2 class="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">${esc(pick.bank.name)}</h2>
-        <p class="font-mono tabular-nums leading-none" aria-label="${num(value)} rupees"><span class="mr-1 text-xl text-muted-foreground">Rs</span><span class="text-6xl font-semibold tracking-tight">${int}</span><span class="text-3xl text-muted-foreground">.${dec}${extra}</span></p>
+        <h2 class="text-2xl font-semibold leading-tight tracking-tight sm:text-4xl">${esc(pick.bank.name)}</h2>
+        <p class="font-mono tabular-nums leading-none" aria-label="${num(value)} rupees"><span class="mr-1 text-xl text-muted-foreground">Rs</span><span class="text-5xl font-semibold tracking-tight sm:text-6xl">${int}</span><span class="text-2xl text-muted-foreground sm:text-3xl">.${dec}${extra}</span></p>
         ${change}
       </div>
       <dl class="divide-y border-y">
         ${row("Lowest selling", num(lowestSell.selling), lowestSell.bank.short || lowestSell.bank.name)}
+        ${row("Highest buying", num(topBuy.buying), topBuy.bank.short || topBuy.bank.name)}
         ${row("Smallest spread", num(spread.selling - spread.buying), spread.bank.short || spread.bank.name)}
         ${row(`Banks quoting ${state.currency}`, String(q.length), "")}
       </dl>`;
@@ -198,7 +212,7 @@ import { ratesBase } from "../data/rates";
         <div id="ra-tip" class="pointer-events-none absolute z-10 hidden rounded-md border bg-background px-2.5 py-1.5 font-mono text-xs shadow-sm"></div>
       </div>
       <dl class="mt-auto grid grid-cols-3 gap-4 border-t pt-4">
-        ${[["Low", num(Math.min(...vs))], ["High", num(Math.max(...vs))], ["Saved updates", String(pts.length)]].map(([k, v]) => `<div><dt class="text-xs text-muted-foreground">${k} · ${state.range}</dt><dd class="font-mono text-sm tabular-nums">${v}</dd></div>`).join("")}
+        ${[["Low", num(Math.min(...vs))], ["High", num(Math.max(...vs))], ["Updates", String(pts.length)]].map(([k, v]) => `<div><dt class="text-xs text-muted-foreground">${k} · ${state.range}</dt><dd class="font-mono text-sm tabular-nums">${v}</dd></div>`).join("")}
       </dl>`;
     const svg = $("ra-svg") as unknown as SVGSVGElement, tip = $("ra-tip");
     const cur = $("ra-cur"), dot = $("ra-dot");
@@ -225,16 +239,16 @@ import { ratesBase } from "../data/rates";
     const side = state.side;
     const rows = sorted(side);
     const best = rows[0];
-    const head = (t: string, cls = "") => `<th scope="col" class="px-4 py-3 text-left font-mono text-xs font-normal text-muted-foreground ${cls}">${t}</th>`;
+    const head = (t: string, cls = "") => `<th scope="col" class="px-3 py-3 text-left font-mono text-xs font-normal text-muted-foreground sm:px-4 ${cls}">${t}</th>`;
     $("ra-table").innerHTML = `
       <div class="overflow-x-auto"><table class="w-full border-collapse text-sm">
         <caption class="sr-only">${state.currency} rates by bank, best ${side} rate first</caption>
-        <thead class="border-b"><tr>${head("Bank")}${head("Buying", "text-right")}${head("Selling", "text-right")}${head("Spread", "hidden text-right sm:table-cell")}${head("Bank updated", "hidden md:table-cell")}</tr></thead>
+        <thead class="border-b"><tr>${head("Bank")}${head("Selling", "text-right")}${head("Buying", "text-right")}${head("Spread", "hidden text-right sm:table-cell")}${head("Bank updated", "hidden md:table-cell")}</tr></thead>
         <tbody class="divide-y">${rows.map((r) => {
           const isBest = r === best;
           const old = stale(r.bank);
-          const cell = (v: number, on: boolean) => `<td class="px-4 py-3 text-right font-mono tabular-nums ${on ? "font-semibold text-primary" : ""}">${num(v)}</td>`;
-          return `<tr class="${isBest ? "bg-primary/5" : ""}"><th scope="row" class="px-4 py-3 text-left font-medium"><span class="flex flex-wrap items-center gap-2">${esc(r.bank.name)}${isBest ? `<span class="rounded border border-primary/40 px-1.5 py-0.5 font-mono text-[11px] font-normal text-primary">Best</span>` : ""}${old ? `<span class="rounded border px-1.5 py-0.5 font-mono text-[11px] font-normal text-[var(--warning)]" title="This bank's rates are more than 7 hours old or its last update failed">Stale</span>` : ""}</span></th>${cell(r.buying, isBest && side === "buying")}${cell(r.selling, isBest && side === "selling")}<td class="hidden px-4 py-3 text-right font-mono tabular-nums text-muted-foreground sm:table-cell">${num(r.selling - r.buying)}</td><td class="hidden px-4 py-3 text-muted-foreground md:table-cell">${bankClock(r.bank.bankUpdatedAt)}</td></tr>`;
+          const cell = (v: number, on: boolean) => `<td class="px-3 py-3 text-right font-mono tabular-nums sm:px-4 ${on ? "font-semibold text-primary" : ""}">${num(v)}</td>`;
+          return `<tr class="${isBest ? "bg-primary/5" : ""}"><th scope="row" class="px-3 py-3 text-left font-medium sm:px-4"><span class="flex flex-wrap items-center gap-2">${esc(r.bank.name)}${isBest ? `<span class="rounded border border-primary/40 px-1.5 py-0.5 font-mono text-[11px] font-normal text-primary">Best</span>` : ""}${old ? `<span class="rounded border px-1.5 py-0.5 font-mono text-[11px] font-normal text-[var(--warning)]" title="This bank's rates are more than 7 hours old or its last update failed">Stale</span>` : ""}</span></th>${cell(r.selling, isBest && side === "selling")}${cell(r.buying, isBest && side === "buying")}<td class="hidden px-4 py-3 text-right font-mono tabular-nums text-muted-foreground sm:table-cell">${num(r.selling - r.buying)}</td><td class="hidden px-4 py-3 text-muted-foreground md:table-cell">${bankClock(r.bank.bankUpdatedAt)}</td></tr>`;
         }).join("")}</tbody></table></div>`;
   }
 
@@ -258,15 +272,15 @@ import { ratesBase } from "../data/rates";
     }
     const th = (t: string, cls = "") => `<th scope="col" class="py-3 pr-4 text-left font-mono text-xs font-normal text-muted-foreground ${cls}">${t}</th>`;
     const cell = (p: [number, string], strong = false) => `<td class="py-3 pr-4 text-right font-mono tabular-nums ${strong ? "font-semibold" : "text-muted-foreground"}">${num(p[0])}<span class="block text-xs font-sans font-normal text-muted-foreground">${esc(names[p[1]] ?? p[1])}</span></td>`;
-    body.innerHTML = `<table class="w-full min-w-[34rem] border-collapse text-sm"><caption class="sr-only">${state.currency} best and worst rates per day</caption><thead class="border-b"><tr>${th("Day")}${th("Best buying", "text-right")}${th("Worst buying", "text-right")}${th("Best selling", "text-right")}${th("Worst selling", "text-right")}</tr></thead><tbody class="divide-y">${
-      [...days.entries()].reverse().slice(0, 14).map(([day, d]) => `<tr><th scope="row" class="py-3 pr-4 text-left font-medium">${new Date(day + "T00:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}</th>${cell(d.bb, true)}${cell(d.wb)}${cell(d.bs, true)}${cell(d.ws)}</tr>`).join("")
+    body.innerHTML = `<table class="w-full min-w-[34rem] border-collapse text-sm"><caption class="sr-only">${state.currency} best and worst rates per day</caption><thead class="border-b"><tr>${th("Day")}${th("Best selling", "text-right")}${th("Worst selling", "text-right")}${th("Best buying", "text-right")}${th("Worst buying", "text-right")}</tr></thead><tbody class="divide-y">${
+      [...days.entries()].reverse().slice(0, 14).map(([day, d]) => `<tr><th scope="row" class="py-3 pr-4 text-left font-medium">${new Date(day + "T00:00:00Z").toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" })}</th>${cell(d.bs, true)}${cell(d.ws)}${cell(d.bb, true)}${cell(d.wb)}</tr>`).join("")
     }</tbody></table>`;
   }
 
   function renderStatus() {
     const s = state.status;
-    $("ra-status").textContent = s
-      ? `Updated ${ago(s.lastRefresh?.at)} · next update ${ago(s.nextRefresh)} · ${s.banks.length} banks · TT rates, LKR per 1 unit`
+    $("ra-status").innerHTML = s
+      ? `Updated ${ago(s.lastRefresh?.at)} · ${s.banks.length} banks<span class="hidden sm:inline"> · next update ${ago(s.nextRefresh)} · TT rates, LKR per 1 unit</span>`
       : "Loading rates…";
   }
 
@@ -304,6 +318,7 @@ import { ratesBase } from "../data/rates";
     const u = new URL(location.href);
     c === "USD" ? u.searchParams.delete("c") : u.searchParams.set("c", c);
     history.replaceState(null, "", u);
+    state.more = false;
     renderCurrencies(); renderSummary(); renderTable(); loadHistory();
   }
 
@@ -316,6 +331,10 @@ import { ratesBase } from "../data/rates";
       case "side": state.side = v as Side; renderSummary(); renderChart(); renderTable(); break;
       case "range": state.range = v; renderSummary(); renderChart(); break;
       case "retry": loadStatus(); break;
+      case "more": state.more = !state.more; renderCurrencies(); break;
+      case "install": install(); break;
+      case "later": dismissInstall(); break;
+      case "ios": $("ra-ios").hidden = !$("ra-ios").hidden; break;
     }
   });
   root.addEventListener("change", (e) => {
@@ -323,6 +342,52 @@ import { ratesBase } from "../data/rates";
     if (el.dataset.a === "currency-select" && el.value) setCurrency(el.value);
     if (el.dataset.a === "bank") { state.bank = el.value; renderSummary(); renderChart(); }
   });
+
+  // Install as an app: Chrome and Edge offer a prompt, iPhone and iPad need Add to Home Screen.
+  // Never shown once installed (or opened as an app); "Not now" hides it for 30 days.
+  type Deferred = Event & { prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> };
+  const IKEY = "lkr-installed", DKEY = "lkr-install-later";
+  const lsGet = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
+  const lsSet = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch { /* private mode */ } };
+  const isApp = () => matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+  const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const phone = () => matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+  let deferred: Deferred | null = null;
+
+  function renderInstall() {
+    const box = $("ra-install");
+    const later = Number(lsGet(DKEY) || 0);
+    const hide = isApp() || lsGet(IKEY) || Date.now() - later < 30 * 86_400_000 || !phone() || !(deferred || isIos);
+    box.hidden = !!hide;
+    if (hide) return;
+    box.innerHTML = `
+      <div class="flex items-center gap-3">
+        <img src="/lkr/icon-192.png" alt="" width="44" height="44" class="size-11 shrink-0 rounded-xl" />
+        <div class="min-w-0 flex-1"><p class="font-medium leading-tight">Install LKR Rates</p><p class="text-sm text-muted-foreground">Open today's rates from your home screen. Works offline.</p></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" data-a="${deferred ? "install" : "ios"}" class="h-9 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:bg-primary/85 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">${deferred ? "Install" : "How to install"}</button>
+        <button type="button" data-a="later" class="h-9 rounded-md px-3 text-sm text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring">Not now</button>
+      </div>
+      ${deferred ? "" : `<p id="ra-ios" hidden class="text-sm leading-relaxed text-muted-foreground">Tap the Share button in Safari, then choose <span class="text-foreground">Add to Home Screen</span>.</p>`}`;
+  }
+  function dismissInstall() { lsSet(DKEY, String(Date.now())); $("ra-install").hidden = true; }
+  async function install() {
+    if (!deferred) return;
+    await deferred.prompt();
+    const { outcome } = await deferred.userChoice;
+    deferred = null;
+    if (outcome === "accepted") lsSet(IKEY, "1");
+    renderInstall();
+  }
+  window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); deferred = e as Deferred; renderInstall(); });
+  window.addEventListener("appinstalled", () => { lsSet(IKEY, "1"); deferred = null; renderInstall(); });
+  matchMedia("(display-mode: standalone)").addEventListener("change", renderInstall);
+  renderInstall();
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/free-tools/exchange-rates/sw.js", { scope: "/free-tools/exchange-rates/" }).catch(() => {});
+  }
 
   loadStatus();
   setInterval(() => { if (!document.hidden) loadStatus(); }, 600_000);

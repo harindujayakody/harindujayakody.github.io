@@ -2,6 +2,13 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.35.0] - 2026-11-25
+
+### Added
+- Post: "Cheap Domain Names From $2.73 With Spaceship Coupons" (`/blog/cheap-domain-names-spaceship-coupons/`): Spaceship coupon codes and prices for .com, .net, .org and .info, how to apply a code, and which extension suits which site.
+- New category `Domains` (`/blog/category/domains/`), added to the allowed list in `src/content.config.ts` and `docs/CONTENT.md`.
+- Table styling for posts: markdown tables now have padded cells, light row rules, a mono header row and a hover highlight, and scroll sideways inside the page on phones instead of widening it. Before, table cells had no spacing at all (headers ran together), which also affected the tables in older posts.
+
 ## [1.34.0] - 2026-11-20
 
 ### Added

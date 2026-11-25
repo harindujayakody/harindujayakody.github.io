@@ -176,6 +176,15 @@ html[data-theme="light"] {
 }
 .prose p > img { @apply aspect-video w-full rounded-xl border object-cover; }
 .prose hr { @apply my-10; }
+/* Tables from markdown: light rules, mono header row; wide tables scroll sideways on phones instead of widening the page. */
+.prose table { @apply w-full border-collapse text-sm; }
+.prose thead th { @apply border-b px-3 py-2 text-left font-mono text-xs font-medium text-muted-foreground; }
+.prose tbody td { @apply border-b px-3 py-2.5 align-top; }
+.prose tbody tr:last-child td { @apply border-b-0; }
+.prose tbody tr:hover td { @apply bg-card/60; }
+@media (max-width: 639px) {
+  .prose table { @apply block overflow-x-auto; }
+}
 
 /* GitHub contribution graph: GitHub's 5 levels in mint; .pad fills the first week's empty days. */
 .cg i { @apply block aspect-square rounded-[2px]; }

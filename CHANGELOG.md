@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.35.1] - 2026-11-25
+
+### Changed
+- Post lists (home page "Writing", blog, category, tag and series pages, related posts, 404): the description text is 18px, up from 17px. Titles stay 19px.
+
 ## [1.35.0] - 2026-11-25
 
 ### Added

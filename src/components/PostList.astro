@@ -22,7 +22,7 @@ const { posts } = Astro.props;
         <a href={`/blog/${p.id}/`} class="after:absolute after:inset-0">{p.data.title}</a>
         <span class="-translate-x-1 text-primary opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100" aria-hidden="true">→</span>
       </h3>
-      <p class="text-[17px] leading-relaxed text-muted-foreground">{p.data.description}</p>
+      <p class="text-[18px] leading-relaxed text-muted-foreground">{p.data.description}</p>
       {p.data.tags.length > 0 && (
         <div class="flex flex-wrap gap-1.5 pt-1">
           {p.data.tags.map((t) => (

@@ -2,6 +2,15 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.36.0] - 2026-11-25
+
+### Added
+- Post: DeepSeek is free this Thanksgiving on TokenRouter, with a generated model-card cover image.
+- `News` blog category.
+
+### Fixed
+- Build warning about `/blog/tag/open-source` colliding with itself: one post used `open-source`, the others `open source`; all now use `open source`.
+
 ## [1.35.1] - 2026-11-25
 
 ### Changed

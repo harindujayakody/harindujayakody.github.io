@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.36.1] - 2026-11-25
+
+### Changed
+- DeepSeek post: added the TokenRouter diagram under "What is live on TokenRouter".
+
 ## [1.36.0] - 2026-11-25
 
 ### Added

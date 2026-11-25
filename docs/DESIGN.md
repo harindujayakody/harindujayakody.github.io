@@ -64,7 +64,7 @@ Scroll-linked animations must use longhand properties (`animation-name`, `animat
 | `ui/Button` | `default` (mint fill), `outline`, `ghost`; `size="icon"` |
 | `ui/Card` | Bordered, translucent; becomes a link when given `href` |
 | `ui/Badge` | `secondary` (filled, mono) or `outline` |
-| `PostList` | Whole row is the link (stretched link); category and tag links sit above it. Type: title 19px semibold, description 18px |
+| `PostList` | Whole row is the link (stretched link); category and tag links sit above it. Type: title 19px semibold, description 15px (the article body itself is 18px) |
 | `ProjectCard` | Same stretched-link pattern; optional "source ↗" |
 | `XFeed` | Mirrors an X post: avatar, name, handle, text, X's like and reply icons |
 | `Timeline` | Year column (sticky on desktop), dashed rail, dots |

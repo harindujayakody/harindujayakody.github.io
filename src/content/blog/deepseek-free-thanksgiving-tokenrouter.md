@@ -15,6 +15,8 @@ DeepSeek is free on TokenRouter this Thanksgiving. The model `deepseek-v4.1-flas
 
 The model ID is `deepseek-v4.1-flash-1017`. It is available on TokenRouter today, and every account gets it free, so there is nothing extra to unlock.
 
+![TokenRouter sits between model providers such as OpenAI, Anthropic, Google and NVIDIA and the apps and users that call them, with a Claim Free Credits button below](./images/tokenrouter-how-it-works.png)
+
 ## Why we are doing it
 
 Thanksgiving is a good moment to thank the people who use what we build. Thank you to everyone on TokenRouter. A free model for the holiday season is a small way to give something back.

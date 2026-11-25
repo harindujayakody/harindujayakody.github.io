@@ -35,6 +35,7 @@ Code borrows GitHub dark mode: Shiki `github-dark-default` syntax colours, `#151
 |---|---|---|
 | Headings | Poppins 600 | `tracking-tight`; h1 `text-4xl` → `sm:text-6xl` |
 | Body | Inter variable | 16px, `leading-relaxed` |
+| Article body (`.prose`) | Inter variable | 18px, `leading-8`; used by blog posts and the HTTP status-code pages |
 | Numbers, code, labels, nav | JetBrains Mono variable | `tabular-nums` for stats |
 
 ## Motion

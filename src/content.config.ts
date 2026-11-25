@@ -11,8 +11,8 @@ const blog = defineCollection({
       date: z.coerce.date(),
       updated: z.coerce.date().optional(),
       // A fixed list keeps category pages from splitting into near-duplicates ("AI" vs "AI Tools").
-      category: z.enum(["AI", "Guides", "Windows", "Web", "Domains"], {
-        error: (iss) => `Unknown category ${JSON.stringify(iss.input)}. Use one of: AI, Guides, Windows, Web, Domains (see docs/CONTENT.md).`,
+      category: z.enum(["AI", "Guides", "Windows", "Web", "Domains", "News"], {
+        error: (iss) => `Unknown category ${JSON.stringify(iss.input)}. Use one of: AI, Guides, Windows, Web, Domains, News (see docs/CONTENT.md).`,
       }),
       tags: z.array(z.string()).default([]),
       // Posts sharing the exact same name form a series (2+ published parts); parts read oldest first unless seriesOrder is set.

@@ -2,10 +2,15 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.36.3] - 2026-11-25
+
+### Changed
+- README rewritten: hero screenshot, mint-matched badges, a screenshots section (`docs/screenshots/`), and plainer wording throughout. Docs now note the `.prose` article size (18px, `leading-8`).
+
 ## [1.36.2] - 2026-11-25
 
 ### Changed
-- Post lists (home "Writing", blog, category, tag pages): description back down to 15px so it sits clearly under the 19px title; the 18px size now applies to the article body on the post page.
+- Post lists (home "Writing", blog, category, tag pages): description back down to 15px so it sits clearly under the 19px title; the article body (`.prose`) goes from 17px to 18px and line height from `leading-7` to `leading-8`, on blog posts and the HTTP status-code tool pages.
 
 ## [1.36.1] - 2026-11-25
 

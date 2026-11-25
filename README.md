@@ -1,32 +1,34 @@
 <div align="center">
 
+<a href="https://harindujayakody.com">
+  <img src="docs/screenshots/home-dark.jpg" alt="The harindujayakody.com home page in dark mode: name, short bio, stats and the GitHub contribution graph" width="860">
+</a>
+
 # harindujayakody.com
 
-**Personal site, blog and project portfolio of [Harindu Jayakody](https://harindujayakody.com), founder of [Infiax](https://infiax.com).**
-
+Personal site, blog and project portfolio of [Harindu Jayakody](https://harindujayakody.com), founder of [Infiax](https://infiax.com).<br>
 A static Astro site that ships almost no JavaScript, pulls its data from GitHub and X at build time, and deploys to GitHub Pages on every push.
 
-[![Deploy](https://github.com/harindujayakody/harindujayakody.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/harindujayakody/harindujayakody.github.io/actions/workflows/deploy.yml)
-[![CI](https://github.com/harindujayakody/harindujayakody.github.io/actions/workflows/ci.yml/badge.svg)](https://github.com/harindujayakody/harindujayakody.github.io/actions/workflows/ci.yml)
-[![Version](https://img.shields.io/github/package-json/v/harindujayakody/harindujayakody.github.io/master?label=version&color=7fd6b4)](CHANGELOG.md)
-[![Website](https://img.shields.io/website?url=https%3A%2F%2Fharindujayakody.com&label=harindujayakody.com)](https://harindujayakody.com)
-[![License: MIT](https://img.shields.io/github/license/harindujayakody/harindujayakody.github.io?color=blue)](LICENSE)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/harindujayakody/harindujayakody.github.io/deploy.yml?branch=master&label=deploy&logo=githubactions&logoColor=white&style=flat-square&labelColor=0d0e12&color=7fd6b4)](https://github.com/harindujayakody/harindujayakody.github.io/actions/workflows/deploy.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/harindujayakody/harindujayakody.github.io/ci.yml?label=ci&logo=github&logoColor=white&style=flat-square&labelColor=0d0e12&color=7fd6b4)](https://github.com/harindujayakody/harindujayakody.github.io/actions/workflows/ci.yml)
+[![Version](https://img.shields.io/github/package-json/v/harindujayakody/harindujayakody.github.io/master?label=version&logo=semver&logoColor=white&style=flat-square&labelColor=0d0e12&color=7fd6b4)](CHANGELOG.md)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fharindujayakody.com&label=harindujayakody.com&up_message=online&logo=googlechrome&logoColor=white&style=flat-square&labelColor=0d0e12&color=7fd6b4)](https://harindujayakody.com)
+[![License](https://img.shields.io/github/license/harindujayakody/harindujayakody.github.io?style=flat-square&labelColor=0d0e12&color=7fd6b4)](LICENSE)
 
-[![Astro](https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white)](https://astro.build)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Node.js](https://img.shields.io/badge/Node.js-24-5FA04E?logo=nodedotjs&logoColor=white)](https://nodejs.org)
-[![GitHub Pages](https://img.shields.io/badge/Hosted_on-GitHub_Pages-222222?logo=githubpages&logoColor=white)](https://pages.github.com)
-[![Cloudflare](https://img.shields.io/badge/CDN-Cloudflare-F38020?logo=cloudflare&logoColor=white)](https://www.cloudflare.com)
+[![Astro](https://img.shields.io/badge/Astro-7-7fd6b4?logo=astro&logoColor=white&style=flat-square&labelColor=0d0e12)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-7fd6b4?logo=tailwindcss&logoColor=white&style=flat-square&labelColor=0d0e12)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-7fd6b4?logo=typescript&logoColor=white&style=flat-square&labelColor=0d0e12)](https://www.typescriptlang.org)
+[![Node.js](https://img.shields.io/badge/Node.js-24-7fd6b4?logo=nodedotjs&logoColor=white&style=flat-square&labelColor=0d0e12)](https://nodejs.org)
+[![GitHub Pages](https://img.shields.io/badge/hosted_on-GitHub_Pages-7fd6b4?logo=githubpages&logoColor=white&style=flat-square&labelColor=0d0e12)](https://pages.github.com)
+[![Cloudflare](https://img.shields.io/badge/CDN-Cloudflare-7fd6b4?logo=cloudflare&logoColor=white&style=flat-square&labelColor=0d0e12)](https://www.cloudflare.com)
 
-[Live site](https://harindujayakody.com) · [Blog](https://harindujayakody.com/blog/) · [Projects](https://harindujayakody.com/projects/) · [Changelog](CHANGELOG.md)
+[Live site](https://harindujayakody.com) · [Blog](https://harindujayakody.com/blog/) · [Projects](https://harindujayakody.com/projects/) · [Free tools](https://harindujayakody.com/free-tools/) · [Changelog](CHANGELOG.md)
 
 </div>
 
----
-
 ## Contents
 
+- [Screenshots](#screenshots)
 - [Highlights](#highlights)
 - [Tech stack](#tech-stack)
 - [How it works](#how-it-works)
@@ -39,29 +41,60 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 - [Documentation](#documentation)
 - [License](#license)
 
+## Screenshots
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/blog-post-dark.jpg" alt="A blog post with a generated cover card, tags and a table of contents on the right"><br><sub>Blog post with its generated cover card and table of contents</sub></td>
+    <td width="50%"><img src="docs/screenshots/blog-index-light.jpg" alt="The blog index in light mode with a post list and sidebar"><br><sub>Blog index in light mode, which is the default</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/timeline-dark.jpg" alt="The repo timeline, with public repositories grouped by year on a dashed rail"><br><sub>Repo timeline, refreshed from the GitHub API every day</sub></td>
+    <td width="50%"><img src="docs/screenshots/free-tools-dark.jpg" alt="The free tools page with cards for each browser tool"><br><sub>Free browser tools</sub></td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="docs/screenshots/mobile-dark.jpg" alt="The home page on a phone in dark mode" width="260">
+</p>
+
 ## Highlights
 
-| | |
-|---|---|
-| **Blog** | Markdown posts with categories (indexable) and tags, 16:9 cover and inline images, related posts, multi-part series, older/newer links, reading progress bar, reading time, an "updated" date and RSS. Wide screens (1400px+) get a sticky blog sidebar (about, popular posts with thumbnails, categories with counts) and posts get a sticky table of contents that highlights the section you are reading |
-| **Link previews** | Hover or focus a link in a post to this site, GitHub or kathaarana.com and a small card shows its image, title and description, read at build time |
-| **Was this helpful?** | Yes/No box on every post. Yes votes are counted in a small Cloudflare Worker (`worker/`, KV storage, one vote per visitor per post, no login) and the footer lists the top posts |
-| **Fast navigation** | Pages prerender on hover (Speculation Rules) and cross-fade with View Transitions; both need no JavaScript and fall back to normal links |
-| **Projects & Tools** | Hand-picked tools and projects plus every public GitHub repo, sorted by stars |
-| **Free tools** | Browser tools under `/free-tools/`: an HTTP status codes reference (hub plus a page for each of the 63 codes) a 2FA (TOTP) code generator that sends and saves nothing, and a Sri Lanka NIC decoder (birthday, age, gender, old/new conversion) that can also be embedded in posts, a landing page for the Octopus Agent anti detect browser with Windows and Mac downloads that follow the newest GitHub release, and a Sri Lankan bank exchange rates tool that runs on the page itself (`components/RatesApp.astro`): best bank per currency, buying/selling toggle, history chart, ranked bank table and daily best and worst. It is also an installable app (manifest in `public/lkr/`, service worker at `public/free-tools/exchange-rates/sw.js`). It reads small JSON files that a script on my PC refreshes every 3 hours (`src/data/rates.ts` holds the data address). Each tool is a card with its own share image. "Star on GitHub" cards with live star counts |
-| **Repo timeline** | Every public repository grouped by year, refreshed daily from the GitHub API |
-| **Contribution graph** | The last year of GitHub activity on the home page, built at build time in the site's mint, no JavaScript |
-| **Comments** | giscus (GitHub Discussions) on every post, in the site's colours; loads only when you scroll to it. `comments: false` turns it off per post |
-| **Newsletter** | Buttondown email sign-up after every post and on the blog pages; a plain form, no JavaScript or tracking script |
-| **X posts** | Home-page feed and in-article embeds rendered as site-themed cards at build time, with no X script on the page |
-| **Code blocks** | GitHub dark syntax theme with a copy button |
-| **Search** | `Ctrl/⌘ + K` or `/` opens a search pop-up anywhere: grouped, highlighted results with full keyboard control. `/search/?q=` page for shareable links |
-| **Keyboard shortcuts** | `g` then `h`/`b`/`p`/`t` to jump between sections, `?` for the shortcuts list |
-| **SEO** | Canonical URLs, Open Graph, JSON-LD structured data, sitemap, robots.txt |
-| **Social cards** | A GitHub-style 1200×630 card generated for every post and tool (title, description, tag pills, a colour bar with one slice per tag, avatar). It is the share image, and the featured image for posts without a cover |
-| **AI agents** | `llms.txt`, `llms-full.txt` and a plain-markdown copy of every post |
-| **Design** | Light by default with a dark switch (the old page shrinks into the toggle going dark; a hole opens out of it going light), solid header, terminal-flavoured, on shadcn/ui tokens, CSS-only motion that respects reduced-motion |
-| **Support** | Ko-fi button in the blog sidebars and the tools footer; GitHub Sponsors and Ko-fi in `.github/FUNDING.yml` |
+Blog
+
+- Markdown posts with indexable categories, tags, a 16:9 cover, inline images, related posts, multi-part series, older and newer links, a reading progress bar, reading time, an "updated" date and RSS.
+- Screens 1400px and wider get a sticky sidebar (about, popular posts with thumbnails, categories with counts). Posts get a sticky table of contents that follows the section you are reading.
+- Hover or focus a link to this site, GitHub or kathaarana.com and a small card shows its image, title and description, read at build time.
+- Every post ends with a Yes/No "Was this helpful?" box. Yes votes are counted by a small Cloudflare Worker (`worker/`, KV storage, one vote per visitor per post, no login), and the footer lists the top posts.
+- Comments run through giscus (GitHub Discussions), in the site's colours. They load only when you scroll to them, and `comments: false` turns them off per post.
+- A Buttondown sign-up form follows every post and sits on the blog pages. It is a plain form with no JavaScript or tracking script.
+- Code blocks use the GitHub dark theme and have a copy button.
+
+Pages
+
+- The home page has a feed of X posts and the last year of GitHub activity as a contribution graph in the site's mint, both drawn at build time without JavaScript. X posts embedded in articles use the same cards, with no X script on the page.
+- Projects lists hand-picked work plus every public GitHub repo, sorted by stars. The timeline groups every public repo by year and refreshes daily.
+- Free tools live under `/free-tools/`:
+  - an HTTP status codes reference, with a hub and a page for each of the 63 codes;
+  - a 2FA (TOTP) code generator that sends and saves nothing;
+  - a Sri Lanka NIC decoder (birthday, age, gender, old and new format), which can also be embedded in posts;
+  - a landing page for the Octopus Agent anti detect browser, with Windows and Mac downloads that follow the newest GitHub release;
+  - a Sri Lankan bank exchange rates tool that runs on the page itself (`components/RatesApp.astro`). It shows the best bank per currency, a buying and selling toggle, a history chart, a ranked bank table and the daily best and worst. It is also an installable app (manifest in `public/lkr/`, service worker at `public/free-tools/exchange-rates/sw.js`) and reads small JSON files that a script on the author's PC refreshes every 3 hours (`src/data/rates.ts` holds the data address).
+- Each tool is a card with its own share image, and "Star on GitHub" cards show live star counts.
+
+Navigation and feel
+
+- Pages prerender on hover (Speculation Rules) and cross-fade with View Transitions. Neither needs JavaScript, and both fall back to normal links.
+- `Ctrl/⌘ + K` or `/` opens a search pop-up anywhere, with grouped, highlighted results and full keyboard control. `/search/?q=` gives shareable links.
+- `g` then `h`, `b`, `p` or `t` jumps between sections, and `?` lists the shortcuts.
+- The site is light by default with a dark switch: the old page shrinks into the toggle going dark, and a hole opens out of it going light. The header is solid and the style is terminal-flavoured, built on shadcn/ui tokens, with CSS-only motion that respects reduced motion.
+
+Discovery
+
+- Canonical URLs, Open Graph, JSON-LD structured data, a sitemap and `robots.txt`.
+- A GitHub-style 1200×630 card is generated for every post and tool (title, description, tag pills, a colour bar with one slice per tag, avatar). It is the share image, and the featured image for posts without a cover.
+- `llms.txt`, `llms-full.txt` and a plain Markdown copy of every post for AI agents.
+- A Ko-fi button sits in the blog sidebars and the tools footer, and `.github/FUNDING.yml` lists GitHub Sponsors and Ko-fi.
 
 ## Tech stack
 
@@ -83,7 +116,7 @@ A static Astro site that ships almost no JavaScript, pulls its data from GitHub 
 
 ## How it works
 
-Everything is rendered at **build time**. The browser receives HTML, inlined CSS, fonts and images.
+Everything is rendered at build time. The browser receives HTML, inlined CSS, fonts and images.
 
 ```mermaid
 flowchart LR
@@ -97,14 +130,14 @@ flowchart LR
     H --> I[harindujayakody.com]
 ```
 
-1. **Content.** Posts are Markdown files validated by a Zod schema (`src/content.config.ts`): title, dates, category, tags, cover image, draft flag. Drafts appear in `npm run dev` but never in production.
-2. **Live data, fetched once per build.** The GitHub API supplies repos and stars for the timeline, stats and projects page. X's public syndication endpoint (no API key) supplies posts for the home feed and article embeds. Both fail soft: a failed request skips that item and the build still succeeds.
-3. **X embeds without X's script.** Pasted X embed code is swapped at build time by a Sätteri hast plugin (`src/lib/x-embed-plugin.ts`) for the same card used on the home page (`xCardHtml` in `src/lib/x.ts`): author, verified badge, text, a photo or video preview and like/reply counts.
-4. **Link previews.** `lib/link-meta.ts` reads the title, description and image of links to GitHub, kathaarana.com and harindujayakody.com at build time (only those hosts, 8 s timeout, a failed page just gets no preview). Internal links use the post and tool data directly.
-5. **Generated endpoints.** `sitemap.xml`, `robots.txt`, `rss.xml`, `search.json`, `llms.txt`, `llms-full.txt` and `/blog/<slug>.md` are plain Astro endpoints with no extra dependencies.
-6. **Deploy.** Every push to `master`, plus a daily 01:00 UTC schedule, runs `check → lint → test → build` and publishes `dist/` to GitHub Pages. The daily run keeps repo stats and X counts fresh without commits.
+1. Posts are Markdown files validated by a Zod schema (`src/content.config.ts`): title, dates, category, tags, cover image, draft flag. Drafts appear in `npm run dev` but never in production.
+2. The GitHub API supplies repos and stars for the timeline, stats and projects page. X's public syndication endpoint (no API key) supplies posts for the home feed and article embeds. Both fail soft: a failed request skips that item and the build still succeeds.
+3. Pasted X embed code is swapped at build time by a Sätteri hast plugin (`src/lib/x-embed-plugin.ts`) for the same card used on the home page (`xCardHtml` in `src/lib/x.ts`): author, verified badge, text, a photo or video preview and like/reply counts.
+4. `lib/link-meta.ts` reads the title, description and image of links to GitHub, kathaarana.com and harindujayakody.com at build time (only those hosts, 8 s timeout, a failed page just gets no preview). Internal links use the post and tool data directly.
+5. `sitemap.xml`, `robots.txt`, `rss.xml`, `search.json`, `llms.txt`, `llms-full.txt` and `/blog/<slug>.md` are plain Astro endpoints with no extra dependencies.
+6. Every push to `master`, plus a daily 01:00 UTC schedule, runs `check → lint → test → build` and publishes `dist/` to GitHub Pages. The daily run keeps repo stats and X counts fresh without commits.
 
-**Client-side JavaScript** is small and deferred: keyboard shortcuts (~1 KB, inline), the search pop-up (~1.3 KB gzipped, which fetches the search index only when first opened), the theme switch, the table of contents highlight, link previews and copy buttons (each only on pages that need them), and the vote box and footer popular list, which call the votes Worker. If the Worker is unreachable those parts hide themselves.
+Client-side JavaScript is small and deferred: keyboard shortcuts (~1 KB, inline), the search pop-up (~1.3 KB gzipped, which fetches the search index only when first opened), the theme switch, the table of contents highlight, link previews and copy buttons (each only on pages that need them), and the vote box and footer popular list, which call the votes Worker. If the Worker is unreachable those parts hide themselves.
 
 ## Project structure
 
@@ -133,7 +166,7 @@ flowchart LR
 
 ## Getting started
 
-**Requirements:** Node.js 22 or newer (CI uses 24) and npm.
+Requirements: Node.js 22 or newer (CI uses 24) and npm.
 
 ```bash
 git clone https://github.com/harindujayakody/harindujayakody.github.io.git
@@ -181,13 +214,13 @@ Full front-matter reference: [docs/CONTENT.md](docs/CONTENT.md).
 
 ## Quality, CI and security
 
-- **Gated deploys.** `deploy.yml` runs `astro check` and ESLint before building; a type or lint error stops the release.
-- **Pull-request checks.** `ci.yml` runs the same check, lint, tests and build on every pull request, so problems show before merging.
-- **Pinned actions.** Every GitHub Action is pinned to a full commit SHA, with the matching release in a comment, so a moved tag can't change what runs.
-- **Least-privilege tokens.** Workflows request only `contents: read` (plus `pages` and `id-token` for deploying).
-- **Reproducible installs.** `npm ci` from the committed lockfile.
-- **No secrets in the repo.** The only token used is GitHub's built-in `GITHUB_TOKEN`. The votes Worker only accepts requests from this site and `localhost:4321`, validates post ids and stores a hash of the visitor, not the IP.
-- **Cookie-free analytics.** Cloudflare Web Analytics, added by Cloudflare at the edge (not in the code); no cookies, so no consent banner. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#cloudflare-in-front-of-harindujayakodycom).
+- `deploy.yml` runs `astro check` and ESLint before building; a type or lint error stops the release.
+- `ci.yml` runs the same check, lint, tests and build on every pull request, so problems show before merging.
+- Every GitHub Action is pinned to a full commit SHA, with the matching release in a comment, so a moved tag can't change what runs.
+- Workflows request only `contents: read` (plus `pages` and `id-token` for deploying).
+- `npm ci` from the committed lockfile.
+- The only token used is GitHub's built-in `GITHUB_TOKEN`. The votes Worker only accepts requests from this site and `localhost:4321`, validates post ids and stores a hash of the visitor, not the IP.
+- Cloudflare Web Analytics, added by Cloudflare at the edge (not in the code); no cookies, so no consent banner. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#cloudflare-in-front-of-harindujayakodycom).
 
 ## SEO and AI-agent support
 

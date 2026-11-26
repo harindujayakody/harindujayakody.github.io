@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.37.0] - 2026-11-26
+
+### Added
+- IndexNow: a key file in `public/` and an `indexnow` job after each push deploy that submits new or edited published posts (plus `/` and `/blog/`) to Bing and other IndexNow engines. Skipped on the daily rebuild; it cannot fail the deploy. Unit test in `npm test`.
+
 ## [1.36.4] - 2026-11-26
 
 ### Added

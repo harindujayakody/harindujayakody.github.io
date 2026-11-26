@@ -1,3 +1,4 @@
+/* global console, process, fetch */
 // Runs after a deploy: sends new or edited published posts to IndexNow (Bing, Yandex and others). Never fails the deploy.
 import { execSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync } from "node:fs";

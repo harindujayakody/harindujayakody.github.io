@@ -2,6 +2,11 @@
 
 All notable changes to this site. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), versions follow [SemVer](https://semver.org/).
 
+## [1.36.4] - 2026-11-26
+
+### Added
+- Bing Webmaster Tools site-verification meta tag (`msvalidate.01`) in the page head.
+
 ## [1.36.3] - 2026-11-25
 
 ### Changed

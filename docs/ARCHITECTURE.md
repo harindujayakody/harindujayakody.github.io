@@ -92,6 +92,10 @@ Steps (Node 24): `npm ci` → `npm run check` → `npm run lint` → `npm test` 
 
 `.github/workflows/ci.yml` runs the same check, lint, test and build on every pull request (no deploy). Deploy runs the same steps before publishing.
 
+### IndexNow
+
+After a push deploys (not the daily rebuild), the `indexnow` job in `deploy.yml` runs `.github/scripts/indexnow.mjs`. It lists the blog posts the merged change added or edited (drafts and deleted files skipped) and POSTs them, with `/` and `/blog/`, to `https://api.indexnow.org/indexnow` so Bing and other IndexNow engines recrawl them. The key is the 32-character name of the `.txt` file in `public/`, which is also served at the site root as IndexNow requires; it is public by design. The job can fail without failing the deploy. Google doesn't use IndexNow and still reads `sitemap.xml`.
+
 ### Cloudflare (in front of harindujayakody.com)
 
 GitHub Pages can't set cache headers, so long caching is done in Cloudflare:
